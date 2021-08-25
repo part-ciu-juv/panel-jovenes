@@ -1,0 +1,84 @@
+---
+title: "Ponderadores"
+author: "Julio Iturra"
+date: "`r format(Sys.time(), '%A %d %B %Y %X')`"
+output:
+  bookdown::html_document2:
+    number_sections: true
+    toc: true
+    toc_float:
+        collapsed: false
+    toc_depth: 2
+    code_folding: "hide"
+editor_options:
+  chunk_output_type: console
+---
+
+
+# Setup
+
+```{r include=FALSE}
+knitr::opts_chunk$set(warning = FALSE,
+                      message = FALSE, 
+                      cache = FALSE,
+                      results = "hold")
+options(scipen=999)
+rm(list=ls())
+options(knitr.kable.NA = '')
+```
+
+```{css, echo=FALSE}
+# /* expandir el espacio del documento*/
+body .main-container {
+      max-width: 1600px !important;
+      width: 1600px !important;
+    }
+#/* expandir width de la TOC*/
+div.tocify {
+    width: 22% !important;
+    max-width: 331px !important;
+    max-height: 102% !important;
+}
+```
+
+**load packages**
+```{r}
+if (!require("pacman")) install.packages("pacman") # instalar pacman
+pacman::p_load(dplyr,       # Manipulacion de datos 
+               haven,       # importar datos en .dta o .sav
+               sjmisc,      # descriptivos y frecuencias
+               sjPlot,      # tablas, plots y descriptivos
+               sjlabelled,
+               summarytools,# resumen de dataframe
+               knitr,       # tablas kable
+               kableExtra,  # tablas kable personalizadas
+               ggplot2,     # plots
+               corrplot,    # plot correlacion
+               survey
+               )
+```
+
+# Datos
+
+```{r}
+df_wave01 <- 
+  haven::read_sav(file = "input/data/original/Ola_1.sav")
+```
+
+# Preparación
+
+```{r}
+df_weights <- 
+  df_wave01 %>% 
+  filter(ci==1,Finished==1)
+```
+
+```{r}
+df_weights %>% # guardar id finales
+  select(ticket) %>% 
+  xlsx::write.xlsx("output/id_ola1.xlsx")
+```
+
+```{r}
+summary(df_weights$Duration__in_seconds_)/60 #mediana de tiempo de encuesta
+```
