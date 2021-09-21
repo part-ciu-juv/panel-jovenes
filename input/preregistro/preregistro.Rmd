@@ -1,0 +1,568 @@
+---
+title: "Participación Ciudadana Juvenil: Entre la reproducción social y la socialización política"
+# css: "input/css/custom.css" # custom CSS para html
+linestretch: '1.5'          # interlineado
+link-citations: yes         # citas linkeadas
+author:
+- name: Daniel Miranda
+  affiliation: Pontificia Universidad Católica de Chile
+  email: damiran1@uc.cl
+  number: 1,2
+- name: Julio César Iturra
+  affiliation: Centro de Estudio de Conflicto y Cohesión Social
+  number: 2
+- name: Anais herrera
+  affiliation: Universidad de Chile
+  number: 3
+# Nota: Autores que comparten filiacion, poner el mismo number y declarar filiación una sola vez.
+output:
+  bookdown::pdf_document2:
+    template: null
+    toc: false
+    keep_tex: false
+    pandoc_args:
+      - --template=mytemplate.tex #custom template para usar autores con afiliacion
+  bookdown::html_document2:
+    number_sections: false
+linkcolor: blue                         # enlaces y citas en color azul
+bibliography: C:/Users/Julio/Dropbox/Bibtex/zlibrary.bib     # bibliografia en bibtex
+csl: "../bib/apa7-singlespace.csl"
+editor_options:
+  chunk_output_type: console            # en RStudio, mostrar output en consola
+geometry: "left=2cm,right=2cm,top=3cm,bottom=3cm" # márgenes de página
+header-includes:
+  - \usepackage[spanish,es-tabla,es-nodecimaldot]{babel}
+  - \usepackage{times}           # Times New Roman
+  - \usepackage{caption}
+  - \captionsetup[figure, table]{labelfont={bf},labelformat={default},labelsep=period}
+  - \usepackage{graphicx}
+  - \usepackage{float}
+  - \usepackage{booktabs}
+  - \usepackage{longtable}
+  - \usepackage{array}
+  - \usepackage{multirow}
+  - \usepackage{wrapfig}
+  - \usepackage{float}
+  - \usepackage{colortbl}
+  - \usepackage{pdflscape}
+  - \usepackage{tabu}
+  - \usepackage{threeparttable}
+---
+
+```{r setup, include=FALSE}
+if (!require("pacman")) install.packages("pacman")  #si falta pacman, instalar
+if (!require("tinytex")) install.packages("tinytex")#si falta tinytex, instalar
+pacman::p_load(knitr, kableExtra, dplyr, ggplot2,sjmisc,texreg) # librerias
+knitr::opts_chunk$set(warning = FALSE,  # mensaje de warning
+                      message = FALSE,  # mensajes/avisos de librerias
+                      cache = FALSE,    # cache de los chunks,usar analisis pesados
+                      out.width = '85%',# largo de imagen en %
+                      fig.pos= "H",     # posicion figuras H = HERE
+                      echo = FALSE      # incluir chunk en output
+                      )
+options(scipen=999) # notacion cientifica
+rm(list=ls())       # limpiar workspace
+options(knitr.kable.NA = '') # NA en kable = ''
+table_format = if(is_html_output()) { # Usar en argumento "format=" de kable
+  "html"
+} else if(is_latex_output()) {
+  "latex"
+}
+fwidth = if(is_html_output()) { #Usar en argumento "full_width" de kableExtra
+  T
+} else if(is_latex_output()) {
+  F
+}
+```
+
+### Resumen {-}
+
+A pesar de la importancia de la persistente desigualdad política y los bajos niveles de involucramiento ciudadano juvenil no se sabe demasiado acerca de cómo los procesos de socialización reproducen y/o socializan estas desigualdades de una generación a otra. A este respecto, aunque es innegable la importancia de varios agentes de socialización política, como la escuela, existe un amplio consenso que plantea que el principal agente socializador de esta dimensión de la vida es la familia. Sin embargo, existen aún varios elementos necesarios de profundizar para comprender mejor el rol de la familia para el desarrollo de las formas de involucramiento ciudadano de los jóvenes. Primero, no es claro aún si esta transmisión se produce de igual manera con los diferentes tipos de participación. Segundo, si bien la transmisión de ventajas comparativas ha sido abordada ampliamente desde la sociología, expresado por ejemplo en el estudio de la transmisión del logro educacional o el estudio de la reproducción social, existe limitada evidencia acerca de cuáles son los mecanismos a través de los cuales opera esta transmisión en el ámbito político. Finalmente, no es claro si los efectos que tienen las condiciones socioeconómicas y/o las prácticas de socialización en edades tempranas se sostienen a lo largo del tiempo.
+
+Este estudio trata acerca de la siguiente pregunta de investigación general: ¿Cuáles son los factores y mecanismos que explican la transmisión intergeneracional de la desigualdad política? Para responder esta pregunta global se analizará el rol que cumplen tanto las características socioeconómicas como las prácticas de socialización política de la familia para el desarrollo de diferentes tipos de participación ciudadana que manifiestan los jóvenes, tales como participación formal, participación activista y/o participación comunitaria. Adicionalmente, se evaluará la estabilidad o cambio de estas fuentes de socialización en diferentes momentos del desarrollo juvenil.
+
+Esta propuesta de investigación busca integrar dos perspectivas sociológicas a través de un modelo, para comprender la participación ciudadana juvenil en sus distintas formas. Por un lado, una perspectiva normativista vinculada a la formación para la ciudadanía desde los agentes de socialización política. Por otro lado, una perspectiva fundada en el rol de los factores socioeconómicos y la transmisión del estatus. Estas dos literaturas se han desarrollado en general de manera separada, observándose poco diálogo entre ellas. En síntesis, se estudiará la asociación entre las condiciones socioeconómicas de origen familiar con los diferentes tipos de participación de la siguiente generación, el rol mediador que tienen las prácticas de socialización política de la familia y el estatus adquirido por los jóvenes a través de la socialización familiar; y también, la estabilidad que tienen dichos procesos.
+
+
+# Preregistro
+
+## ¿Se han recogido ya algunos datos para este estudio?
+
+Los datos de este estudio no han sido recogidos. La muestra planificada corresponde a jóvenes chilenos con edad entre 18 y 30 años. El diseño del estudio posee carácter longitudinal y se implementará una serie de preguntas de carácter retrospectivo con el objetivo de caracterizar la conducta política, recursos culturales y socioeconómicos de los jóvenes y sus familias durante el periodo que refiere a sus estudios secundarios, terciarios  y en periodos recientes.
+
+Incorporar dimensión o definición del concepto prospectivo en el estudio longitudinal.
+
+Previo al levantamiento del estudio, se realizó un estudio piloto entre el 25 de mayo y el 16 de junio de 2021 (_n_= 148). El objetivo central del piloto fue identificar la mediana de tiempo de respuesta del estudio (29,8 minutos) y el análisis de las propiedades métricas de las escalas principales del estudio.
+
+
+## ¿Cuál es la pregunta principal que se hace o la hipótesis que se comprueba en este estudio?
+
+
+
+1. Cuáles son los factores y mecanismos que explican la transmisión intergeneracional de la desigualdad política?
+    1. ¿En qué medida la asociación entre condiciones socioeconómicas de la familia con diferentes tipos de participación ciudadana se produce de manera indirecta, a través de la transmisión de los recursos de una generación a otra?
+    2. ¿En qué medida la asociación entre condiciones socioeconómicas de la familia con diferentes tipos de participación ciudadana se produce de manera indirecta, como una propensión de las familias a socializar políticamente de la siguiente generación?
+    3. ¿En qué medida los procesos directos y/o indirectos de la transmisión intergeneracional de la desigualdad política son persistentes en el tiempo?
+
+**Hipótesis de recursos (directas)**
+
+**$H_1$: **Jóvenes que provienen de familias con mayores recursos socioeconómicos presentan mayores niveles de participación ciudadana.
+
+**$H_{1a}$: **Jóvenes que obtienen mejores posiciones en el mercado laboral y/o mayores credenciales educacionales presentarán mayores niveles de participación ciudadana tradicional.
+
+**Hipótesis de reproducción de estatus (mediación)**
+
+**$H_{2}$: **Jóvenes que provienen de familias con mayores recursos socioeconómicos presentarán también mayores estatus y/o recursos socioeconómicos, y que dado el mayor estatus logrado presenten mayores niveles de participación ciudadana.
+
+**$H_{2a}$: **La reproducción del estatus presentará efectos mayores sobre participación formal o activista que sobre la participación de tipo comunitaria**.**
+
+**Hipótesis de socialización política familiar (directas)**
+
+**$H_{3}$:  **Jóvenes que crecen/crecieron en familias con mayores prácticas vinculadas a la socialización política presentarán mayores niveles de participación política.
+
+**$H_{3a}$: **Prácticas familiares de socialización política se vinculan en mayor medida con la participación de tipo comunitaria que con otras formas de participación política.
+
+**Hipótesis de estratificación de la socialización política (directa)**
+
+**$H_{4}$: **Los recursos socioeconómicos de los padres se asocian con mayores prácticas de socialización política al interior de la familia.
+
+**Hipótesis de persistencia de la socialización (longitudinal)**
+
+**$H_{5}$: **El efecto de los recursos socioeconómicos sobre la participación ciudadana sea similar en jóvenes menores de edad que en jóvenes mayores de edad.
+
+**$H_{6}$: **El rol mediador que juega el estatus socioeconómico logrado por los jóvenes sobre la participación ciudadana observado en cohortes más jóvenes se mantenga en edades posteriores.
+
+**$H_{7}$: **El rol mediador que juegan las prácticas de socialización familiar sobre la participación ciudadana observado en cohortes más jóvenes se mantenga en edades posteriores
+
+
+## Describa la(s) variable(s) dependiente(s) principal(es) especificando cómo se medirán
+
+Por un lado, el diseño del estudio hace necesario describir la medición de las variables dependientes según el tipo de participación y tiempo en que se desarrollan. Por un lado, tenemos preguntas de carácter retrospectivo, las cuales refieren a la participación política durante los últimos dos años de la educación secundaria[^1]. Por otro lado, se incluyen preguntas de participación política en períodos recientes, las cuales buscan determinar la participación política en dos momentos. La primera responde al periodo de protestas que ha sido denominado como “Estallido Social” que abarca entre octubre de 2019 y enero de 2020. En segunda instancia, se realizarán preguntas que buscan conocer la participación política de los jóvenes en el periodo entre marzo y diciembre de 2020. Además, se considera la participación en los diferentes procesos de votación durante los últimos años,  elecciones presidenciales,  el plebiscito constitucional y elecciones posteriores.
+
+Las variables independientes del estudio corresponden a la caracterización  socioeconómica de la familia de origen y a las prácticas de socialización familiar y escolar. Siguiendo la lógica retrospectiva, estas preguntas harán referencias a dichos aspectos del contexto familiar y escolar durante los últimos dos años de la educación secundaria. Por otro lado, se consideran las características socioeconómicas de los participantes y sus experiencias socialización posteriores al colegio (p.e. en instituciones de educación superior).
+
+
+### Ola 1: Participación Ciudadana
+
+La Tabla \@ref(tab:w1-3-4-part-liceo) muestra los indicadores que refieren a la participación política formal, activista y comunitaria durante los últimos dos años de la educación secundaria de los jóvenes. Además, se pueden observar los indicadores que representan las prácticas de socialización política en la escuela.
+
+<!-- **Tabla : Participación política en la escuela [AQUI]** -->
+
+```{r w1-3-4-part-liceo}
+ pacman::p_load(knitr,kableExtra,dplyr)
+ options(knitr.kable.NA = '') # NA en kable = ''
+ 
+ table01 <-
+   xlsx::read.xlsx(file = "participacion_jovenes.xlsx",
+                   sheetName = "w1_3_4_part_liceo",
+                   encoding = "UTF-8")
+ colnames <- c("Preguntas","Indicador","Respuestas")
+ caption <- "Participación política en la escuela"
+ knitr::kable(x = table01,
+              booktabs=T,
+              col.names = colnames, 
+              caption = caption,) %>% 
+   kableExtra::kable_styling(latex_options = "HOLD_position") %>% 
+   kableExtra::column_spec(column = 1,width = "3cm") %>% 
+   kableExtra::collapse_rows(columns = c(1,3)) 
+```
+
+La información sobre la participación en períodos recientes será recolectada en base a una serie de preguntas retrospectivas en el periodo reciente. En este sentido la Tabla \@ref(tab:w1-reciente-estallido) muestra las preguntas que refieren a la participación política durante el periodo del estallido social.
+
+<!-- **Tabla : Participación política durante Estallido social [AQUI]** -->
+
+```{r w1-reciente-estallido}
+pacman::p_load(knitr,kableExtra,dplyr)
+options(knitr.kable.NA = '') # NA en kable = ''
+
+table01 <-
+  xlsx::read.xlsx(file = "participacion_jovenes.xlsx",
+                  sheetName = "w1_reciente_estallido",
+                  encoding = "UTF-8")
+colnames <- c("Preguntas","Indicador","Respuestas")
+caption <- "Participación política durante Estallido social"
+knitr::kable(x = table01,
+             booktabs=T,
+             col.names = colnames, 
+             caption = caption,) %>% 
+  kableExtra::kable_styling(latex_options = "HOLD_position") %>% 
+  kableExtra::column_spec(column = 1,width = "3cm") %>% 
+  kableExtra::collapse_rows(columns = c(1,3)) 
+```
+
+La Tabla \@ref(tab:w1-reciente-plebis) muestra las preguntas referentes a la participación política entre el periodo de marzo a diciembre de 2020. Es posible observar, que las preguntas referentes a la participación política formal incluyen el plebiscito constitucional, elecciones constitucionales y municipales, además de la participación en la última elección presidencial de 2017 y la intención de voto de dicha elección para el año 2021.
+
+\pagebreak
+
+<!-- **Tabla : Participación política en plebiscito constitucional y elecciones [AQUI]** -->
+
+```{r w1-reciente-plebis}
+pacman::p_load(knitr,kableExtra,dplyr)
+options(knitr.kable.NA = '') # NA en kable = ''
+
+table01 <-
+  xlsx::read.xlsx(file = "participacion_jovenes.xlsx",
+                  sheetName = "w1_reciente_plebis",
+                  encoding = "UTF-8")
+colnames <- c("Preguntas","Indicador","Respuestas")
+caption <- "Participación política en plebiscito constitucional y elecciones"
+knitr::kable(x = table01,
+             booktabs=T,
+             col.names = colnames, 
+             caption = caption,) %>% 
+  kableExtra::kable_styling(latex_options = c("HOLD_position",
+                                              "scale_down")) %>% 
+  kableExtra::column_spec(column = 1,width = "6cm",) %>% 
+  kableExtra::collapse_rows(columns = c(1,2,3),valign = "top") 
+```
+
+**Caracterización socioeconómica**
+
+La pregunta de investigación principal refiere a los recursos y el nivel socioeconómico, tanto del individuo, como también de la familia de origen. Al igual que con la medición de la participación y socialización política, se incluirán una serie de preguntas de caracterización de los recursos culturales y estatus socioeconómico del individuo y de su familia de origen.
+
+**__Características socioeconómicas retrospectivas__**
+
+La Tabla \@ref(tab:w1-nse-familia) nos muestra la información que será recopilada a través de las preguntas de carácter retrospectivo, lo cual nos permite conocer el nivel de recursos y estatus socioeconómico de la familia de origen.
+
+<!-- **Tabla : Recursos y estatus socioeconómico de la familia de origen. [AQUI]** -->
+
+
+```{r w1-nse-familia}
+pacman::p_load(knitr,kableExtra,dplyr)
+options(knitr.kable.NA = '') # NA en kable = ''
+
+table01 <-
+  xlsx::read.xlsx(file = "participacion_jovenes.xlsx",
+                  sheetName = "w1_nse_familia",
+                  encoding = "UTF-8")
+colnames <- c("Variable","Preguntas","Indicador","Respuestas")
+caption <- "Recursos y estatus socioeconómico de la familia de origen"
+knitr::kable(x = table01,
+             linesep = "",
+             booktabs=T,
+             col.names = colnames, 
+             caption = caption,) %>% 
+  kableExtra::kable_styling(latex_options = c("HOLD_position",
+                                              "scale_down"),
+                            font_size = 8) %>% 
+  kableExtra::column_spec(column = 1,width = "2cm",) %>%   
+  kableExtra::column_spec(column = 2,width = "4cm",) %>%   
+  kableExtra::column_spec(column = 4,width = "10cm",) %>%  
+  kableExtra::collapse_rows(columns = c(1,2,4),valign = "top") 
+```
+
+\pagebreak
+
+**__Características socioeconómicas actuales__**
+
+Para la medición de los recursos y estatus socioeconómico, la Tabla \@ref(tab:w1-nse-individuo) muestra una serie de preguntas en torno al nivel educacional, ocupación, nivel de ingresos y libros en el hogar.
+
+<!-- **Tabla : Recursos y estatus socioeconómico del individuo. [AQUI]** -->
+
+```{r w1-nse-individuo}
+pacman::p_load(knitr,kableExtra,dplyr)
+options(knitr.kable.NA = '') # NA en kable = ''
+
+table01 <-
+  xlsx::read.xlsx(file = "participacion_jovenes.xlsx",
+                  sheetName = "w1_nse_individuo",
+                  encoding = "UTF-8")
+colnames <- c("Variable","Preguntas","Respuestas")
+caption <- "Recursos y estatus socioeconómico del individuo"
+knitr::kable(x = table01,
+             linesep = "",
+             booktabs=T,
+             col.names = colnames, 
+             caption = caption,
+             escape = T, 
+             longtable=T) %>% 
+  kableExtra::kable_styling(latex_options = c("hold_position",
+                                              "scale_down"),
+                              font_size = 8) %>% 
+  kableExtra::column_spec(column = 1,width = "2cm",) %>%   
+  kableExtra::column_spec(column = 2,width = "4cm",) %>%   
+  kableExtra::column_spec(column = 3,width = "10cm") %>%
+  kableExtra::collapse_rows(columns = c(1,2,3)) 
+```
+
+
+
+
+
+
+**Caracterización de prácticas de socialización política**
+
+En esta sección se muestran los indicadores que refieren a prácticas de socialización durante diferentes periodos. Primero, las Tablas \@ref(tab:w1-3-4-soci-liceo) y \@ref(tab:w1-3-4-soci-familia) caracterizan los últimos dos años de secundaria (p.e. participación política formal, activista y comunitaria de la familia de origen), luego en la Tabla \@ref(tab:w1-rec-estall-pleb-soci-fam) se caracterizan actividades familiares durante el periodo referido al estallido social, durante el año 2020, y finalmente en los últimos dos semestres de 2020. Se incorporaron indicadores independientes para padre y madre.
+
+<!-- **Tabla : Socialización política en la escuela [AQUI]** -->
+
+
+```{r w1-3-4-soci-liceo}
+pacman::p_load(knitr,kableExtra,dplyr)
+options(knitr.kable.NA = '') # NA en kable = ''
+
+table01 <-
+  xlsx::read.xlsx(file = "participacion_jovenes.xlsx",
+                  sheetName = "w1_3_4_soci_liceo",
+                  encoding = "UTF-8")
+colnames <- c("Preguntas","Item","Respuestas")
+caption <- "Socialización política en la escuela"
+knitr::kable(x = table01,
+             linesep = "",
+             booktabs=T,
+             col.names = colnames, 
+             caption = caption,
+             escape = T) %>% 
+  kableExtra::kable_styling(latex_options = c("HOLD_position",
+                                              "scale_down")) %>% 
+  kableExtra::column_spec(column = 1,width = "5cm") %>%   
+  kableExtra::column_spec(column = 2,width = "8cm") %>%   
+  kableExtra::column_spec(column = 3,width = "4cm") %>%   
+  kableExtra::collapse_rows(columns = c(1,2),valign = "top") 
+```
+
+<!-- **Tabla : Socialización política familiar durante educación secundaria [AQUI]** -->
+
+```{r w1-3-4-soci-familia}
+pacman::p_load(knitr,kableExtra,dplyr)
+options(knitr.kable.NA = '') # NA en kable = ''
+
+table01 <-
+  xlsx::read.xlsx(file = "participacion_jovenes.xlsx",
+                  sheetName = "w1_3_4_soci_familia",
+                  encoding = "UTF-8")
+colnames <- c("Preguntas","Item","Respuestas")
+caption <- "Socialización política familiar durante educación secundaria "
+knitr::kable(x = table01,
+             linesep = "",
+             booktabs=T,
+             col.names = colnames, 
+             caption = caption,
+             escape = T) %>% 
+  kableExtra::kable_styling(latex_options = c("hold_position",
+                                              "scale_down")) %>% 
+  kableExtra::column_spec(column = 1,width = "5cm") %>%   
+  kableExtra::column_spec(column = 2,width = "12cm") %>%   
+  kableExtra::column_spec(column = 3,width = "3cm") %>%   
+  kableExtra::collapse_rows(columns = c(1,2),valign = "top") 
+```
+
+<!-- **Tabla : Socialización política en la familia durante el estallido social y plebiscito 2020 [AQUI]** ??-->
+
+```{r w1-rec-estall-pleb-soci-fam}
+pacman::p_load(knitr,kableExtra,dplyr)
+options(knitr.kable.NA = '') # NA en kable = ''
+
+table01 <-
+  xlsx::read.xlsx(file = "participacion_jovenes.xlsx",
+                  sheetName = "w1_rec-estall-pleb-soci_fam",
+                  encoding = "UTF-8")
+colnames <- c("Preguntas","Item","Respuestas")
+caption <- "Socialización política familiar durante el estallido social y plebiscito 2020 "
+knitr::kable(x = table01,
+             linesep = "",
+             booktabs=T,
+             col.names = colnames, 
+             caption = caption,
+             escape = T) %>% 
+  kableExtra::kable_styling(latex_options = c("hold_position")) %>% 
+  kableExtra::column_spec(column = 1,width = "6cm") %>%   
+  kableExtra::column_spec(column = 2,width = "6cm") %>%   
+  kableExtra::collapse_rows(columns = c(1,2)) 
+```
+
+
+### Ola 2: Participación en Educación terciaria y primer semestre 2021
+
+Esta sección tiene por objetivo caracterizar la experiencia de aquellos encuestados que cursan o cursaron la educación terciaria (ver Tabla \@ref(tab:w2-educ-sup-parti)
+). Además, se incluyen una serie de indicadores que refieren a la participación y socialización política que también se encuentran presentes en la primera medición, pero en este caso se hace referencia al periodo reciente que abarca los primeros meses del año 2021.
+
+\pagebreak 
+
+<!-- **Tabla : Participación política en educación terciaria [AQUI] ** -->
+
+```{r w2-educ-sup-parti}
+pacman::p_load(knitr,kableExtra,dplyr)
+options(knitr.kable.NA = '') # NA en kable = ''
+
+table01 <-
+  xlsx::read.xlsx(file = "participacion_jovenes.xlsx",
+                  sheetName = "w2_educ_sup_parti",
+                  encoding = "UTF-8")
+colnames <- c("Preguntas","Item","Respuestas")
+caption <- "Participación política durante la educación terciaria"
+knitr::kable(x = table01,
+             linesep = "",
+             booktabs=T,
+             col.names = colnames,
+             caption = caption,
+             escape = T) %>%
+  kableExtra::kable_styling(latex_options = c("HOLD_position")) %>%
+  kableExtra::column_spec(column = 1,width = "3cm") %>%
+  kableExtra::collapse_rows(columns = c(1))
+```
+
+
+Adicionalmente a la participación, la Tabla \@ref(tab:w2-educ-sup-soci) incluye una serie de preguntas que buscan capturar las prácticas de socialización política al interior de los establecimientos de educación superior. Estas preguntas son de carácter retrospectivo para quienes han transitado o terminado el ciclo terciario de educación y de reporte actual para quienes siguen cursando el ciclo de estudios.
+
+<!-- **Tabla : Socialización política en educación terciaria [AQUI] ** -->
+
+```{r w2-educ-sup-soci}
+pacman::p_load(knitr,kableExtra,dplyr)
+options(knitr.kable.NA = '') # NA en kable = ''
+
+table01 <-
+  xlsx::read.xlsx(file = "participacion_jovenes.xlsx",
+                  sheetName = "w2_educ_sup_soci",
+                  encoding = "UTF-8")
+colnames <- c("Variable","Preguntas","Item","Respuestas")
+caption <- "Socialización política durante la educación terciaria"
+knitr::kable(x = table01,
+             linesep = "",
+             booktabs=T,
+             col.names = colnames, 
+             caption = caption,
+             escape = T) %>% 
+  kableExtra::kable_styling(latex_options = c("HOLD_position",
+                                              "scale_down")) %>% 
+  kableExtra::column_spec(column = 1,width = "2cm") %>% 
+  kableExtra::column_spec(column = 2,width = "5cm") %>%   
+  kableExtra::collapse_rows(columns = c(1,2),valign = "middle") 
+```
+
+
+En segunda instancia el cuestionario busca capturar la participación política durante los primeros meses del año 2021. En este sentido, la Tabla \@ref(tab:w2-s01-2021-part) muestra una serie de indicadores que refieren a los tres tipos de participación política que han sido incluidos en la primera medición, pero en este caso refieren al primer semestre de 2021.
+
+<!-- **Tabla : Participación y socialización política durante el primer semestre de 2021 [AQUI] ** -->
+
+```{r w2-s01-2021-part}
+pacman::p_load(knitr,kableExtra,dplyr)
+options(knitr.kable.NA = '') # NA en kable = ''
+
+table01 <-
+  xlsx::read.xlsx(file = "participacion_jovenes.xlsx",
+                  sheetName = "w2_s01_2021_part",
+                  encoding = "UTF-8")
+colnames <- c("Preguntas","Item","Respuestas")
+caption <- "Participación y socialización política durante el primer semestre de 2021"
+knitr::kable(x = table01,
+             linesep = "",
+             booktabs=T,
+             col.names = colnames, 
+             caption = caption,
+             escape = T) %>% 
+  kableExtra::kable_styling(latex_options = c("HOLD_position",
+                                              "scale_down")) %>% 
+  kableExtra::column_spec(column = 1,width = "5cm") %>%   
+  kableExtra::column_spec(column = 2,width = "11cm") %>%   
+  kableExtra::collapse_rows(columns = c(1,2)) 
+```
+
+
+<!-- **Tabla : Socialización política en la familia durante el primer semestre de 2021 [AQUI]** ??-->
+
+```{r}
+
+```
+
+
+<!-- **Tabla : Socialización política en la familia durante el segundo semestre de 2021 [AQUI]** ??-->
+
+```{r}
+
+```
+
+
+
+### Ola 3: Participación en segundo semestre de 2021
+
+En la tercera y última medición abordará la participación política de los jóvenes durante el segundo semestre de 2021, con un énfasis en la elección presidencial y en la intención de voto en el plebiscito de salida del proceso constitucional que se llevará a cabo en marzo del año 2022. La Tabla \@ref(tab:w3-s02-2021-part) muestra los indicadores para la participación política que ya han sido incluidos en las mediciones anteriores, en conjunto de la intención de voto.
+
+<!-- **Tabla :Participación política segundo semestre 2021 e intención de voto plebiscito constitucional [AQUI]** -->
+
+```{r w3-s02-2021-part}
+pacman::p_load(knitr,kableExtra,dplyr)
+options(knitr.kable.NA = '') # NA en kable = ''
+
+table01 <-
+  xlsx::read.xlsx(file = "participacion_jovenes.xlsx",
+                  sheetName = "w3_s02_2021_part",
+                  encoding = "UTF-8")
+colnames <- c("Preguntas","Item","Respuestas")
+caption <- "Participación política segundo semestre 2021 e intención de voto plebiscito constitucional"
+knitr::kable(x = table01,
+             linesep = "",
+             booktabs=T,
+             col.names = colnames, 
+             caption = caption,
+             escape = T) %>% 
+  kableExtra::kable_styling(latex_options = c("HOLD_position",
+                                              "scale_down")) %>% 
+  kableExtra::column_spec(column = 1,width = "5cm") %>%   
+  kableExtra::column_spec(column = 2,width = "10cm") %>%
+  kableExtra::collapse_rows(columns = c(1,2)) 
+```
+
+\pagebreak
+
+## Especifique exactamente qué análisis realizará para examinar la pregunta/hipótesis principal.
+
+Como ha sido descrito en la sección anterior, contamos con tres grupos de hipótesis referidas a los efectos directos, indirectos y longitudinales. Para desarrollar estos análisis se empleará un marco de Modelos de Ecuaciones Estructurales, dado que se incluirán variables observadas directamente y variables latentes, para participación y socialización política.
+
+Si bien el presente estudio no plantea hipótesis de medición, tanto las formas de participación política como la socialización política familiar pueden ser tratadas como factores o variables latentes [@brown_Confirmatory_2015]. Por esta razón, emplearemos un Análisis Factorial Exploratorio (CFA) para determinar las propiedades métricas de cada factor. Para evaluar la bondad de ajuste usaremos Comparative Fit Index (CFI), el Tucker-Lewis Index (TLI) y el Root Mean Square Error of Approximation (RMSEA), donde valores por sobre el 0,95 son aceptables para los primeros dos y valores por debajo de 0,05 para el último  [@brown_Confirmatory_2015,Cap. 3 y 4]. Alternativamente, en el caso de que el ajuste del análisis factorial confirmatorio no sea adecuado, se empleará un índice sumatorio simple de los indicadores de la escala o en su defecto indicadores simples.
+
+Primero, para abordar las hipótesis que sostienen un efecto directo (H1a y H1b) e indirecto (H2a y H2b) de los **recursos familiares** sobre la participación política de los jóvenes se estimará un modelo de **mediación cross-sectional** empleando la información reconstruida a través de las preguntas retrospectivas [@brown_Confirmatory_2015].
+
+En segunda instancia, las hipótesis de **socialización política familiar** (H3a y H3b) y de **reproducción de estatus** (H4) serán modeladas a través de un modelo de ecuaciones estructurales donde las prácticas de socialización política son especificadas como variables latentes.
+
+En último lugar, las hipótesis longitudinales de **persistencia de socialización** (H5, H6 y H7) se estimará un modelo de **mediación longitudinal.**
+
+**Software:**
+
+El análisis estadístico se realizará empleando el paquete estadístico R en su versión 4.0 [@rcoreteam_language_2019] y la librería lavaan [@Rosseel2012]. De manera complementaria, se empleará el software MPlus [@muthen_Mplus_2017]
+
+## ¿Hay análisis secundarios?
+
+**Ajustes adicionales**
+
+Las estimaciones de los modelos de ecuaciones estructurales serán ponderadas. El ajuste de las estimaciones se basa en las macrozonas, género, grupos de edad y nivel educacional, siguiendo los datos agregados del Censo Abreviado de Población y Vivienda del año 2017 implementado por el Instituto Nacional de Estadísticas de Chile (INE).
+
+
+## ¿Cuántas observaciones se recogerán o qué determinará el tamaño de la muestra? No es necesario justificar la decisión, pero hay que ser preciso sobre cómo se determinará exactamente el número.
+
+La estrategia de muestreo es no probabilística por cuotas según género, edad y nivel educacional. La proporción para cada cuota se determinó en base a los resultados ajustados empleando el diseño muestral complejo de la Encuesta de Caracterización Socioeconómica Nacional (CASEN) del año 2017, la cual es realizada por el Ministerio de Desarrollo Social de Chile. La Tabla \@ref(tab:quotas) muestra el detalle de la proporción de las cuotas para la primera ola del estudio.
+
+<!-- **Tabla : Distribución de cuotas según sexo, edad y nivel educacional. [AQUI]** -->
+
+```{r quotas}
+pacman::p_load(knitr,kableExtra,dplyr)
+options(knitr.kable.NA = '') # NA en kable = ''
+
+table01 <-
+  xlsx::read.xlsx(file = "participacion_jovenes.xlsx",
+                  sheetName = "quotas",
+                  encoding = "UTF-8")
+colnames <- c("Categoría","%","N")
+caption <- "Distribución de cuotas según sexo, edad y nivel educacional"
+knitr::kable(x = table01,
+             linesep = "",
+             booktabs=T,
+             col.names = colnames, 
+             caption = caption,
+             escape = T) %>% 
+  kableExtra::kable_styling(latex_options = c("hold_position"))
+```
+
+**¿Algo más que desee registrar previamente? (por ejemplo, exclusiones de datos, variables recogidas con fines exploratorios, análisis inusuales previstos...)**
+
+Siguiendo las recomendaciones de la _American Association for Public Opinion Research_ (AAPOR, 2016), seguiremos criterios estándar de exclusión de casos. En particular se excluirán de los análisis aquellos casos que cumplan con las siguientes condiciones:
+
+* Individuos que no aceptan participar
+* Casos incompletos o con información insuficiente.
+* Casos que son expulsados del cuestionario por cuota completa.
+* Casos con IP duplicadas (se conserva el caso que ingresa primero).
+
+
+[^1]: En el sistema educacional chileno la educación secundaria es denominada Educación Media, la cual consta de cuatro niveles. En este estudio se aborda la experiencia de participación política durante el tercer y cuarto año de este ciclo.
+
+# Referencias bibliográficas
