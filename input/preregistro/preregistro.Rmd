@@ -16,14 +16,14 @@ author:
   number: 3
 # Nota: Autores que comparten filiacion, poner el mismo number y declarar filiación una sola vez.
 output:
+  bookdown::html_document2:
+    number_sections: false
   bookdown::pdf_document2:
     template: null
     toc: false
     keep_tex: false
     pandoc_args:
       - --template=mytemplate.tex #custom template para usar autores con afiliacion
-  bookdown::html_document2:
-    number_sections: false
 linkcolor: blue                         # enlaces y citas en color azul
 bibliography: C:/Users/Julio/Dropbox/Bibtex/zlibrary.bib     # bibliografia en bibtex
 csl: "../bib/apa7-singlespace.csl"
