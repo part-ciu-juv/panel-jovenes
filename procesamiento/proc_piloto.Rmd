@@ -25,7 +25,6 @@ knitr::opts_chunk$set(warning = FALSE,
 options(scipen=999)
 rm(list=ls())
 options(knitr.kable.NA = '')
-# .rs.restartR()
 ```
 
 ```{css, echo=FALSE}
@@ -57,7 +56,6 @@ pacman::p_load(dplyr,       # Manipulacion de datos
                corrplot,    # plot correlacion
                survey
                )
-
 ```
 
 # Datos
@@ -66,8 +64,8 @@ pacman::p_load(dplyr,       # Manipulacion de datos
 df_wave01 <- 
   haven::read_sav(file = "input/data/original/Ola_1.sav")
 
-df_wave02 <- 
-  haven::read_sav(file = "input/data/original/Ola_2.sav")
+df_piloto <- 
+  haven::read_sav(file = "input/data/original/Ola_1_Piloto.sav")
 ```
 
 # Preparación
