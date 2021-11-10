@@ -77,6 +77,11 @@ df_weights <-
   df_wave01 %>% 
   filter(ci==1,Finished==1)
 
+df_weights2 <- 
+  df_wave02 %>% 
+  filter(Finished==1)
+
+
 df_piloto2 <- 
   df_piloto %>% 
   filter(Q83==4,Finished==1)
@@ -87,6 +92,10 @@ df_weights %>% # guardar id finales
   select(ticket) %>% 
   xlsx::write.xlsx("output/id_ola1.xlsx")
 
+df_weights2 %>% # guardar id finales
+  select(ticket) %>% 
+  xlsx::write.xlsx("output/id_ola2.xlsx")
+
 df_piloto2 %>% # guardar id finales piloto
   select(ticket,Q15_1) %>% 
   filter(!is.na(Q15_1)) %>% 
@@ -96,4 +105,5 @@ df_piloto2 %>% # guardar id finales piloto
 
 ```{r}
 summary(df_weights$Duration__in_seconds_)/60 #mediana de tiempo de encuesta
+summary(df_weights2$Duration__in_seconds_)/60 #mediana de tiempo de encuesta
 ```

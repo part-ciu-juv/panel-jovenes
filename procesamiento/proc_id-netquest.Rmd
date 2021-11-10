@@ -66,6 +66,8 @@ load(url("https://github.com/jciturras/data-chile/blob/main/data/censo-2017/cens
 save(censo2017,file = "input/data/original/censo2017.RData")
 
 df_wave01 <- haven::read_sav(file = "input/data/original/Ola_1.sav")
+df_wave02 <- haven::read_sav(file = "input/data/original/Ola_2.sav")
+
 ```
 
 # Preparación
