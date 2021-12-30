@@ -1,0 +1,556 @@
+---
+title: "Youth Citizen Participation: Between social reproduction and political socialisation"
+# css: "input/css/custom.css" # custom CSS para html
+linestretch: '1.5'          # interlineado
+link-citations: yes         # citas linkeadas
+author:
+- name: Daniel Miranda
+  affiliation: Pontificia Universidad Católica de Chile
+  email: damiran1@uc.cl
+  number: 1,2
+- name: Julio Iturra
+  affiliation: Centro de Estudio de Conflicto y Cohesión Social
+  number: 2
+- name: Anaís Herrera-Leighton
+  affiliation: Universidad de Chile
+  number: 3
+# Nota: Autores que comparten filiacion, poner el mismo number y declarar filiación una sola vez.
+output:
+  bookdown::pdf_document2:
+    template: null
+    toc: false
+    keep_tex: false
+    pandoc_args:
+      - --template=mytemplate.tex #custom template para usar autores con afiliacion
+  bookdown::html_document2:
+    number_sections: false
+linkcolor: blue                         # enlaces y citas en color azul
+bibliography: "../bib/referencias.bib"     # bibliografia en bibtex
+csl: "../bib/apa7-singlespace.csl"
+editor_options:
+  chunk_output_type: console            # en RStudio, mostrar output en consola
+geometry: "left=2cm,right=2cm,top=3cm,bottom=3cm" # márgenes de página
+header-includes:
+  - \usepackage[spanish,es-tabla,es-nodecimaldot]{babel}
+  - \usepackage{times}           # Times New Roman
+  - \usepackage{caption}
+  - \captionsetup[figure, table]{labelfont={bf},labelformat={default},labelsep=period}
+  - \usepackage{graphicx}
+  - \usepackage{float}
+  - \usepackage{booktabs}
+  - \usepackage{longtable}
+  - \usepackage{array}
+  - \usepackage{multirow}
+  - \usepackage{wrapfig}
+  - \usepackage{float}
+  - \usepackage{colortbl}
+  - \usepackage{pdflscape}
+  - \usepackage{tabu}
+  - \usepackage{threeparttable}
+---
+ 
+````{r setup, include=FALSE}
+if (!require("pacman")) install.packages("pacman") #if pacman is missing, 
+if (!require("tinytex")) install.packages("tinytex")#if tinytex is missing, 
+pacman::p_load(knitr, kableExtra, dplyr, ggplot2,sjmisc,texreg) # libraries
+knitr::opts_chunk$set(warning = FALSE, # warning message
+                      message = FALSE, # library messages/warnings
+                      cache = FALSE, # cache the 
+                      out.width = '85%',# image length in %.
+                      fig.pos= "H", # position figures H = HERE
+                      echo = FALSE # include chunk in output
+                      )
+options(scipen=999) # scientific notation
+rm(list=ls()) # clean workspace
+options(knitr.kable.NA = '') # NA in kable = '') # NA in kable = '')
+table_format = if(is_html_output()) { # Use in "format=" argument of kable
+  "html"
+} else if(is_latex_output()) {
+  "latex" 
+  }
+fwidth = if(is_html_output()) { #Use in "full_width" argument of kableExtra
+  T
+} else if(is_latex_output()) {
+  F
+}
+```
+ 
+### Summary {-}
+ 
+The persistence of inequalities in political participation and their corresponding intergenerational transmission, keep open a series of questions about how socialisation processes reproduce and/or socialise these inequalities from one generation to the next. In this respect, although the importance of various agents of political socialisation is undeniable, there is a broad consensus that the main socialising agent of this dimension of life is the family. However, there are still several elements that need to be explored further in order to better understand the role of the family in the development of young people's forms of civic involvement. First, it is not yet clear whether this transmission occurs in the same way with different types of participation. Second, while the transmission of comparative advantage has been widely addressed in sociology, for example in the study of the transmission of educational attainment or the study of social reproduction, there is limited evidence about the mechanisms through which this transmission operates in the political sphere. Finally, it is not clear whether the effects of socio-economic conditions and/or socialisation practices at early ages are sustained over time.
+ 
+This study addresses the following general research question: What are the factors and mechanisms that explain the intergenerational transmission of political inequality? To answer this overarching question, the role of both socio-economic characteristics and family political socialisation practices in the development of different types of civic participation by young people, such as formal participation, activist participation and/or community participation, will be analysed. Additionally, the stability or change of these sources of socialisation at different moments of youth development will be assessed.
+ 
+This research proposal seeks to integrate two sociological perspectives through a model to understand youth citizen participation in its different forms. On the one hand, a normativist perspective linked to training for citizenship from theagents of political socialisation. On the other hand, a perspective based on therole of socio-economic factors and the transmission of status. In short, we willstudy the association between the socio-economic conditions of family originwith the different types of participation of the next generation, the mediating role of the family's political socialisation practices and the status acquired by young people through family socialisation, and also the stability of theseprocesses.
+ 
+ 
+# Pre-registration
+ 
+## Has any data already been collected for this study?
+ 
+The data for this study have not been fully collected. The planned sample corresponds to young Chileans aged between 18 and 30. The study design has a longitudinal character of three measurements:
+ 
+Wave 1: started on 19 July 2021
+Wave 2: started on 04 October 2021
+Wave 3: started on 30 December 2021
+ 
+During the first measurement, a series of retrospective questions are implemented in order to characterise the political behaviour, cultural and socio-economic resources of young people and their families during the period of their secondary and tertiary education and in recent periods. The following measures characterise political behaviour and attitudes during the recent period (first and second half of 2021, respectively).
+ 
+Prior to the survey, a pilot study was conducted between 25 May and 16 June 2021 (_n_= 148). The main objective of the pilot was to identify the median response time of the study (29.8 minutes) and the analysis of the metric properties of the main scales of the study.
+ 
+ 
+## What is the main question being asked or hypothesis being tested in this study?
+ 
+1. What are the factors and mechanisms that explain the intergenerational transmission of political inequality?
+2. To what extent does the association between family socio-economic conditions and different types of civic participation occur indirectly, through the transmission of resources from one generation to the next?
+3. To what extent does the association between family socio-economic conditions and different types of civic participation occur indirectly, as a propensity of families to politically socialise the next generation?
+4. To what extent are the direct and/or indirect processes of intergenerational transmission of political inequality persistent over time?
+ 
+**Resource assumptions (direct)**
+
+**$H_1$: **Young people who come from families with greater socio-economic resources have higher levels of civic participation.
+ 
+**$H_{1a}$: **Young people who obtain better labour market positions and/or higher educational credentials will exhibit higher levels of traditional civic participation.
+ 
+**Status reproduction hypothesis (mediation)**.
+ 
+**$H_{2}$: **Young people who come from families with higher socio-economic resources will also present higher status and/or socio-economic resources, and that given the higher status achieved will present higher levels of civic participation.
+ 
+**$H_{2a}$:**Status replication will have greater effects on formal or activist 
+participation than on community-type participation.
+ 
+**Family political socialisation hypotheses (direct)**.
+ 
+**$H_{3}$:** Young people who grow up/grew up in families with higher practiceslinked to political socialisation will present higher levels of political participation.
+ 
+**$H_{3a}$:**Family practices of political socialisation are linked to a greater extent with community-type participation than with other forms of political participation.
+ 
+**Political socialisation stratification hypothesis (direct)**.
+ 
+**$H_{4}$:**Parental socio-economic resources are associated with greater political socialisation practices within the family.
+ 
+**Socialisation persistence hypothesis (longitudinal)**
+
+**$H_{5}$:**The effect of socio-economic resources on civic participation is  similar for younger youth than for older youth.
+ 
+**$H_{6}$:**The mediating role played by the socio-economic status achieved by young people on civic participation observed in younger cohorts is maintained at later ages.
+ 
+**$H_{7}$:**The mediating role played by family socialisation practices on civic participation observed in younger cohorts is maintained at later ages.
+ 
+ 
+## Describe the main dependent variable(s), specifying how they will be measured
+ 
+On the one hand, the study design makes it necessary to describe the measurement of the dependent variables according to the type of participation and time in which they are developed. Retrospective questions are available, which refer to political participation during the last two years of secondary education[^1]. On the other hand, questions on political participation in recent periods are included, which seek to determine political participation at two points in time. The first responds to the period of protests that has been referred to as the "Estallido Social", which runs from October 2019 to January 2020. Secondly, questions will be asked about the political participation of young people in the period between March and December 2020. Finally, questions will be asked about processes of socialisation and political participation during the first and second half of 2021. In addition, participation in the different voting processes during the last few years, presidential elections, the constitutional plebiscite and subsequent elections will be considered.
+ 
+The independent variables of the study correspond to the socio-economic characterisation of the family of origin and family and school socialisation practices. Following the retrospective logic, these questions will refer to these aspects of the family and school context during the last two years of secondary education. On the other hand, the socio-economic characteristics of the participants and their post-school socialisation experiences (e.g. in higher education institutions) are considered.
+ 
+ 
+### Wave 1: Citizen Participation
+ 
+Table \@ref(tab:w1-3-4-part-liceo) shows the indicators that refer to formal, activist and community political participation during the last two years of young people's secondary education. In addition, indicators representing political socialisation practices at school can be observed.
+ 
+<!-- **Table : Political participation in schools ** --> 
+ 
+````{r w1-3-4-part-liceo}
+ pacman::p_load(knitr,kableExtra,dplyr)
+ options(knitr.kable.NA = '') # NA in kable = '') # NA in kable = '')
+ 
+ table01 <-
+   xlsx::read.xlsx(file = "participacion_jovenes.xlsx",
+                   sheetName = "w1_3_4_part_liceo",
+                   encoding = "UTF-8")
+ colnames <- c("Questions", "Indicator", "Answers")
+ caption <- "Political participation at school"
+ knitr::kable(x = table01,
+              booktabs=T,
+              col.names = colnames, 
+              caption = caption) %>% 
+   kableExtra::kable_styling(latex_options = "HOLD_position") %>%
+   kableExtra::column_spec(column = 1,width = "3cm") %>%
+   kableExtra::collapse_rows(columns = c(1,3)) 
+```
+ 
+Information on participation in recent periods will be collected on the basis of a series of retrospective questions in the recent period. In this sense, Table \@ref(tab:w1-recent-stalled) shows the questions that refer to political participation during the period of the social upheaval.
+ 
+<!-- **Table : Political participation during Social Outburst ** --> 
+ 
+````{r w1-recent-stalled}
+pacman::p_load(knitr,kableExtra,dplyr)
+options(knitr.kable.NA = '') # NA in kable = '') # NA in kable = '')
+ 
+table01 <-
+  xlsx::read.xlsx(file = "participacion_jovenes.xlsx",
+                  sheetName = "w1_reciente_estallido",
+                  encoding = "UTF-8")
+colnames <- c("Questions", "Indicator", "Answers")
+caption <- "Political participation during social unrest"
+knitr::kable(x = table01,
+             booktabs=T,
+             col.names = colnames, 
+             caption = caption) %>%
+  kableExtra::kable_styling(latex_options = "HOLD_position") %>% 
+  kableExtra::column_spec(column = 1,width = "3cm") %>%
+  kableExtra::collapse_rows(columns = c(1,3)) 
+```
+ 
+Table \@ref(tab:w1-recent-plebis) shows the questions on political participation between March and December 2020. It is possible to observe that the questions concerning formal political participation include the constitutional plebiscite, constitutional and municipal elections, as well as participation in the last presidential election in 2017 and the intention to vote in that election for the year 2021.
+ 
+\pagebreak
+ 
+<!-- **Table : Political participation in constitutional plebiscite and 
+elections ** --> 
+````{r w1-recent-plebis}
+pacman::p_load(knitr,kableExtra,dplyr)
+options(knitr.kable.NA = '') # NA in kable = '') # NA in kable = '')
+ 
+table01 <-
+  xlsx::read.xlsx(file = "participacion_jovenes.xlsx",
+                  sheetName = "w1_reciente_plebis",
+                  encoding = "UTF-8")
+colnames <- c("Questions", "Indicator", "Answers")
+caption <- "Political participation in constitutional plebiscite and elections"
+knitr::kable(x = table01,
+             booktabs=T,
+             col.names = colnames, 
+             caption = caption) %>% 
+  kableExtra::kable_styling(latex_options = c("HOLD_position",
+                                              "scale_down")) %>% 
+  kableExtra::column_spec(column = 1,width = "6cm",) %>% 
+  kableExtra::collapse_rows(columns = c(1,2,3),valign = "top") 
+```
+ 
+**Socio-economic characterisation**
+ 
+The main research question concerns the resources and socio-economic status of both the individual and the family of origin. As with the measurement of political participation and socialisation, a series of questions will be included to characterise the cultural resources and socio-economic status of the individual and his/her family of origin.
+ 
+**Retrospective socio-economic characteristics**
+ 
+Table \@ref(tab:w1-nse-family) shows the information that will be collected through the retrospective questions, which allows us to know the level of resources and socio-economic status of the family of origin.
+ 
+<!-- **Table : Resources and socio-economic status of the family of origin. ** --> 
+ 
+ 
+````{r w1-nse-family}
+pacman::p_load(knitr,kableExtra,dplyr)
+options(knitr.kable.NA = '') # NA in kable = '') # NA in kable = '')
+ 
+table01 <-
+  xlsx::read.xlsx(file = "participacion_jovenes.xlsx",
+                  sheetName = "w1_nse_familia",
+                  encoding = "UTF-8")
+colnames <- c("Variable", "Questions", "Indicator", "Answers")
+caption <- "Resources and socio-economic status of the family of origin"
+knitr::kable(x = table01,
+             linesep = "",
+             booktabs=T,
+             col.names = colnames, 
+             caption = caption) %>%
+  kableExtra::kable_styling(latex_options = c("HOLD_position",
+                                              "scale_down"),
+                            font_size = 8) %>%
+  kableExtra::column_spec(column = 1,width = "2cm") %>%   
+  kableExtra::column_spec(column = 2,width = "4cm") %>%   
+  kableExtra::column_spec(column = 4,width = "10cm") %>%  
+  kableExtra::collapse_rows(columns = c(1,2,4),valign = "top") 
+```
+ 
+\pagebreak
+ 
+**Current socio-economic characteristics**
+ 
+For the measurement of socio-economic status and resources, Table \@ref(tab:w1-nse-individual) shows a series of questions around educational level, occupation, income level and books in the household.
+ 
+<!-- **Table : Resources and socio-economic status of the individual. ** --> 
+ 
+````{r w1-nse-individual}
+pacman::p_load(knitr,kableExtra,dplyr)
+options(knitr.kable.NA = '') # NA in kable = '') # NA in kable = '')
+ 
+table01 <-
+  xlsx::read.xlsx(file = "participacion_jovenes.xlsx",
+                  sheetName = "w1_nse_individuo",
+                  encoding = "UTF-8")
+colnames <- c("Variable", "Questions", "Answers")
+caption <- "Resources and socio-economic status of the individual"
+knitr::kable(x = table01,
+             linesep = "",
+             booktabs=T,
+             col.names = colnames, 
+             caption = caption,
+             escape = T, 
+             longtable=T) %>%
+  kableExtra::kable_styling(latex_options = c("hold_position",
+                                              "scale_down"),
+                              font_size = 8) %>%  
+  kableExtra::column_spec(column = 1,width = "2cm",) %>%   
+  kableExtra::column_spec(column = 2,width = "4cm",) %>%   
+  kableExtra::column_spec(column = 3,width = "10cm") %>%
+kableExtra::column_spec(column = 3,width = "10cm") %>%
+  kableExtra::collapse_rows(columns = c(1,2,3)) 
+```
+ 
+ 
+**Characterisation of political socialisation practices**
+ 
+In this section, indicators referring to socialisation practices during different periods are shown. First, Tables \@ref(tab:w1-3-4-soci-ice) and\@ref(tab:w1-3-4-soci-family) characterise the last two years of secondary school (e.g. formal political, activist and community involvement of the familyof origin), then Table \@ref(tab:w1-rec-estall-pleb-soci-fam) characterises family activities during the period referring to the social outburst, during the year 2020, and finally in the last two semesters of 2020. Separate indicatorsfor father and mother were incorporated.
+<!-- **Table : Political socialisation in schools ** --> 
+ 
+ 
+````{r w1-3-4-soci-ice}
+pacman::p_load(knitr,kableExtra,dplyr)
+options(knitr.kable.NA = '') # NA in kable = '') # NA in kable = '')
+ 
+table01 <-
+  xlsx::read.xlsx(file = "participacion_jovenes.xlsx",
+                  sheetName = "w1_3_4_soci_liceo",
+                  encoding = "UTF-8")
+colnames <- c("Questions", "Item", "Answers")
+caption <- "Political socialisation at school"
+knitr::kable(x = table01,
+             linesep = "",
+             booktabs=T,
+             col.names = colnames, 
+             caption = caption,
+             escape = T) %>% 
+  kableExtra::kable_styling(latex_options = c("HOLD_position",
+                                              "scale_down")) %>% 
+  kableExtra::column_spec(column = 1,width = "5cm") %>%
+kableExtra::column_spec(column = 1,width = "5cm") %>%   
+  kableExtra::column_spec(column = 2,width = "8cm") %>%
+kableExtra::column_spec(column = 2,width = "8cm") %>%   
+  kableExtra::column_spec(column = 3,width = "4cm") %>%
+kableExtra::column_spec(column = 3,width = "4cm") %>%   
+  kableExtra::collapse_rows(columns = c(1,2),valign = "top") 
+```
+ 
+<!-- **Table : Family political socialisation during secondary school education 
+** --> 
+````{r w1-3-4-soci-family}
+pacman::p_load(knitr,kableExtra,dplyr)
+options(knitr.kable.NA = '') # NA in kable = '') # NA in kable = '')
+ 
+table01 <-
+  xlsx::read.xlsx(file = "participacion_jovenes.xlsx",
+                  sheetName = "w1_3_4_soci_familia",
+                  encoding = "UTF-8")
+colnames <- c("Questions", "Item", "Answers")
+caption <- "Family political socialisation during secondary education"
+knitr::kable(x = table01,
+             linesep = "",
+             booktabs=T,
+             col.names = colnames, 
+             caption = caption,
+             escape = T) %>% 
+  kableExtra::kable_styling(latex_options = c("hold_position",
+                                              "scale_down")) %>%
+  kableExtra::column_spec(column = 1,width = "5cm") %>%
+  kableExtra::column_spec(column = 2,width = "12cm") %>% 
+  kableExtra::column_spec(column = 3,width = "3cm") %>% 
+  kableExtra::collapse_rows(columns = c(1,2),valign = "top") 
+```
+ 
+<!-- **Table : Political socialisation in the family during the social outburst 
+and the 2020 plebiscite ** ??-->
+ 
+````{r w1-rec-estall-pleb-soci-fam}
+pacman::p_load(knitr,kableExtra,dplyr)
+options(knitr.kable.NA = '') # NA in kable = '') # NA in kable = '')
+ 
+table01 <-
+  xlsx::read.xlsx(file = "participacion_jovenes.xlsx",
+                  sheetName = "w1_rec-estall-pleb-soci_fam",
+                  encoding = "UTF-8")
+colnames <- c("Questions", "Item", "Answers")
+caption <- "Family political socialisation during the social outburst and plebiscite 2020"
+knitr::kable(x = table01,
+             linesep = "",
+             booktabs=T,
+             col.names = colnames, 
+             caption = caption,
+             escape = T) %>% 
+  kableExtra::kable_styling(latex_options = c("hold_position")) %>% 
+  kableExtra::column_spec(column = 1,width = "6cm") %>%
+  kableExtra::column_spec(column = 2,width = "6cm") %>% 
+  kableExtra::collapse_rows(columns = c(1,2)) 
+```
+ 
+ 
+### Wave 2: Tertiary Education Characterisation and Participation first semester 2021
+ 
+This section aims to characterise the experience of those respondents who are or have been in tertiary education (see Table \@ref(tab:w2-educ-sup-parti).). In addition, a series of indicators are included that refer to political participation and socialisation that are also present in the first measurement, but in this case they refer to the recent period covering the first months of the year 2021.
+ 
+\pagebreak 
+ 
+<!-- **Table : Political participation and socialisation in tertiary education 
+ ** --> 
+ 
+````{r w2-educ-sup-parti}
+pacman::p_load(knitr,kableExtra,dplyr)
+options(knitr.kable.NA = '') # NA in kable = '') # NA in kable = '')
+ 
+table01 <-
+  xlsx::read.xlsx(file = "participacion_jovenes.xlsx",
+                  sheetName = "w2_educ_sup_parti",
+                  encoding = "UTF-8")
+colnames <- c("Questions", "Item", "Answers")
+caption <- "Political participation during tertiary education"
+knitr::kable(x = table01,
+             linesep = "",
+             booktabs=T,
+             col.names = colnames,
+             caption = caption,
+             escape = T) %>% 
+  kableExtra::kable_styling(latex_options = c("HOLD_position")) %>%
+  kableExtra::column_spec(column = 1,width = "3cm") %>%
+  kableExtra::collapse_rows(columns = c(1))
+```
+ 
+ 
+In addition to participation, Table \@ref(tab:w2-educ-sup-soci) includes a series of questions that seek to capture political socialisation practices within higher education institutions. These questions are retrospective in nature for those who have gone through or completed the tertiary cycle of education and current for those who are still in the cycle of studies.
+ 
+<!-- **Table : Political socialisation in tertiary education  ** --> 
+ 
+````{r w2-educ-sup-soci}
+pacman::p_load(knitr,kableExtra,dplyr)
+options(knitr.kable.NA = '') # NA in kable = '') # NA in kable = '')
+ 
+table01 <-
+  xlsx::read.xlsx(file = "participacion_jovenes.xlsx",
+                  sheetName = "w2_educ_sup_soci",
+                  encoding = "UTF-8")
+colnames <- c("Variable", "Questions", "Item", "Answers")
+caption <- "Political socialisation during tertiary education"
+knitr::kable(x = table01,
+             linesep = "",
+             booktabs=T,
+             col.names = colnames, 
+             caption = caption,
+             escape = T) %>% 
+  kableExtra::kable_styling(latex_options = c("HOLD_position",
+                                              "scale_down")) %>%
+  kableExtra::column_spec(column = 1,width = "2cm") %>%
+  kableExtra::column_spec(column = 2,width = "5cm") %>% 
+  kableExtra::collapse_rows(columns = c(1,2),valign = "middle") 
+```
+ 
+ 
+In the second instance, the questionnaire seeks to capture political participation during the first months of 2021. In this sense, Table  \@ref(tab:w2-s01-2021-part) shows a series of indicators that refer to the three  types of political participation that have been included in the first measurement, but in this case they refer to the first half of 2021.
+ 
+
+````{r w2-s01-2021-part}
+pacman::p_load(knitr,kableExtra,dplyr)
+options(knitr.kable.NA = '') # NA in kable = '') # NA in kable = '')
+ 
+table01 <-
+  xlsx::read.xlsx(file = "participacion_jovenes.xlsx",
+                  sheetName = "w2_s01_2021_part",
+                  encoding = "UTF-8")
+colnames <- c("Questions", "Item", "Answers")
+caption <- "Political participation and socialisation during the first half of 
+2021"
+knitr::kable(x = table01,
+             linesep = "",
+             booktabs=T,
+             col.names = colnames, 
+             caption = caption,
+             escape = T) %>% 
+  kableExtra::kable_styling(latex_options = c("HOLD_position",
+                                              "scale_down")) %>%
+  kableExtra::column_spec(column = 1,width = "5cm") %>%
+  kableExtra::column_spec(column = 2,width = "11cm") %>%
+  kableExtra::collapse_rows(columns = c(1,2)) 
+```
+ 
+ 
+### Wave 3: Participation in second half of 2021
+ 
+The third and final measurement will address the political participation of young people during the second half of 2021, with an emphasis on the presidential election and voting intentions in the exit plebiscite of the constitutional process to be held in March 2022. Table \@ref(tab:w3-s02-2021-part) shows the indicators for political participation that have already been included in previous measurements, together with voting intention.
+ 
+<!-- **Table :Political participation second semester 2021 and constitutional 
+plebiscite voting intentions ** --> 
+ 
+````{r w3-s02-2021-part}
+pacman::p_load(knitr,kableExtra,dplyr)
+options(knitr.kable.NA = '') # NA in kable = '') # NA in kable = '')
+ 
+table01 <-
+  xlsx::read.xlsx(file = "participacion_jovenes.xlsx",
+                  sheetName = "w3_s02_2021_part",
+                  encoding = "UTF-8")
+colnames <- c("Questions", "Item", "Answers")
+caption <- "Political participation second semester 2021 and constitutional plebiscite voting intention"
+knitr::kable(x = table01,
+             linesep = "",
+             booktabs=T,
+             col.names = colnames, 
+             caption = caption,
+             escape = T) %>% 
+  kableExtra::kable_styling(latex_options = c("HOLD_position",
+                                              "scale_down")) %>% 
+  kableExtra::column_spec(column = 1,width = "5cm") %>%
+  kableExtra::column_spec(column = 2,width = "10cm") %>%
+  kableExtra::collapse_rows(columns = c(1,2)) 
+```
+ 
+\pagebreak
+ 
+## Specify exactly what analysis you will conduct to examine the main question/hypothesis.
+ 
+As described in the previous section, we have three sets of hypotheses concerning direct, indirect and longitudinal effects. In order to develop these analyses, a Structural Equation Modelling framework will be used, since directly observed variables and latent variables, for political participation and socialisation, will be included.
+ 
+While this study does not hypothesise measurement, both forms of political participation and family political socialisation can be treated as factors or latent variables [@brown_Confirmatory_2015]. For this reason, we will employ an Exploratory Factor Analysis (CFA) to determine the metric properties of each factor. To assess goodness of fit we will use the Comparative Fit Index (CFI), the Tucker-Lewis Index (TLI) and the Root Mean Square Error of Approximation (RMSEA), where values above 0.95 are acceptable for the first two and values below 0.05 for the last one [@brown_Confirmatory_2015,Chap. 3 and 4]. Alternatively, in the event that the confirmatory factor analysis fit is not adequate, a simple summative index of the scale indicators or, alternatively, simple indicators will be used.
+ 
+First, to address the hypotheses that support a direct (H1a and H1b) and indirect (H2a and H2b) effect of **family resources** on young people's political participation, a **cross-sectional **mediation** model will be estimated using the information reconstructed through the retrospective questions [@brown_Confirmatory_2015].
+ 
+Second, the hypotheses of **family political socialisation** (H3a and H3b) and**status reproduction** (H4) will be modelled through a structural equation model where political socialisation practices are specified as latent variables.
+ 
+Finally, the longitudinal hypotheses of **persistence of socialisation** (H5, H6 and H7) will be estimated in a **longitudinal averaging model**.
+ 
+**Software**
+ 
+The statistical analysis will be carried out using the R statistical package in its 4.0 version [@rcoreteam_language_2019] and the lavaan library [@Rosseel2012]. In addition, the MPlus software [@muthen_Mplus_2017] will be used.
+ 
+## Is there secondary analysis?
+ 
+**Additional settings**
+ 
+Estimates from structural equation models will be weighted. The adjustment of the estimates is based on macro-zones, gender, age groups and educational level, following the aggregated data from the 2017 Abbreviated Population and Housing Census implemented by the National Institute of Statistics of Chile (INE).
+ 
+ 
+## How many observations will be collected or what will determine the sample size? You do not need to justify your decision, but be precise about exactly how the number will be determined.
+ 
+The sampling strategy is non-probabilistic by quotas according to gender, age and educational level. The proportion for each quota was determined based on the adjusted results using the complex sample design of the 2017 National Socioeconomic Characterisation Survey (CASEN), which is conducted by the Chilean Ministry of Social Development. Table \@ref(tab:quotas) shows the detail of the proportion of quotas for the first wave of the study.
+ 
+
+````{r quotas}
+pacman::p_load(knitr,kableExtra,dplyr)
+options(knitr.kable.NA = '') # NA in kable = '') # NA in kable = '')
+ 
+table01 <-
+  xlsx::read.xlsx(file = "participacion_jovenes.xlsx",
+                  sheetName = "quotas",
+                  encoding = "UTF-8")
+colnames <- c("Category","%", "N")
+caption <- "Distribution of quotas according to sex, age and educational level"
+knitr::kable(x = table01,
+             linesep = "",
+             booktabs=T,
+             col.names = colnames, 
+             caption = caption,
+             escape = T) %>% 
+  kableExtra::kable_styling(latex_options = c("hold_position"))
+```
+ 
+**Anything else you would like to pre-record (e.g. data exclusions, variables collected for exploratory purposes, unusual analyses planned...)**
+ 
+Following the recommendations of the _American Association for Public Opinion Research_ (AAPOR, 2016), we will follow standard case exclusion criteria. In  particular, cases that meet the following conditions will be excluded from the analysis:
+ 
+* Individuals who do not agree to participate
+* Incomplete cases or cases with insufficient information.
+* Cases that are expelled from the questionnaire by full quota.
+* Cases with duplicate IPs (the case that enters first is retained).
+ 
+ 
+[^1]: In the Chilean education system, the educational cycle consists of 12 years (8 years of basic education and 4 years of secondary education). Secondary education is called Educación Media and consists of four levels during the 9th, 10th, 11th and 12th years of the educational cycle. This study addresses the  experience of political participation during the 11th and 12th year of the cycle.
+ 
+# Bibliographical references

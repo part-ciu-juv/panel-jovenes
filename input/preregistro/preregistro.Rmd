@@ -8,24 +8,24 @@ author:
   affiliation: Pontificia Universidad Católica de Chile
   email: damiran1@uc.cl
   number: 1,2
-- name: Julio César Iturra
+- name: Julio Iturra
   affiliation: Centro de Estudio de Conflicto y Cohesión Social
   number: 2
-- name: Anais herrera
+- name: Anaís Herrera-Leighton
   affiliation: Universidad de Chile
   number: 3
 # Nota: Autores que comparten filiacion, poner el mismo number y declarar filiación una sola vez.
 output:
-  bookdown::html_document2:
-    number_sections: false
   bookdown::pdf_document2:
     template: null
     toc: false
     keep_tex: false
     pandoc_args:
       - --template=mytemplate.tex #custom template para usar autores con afiliacion
+  bookdown::html_document2:
+    number_sections: false
 linkcolor: blue                         # enlaces y citas en color azul
-bibliography: C:/Users/Julio/Dropbox/Bibtex/zlibrary.bib     # bibliografia en bibtex
+bibliography: "../bib/referencias.bib"     # bibliografia en bibtex
 csl: "../bib/apa7-singlespace.csl"
 editor_options:
   chunk_output_type: console            # en RStudio, mostrar output en consola
@@ -77,27 +77,29 @@ fwidth = if(is_html_output()) { #Usar en argumento "full_width" de kableExtra
 
 ### Resumen {-}
 
-A pesar de la importancia de la persistente desigualdad política y los bajos niveles de involucramiento ciudadano juvenil no se sabe demasiado acerca de cómo los procesos de socialización reproducen y/o socializan estas desigualdades de una generación a otra. A este respecto, aunque es innegable la importancia de varios agentes de socialización política, como la escuela, existe un amplio consenso que plantea que el principal agente socializador de esta dimensión de la vida es la familia. Sin embargo, existen aún varios elementos necesarios de profundizar para comprender mejor el rol de la familia para el desarrollo de las formas de involucramiento ciudadano de los jóvenes. Primero, no es claro aún si esta transmisión se produce de igual manera con los diferentes tipos de participación. Segundo, si bien la transmisión de ventajas comparativas ha sido abordada ampliamente desde la sociología, expresado por ejemplo en el estudio de la transmisión del logro educacional o el estudio de la reproducción social, existe limitada evidencia acerca de cuáles son los mecanismos a través de los cuales opera esta transmisión en el ámbito político. Finalmente, no es claro si los efectos que tienen las condiciones socioeconómicas y/o las prácticas de socialización en edades tempranas se sostienen a lo largo del tiempo.
+La persistencia de desigualdades en la participación política y su correspondiente transmisión intergeneracional, mantienen abiertas una serie de interrogantes acerca de como los procesos de socialización reproducen y/o socializan estas desigualdades de una generación a otra. A este respecto, aunque es innegable la importancia de varios agentes de socialización política, existe un amplio consenso que plantea que el principal agente socializador de esta dimensión de la vida es la familia. Sin embargo, existen aún varios elementos necesarios de profundizar para comprender mejor el rol de la familia para el desarrollo de las formas de involucramiento ciudadano de los jóvenes. Primero, no es claro aún si esta transmisión se produce de igual manera con los diferentes tipos de participación. Segundo, si bien la transmisión de ventajas comparativas ha sido abordada ampliamente desde la sociología, expresado por ejemplo en el estudio de la transmisión del logro educacional o el estudio de la reproducción social, existe limitada evidencia acerca de cuáles son los mecanismos a través de los cuales opera esta transmisión en el ámbito político. Finalmente, no es claro si los efectos que tienen las condiciones socioeconómicas y/o las prácticas de socialización en edades tempranas se sostienen a lo largo del tiempo.
 
 Este estudio trata acerca de la siguiente pregunta de investigación general: ¿Cuáles son los factores y mecanismos que explican la transmisión intergeneracional de la desigualdad política? Para responder esta pregunta global se analizará el rol que cumplen tanto las características socioeconómicas como las prácticas de socialización política de la familia para el desarrollo de diferentes tipos de participación ciudadana que manifiestan los jóvenes, tales como participación formal, participación activista y/o participación comunitaria. Adicionalmente, se evaluará la estabilidad o cambio de estas fuentes de socialización en diferentes momentos del desarrollo juvenil.
 
-Esta propuesta de investigación busca integrar dos perspectivas sociológicas a través de un modelo, para comprender la participación ciudadana juvenil en sus distintas formas. Por un lado, una perspectiva normativista vinculada a la formación para la ciudadanía desde los agentes de socialización política. Por otro lado, una perspectiva fundada en el rol de los factores socioeconómicos y la transmisión del estatus. Estas dos literaturas se han desarrollado en general de manera separada, observándose poco diálogo entre ellas. En síntesis, se estudiará la asociación entre las condiciones socioeconómicas de origen familiar con los diferentes tipos de participación de la siguiente generación, el rol mediador que tienen las prácticas de socialización política de la familia y el estatus adquirido por los jóvenes a través de la socialización familiar; y también, la estabilidad que tienen dichos procesos.
+Esta propuesta de investigación busca integrar dos perspectivas sociológicas a través de un modelo, para comprender la participación ciudadana juvenil en sus distintas formas. Por un lado, una perspectiva normativista vinculada a la formación para la ciudadanía desde los agentes de socialización política. Por otro lado, una perspectiva fundada en el rol de los factores socioeconómicos y la transmisión del estatus. En síntesis, se estudiará la asociación entre las condiciones socioeconómicas de origen familiar con los diferentes tipos de participación de la siguiente generación, el rol mediador que tienen las prácticas de socialización política de la familia y el estatus adquirido por los jóvenes a través de la socialización familiar; y también, la estabilidad que tienen dichos procesos.
 
 
 # Preregistro
 
 ## ¿Se han recogido ya algunos datos para este estudio?
 
-Los datos de este estudio no han sido recogidos. La muestra planificada corresponde a jóvenes chilenos con edad entre 18 y 30 años. El diseño del estudio posee carácter longitudinal y se implementará una serie de preguntas de carácter retrospectivo con el objetivo de caracterizar la conducta política, recursos culturales y socioeconómicos de los jóvenes y sus familias durante el periodo que refiere a sus estudios secundarios, terciarios  y en periodos recientes.
+Los datos de este estudio no han sido recogidos completamente. La muestra planificada corresponde a jóvenes chilenos con edad entre 18 y 30 años. El diseño del estudio posee carácter longitudinal de tres mediciones:
 
-Incorporar dimensión o definición del concepto prospectivo en el estudio longitudinal.
+Ola 1: inició el 19 de julio de 2021
+Ola 2: inició el 04 de octubre de 2021
+Ola 3: inició el 30 de diciembre de 2021
+
+Durante la primera medición, se implementa una serie de preguntas de carácter retrospectivo con el objetivo de caracterizar la conducta política, recursos culturales y socioeconómicos de los jóvenes y sus familias durante el periodo que refiere a sus estudios secundarios, terciarios  y en periodos recientes. En las siguientes mediciones se caracteriza el comportamiento y actitudes políticas durante el periodo reciente (primer y segundo semestre de 2021, respectivamente).
 
 Previo al levantamiento del estudio, se realizó un estudio piloto entre el 25 de mayo y el 16 de junio de 2021 (_n_= 148). El objetivo central del piloto fue identificar la mediana de tiempo de respuesta del estudio (29,8 minutos) y el análisis de las propiedades métricas de las escalas principales del estudio.
 
 
 ## ¿Cuál es la pregunta principal que se hace o la hipótesis que se comprueba en este estudio?
-
-
 
 1. Cuáles son los factores y mecanismos que explican la transmisión intergeneracional de la desigualdad política?
     1. ¿En qué medida la asociación entre condiciones socioeconómicas de la familia con diferentes tipos de participación ciudadana se produce de manera indirecta, a través de la transmisión de los recursos de una generación a otra?
@@ -130,14 +132,14 @@ Previo al levantamiento del estudio, se realizó un estudio piloto entre el 25 d
 
 **$H_{5}$: **El efecto de los recursos socioeconómicos sobre la participación ciudadana sea similar en jóvenes menores de edad que en jóvenes mayores de edad.
 
-**$H_{6}$: **El rol mediador que juega el estatus socioeconómico logrado por los jóvenes sobre la participación ciudadana observado en cohortes más jóvenes se mantenga en edades posteriores.
+**$H_{6}$: **El rol mediador que juega el estatus socioeconómico logrado por los jóvenes sobre la participación ciudadana observado en cohortes más jóvenes se mantiene en edades posteriores.
 
-**$H_{7}$: **El rol mediador que juegan las prácticas de socialización familiar sobre la participación ciudadana observado en cohortes más jóvenes se mantenga en edades posteriores
+**$H_{7}$: **El rol mediador que juegan las prácticas de socialización familiar sobre la participación ciudadana observado en cohortes más jóvenes se mantiene en edades posteriores
 
 
 ## Describa la(s) variable(s) dependiente(s) principal(es) especificando cómo se medirán
 
-Por un lado, el diseño del estudio hace necesario describir la medición de las variables dependientes según el tipo de participación y tiempo en que se desarrollan. Por un lado, tenemos preguntas de carácter retrospectivo, las cuales refieren a la participación política durante los últimos dos años de la educación secundaria[^1]. Por otro lado, se incluyen preguntas de participación política en períodos recientes, las cuales buscan determinar la participación política en dos momentos. La primera responde al periodo de protestas que ha sido denominado como “Estallido Social” que abarca entre octubre de 2019 y enero de 2020. En segunda instancia, se realizarán preguntas que buscan conocer la participación política de los jóvenes en el periodo entre marzo y diciembre de 2020. Además, se considera la participación en los diferentes procesos de votación durante los últimos años,  elecciones presidenciales,  el plebiscito constitucional y elecciones posteriores.
+Por un lado, el diseño del estudio hace necesario describir la medición de las variables dependientes según el tipo de participación y tiempo en que se desarrollan. Se dispone de preguntas de carácter retrospectivo, las cuales refieren a la participación política durante los últimos dos años de la educación secundaria[^1]. Por otro lado, se incluyen preguntas de participación política en períodos recientes, las cuales buscan determinar la participación política en dos momentos. La primera responde al periodo de protestas que ha sido denominado como “Estallido Social” que abarca entre octubre de 2019 y enero de 2020. En segunda instancia, se realizarán preguntas que buscan conocer la participación política de los jóvenes en el periodo entre marzo y diciembre de 2020. Finalmente, se indaga sobre procesos de socialización y participación política durante el primer y segundo semestre de 2021. Además, se considera la participación en los diferentes procesos de votación durante los últimos años,  elecciones presidenciales,  el plebiscito constitucional y elecciones posteriores.
 
 Las variables independientes del estudio corresponden a la caracterización  socioeconómica de la familia de origen y a las prácticas de socialización familiar y escolar. Siguiendo la lógica retrospectiva, estas preguntas harán referencias a dichos aspectos del contexto familiar y escolar durante los últimos dos años de la educación secundaria. Por otro lado, se consideran las características socioeconómicas de los participantes y sus experiencias socialización posteriores al colegio (p.e. en instituciones de educación superior).
 
@@ -286,10 +288,6 @@ knitr::kable(x = table01,
 ```
 
 
-
-
-
-
 **Caracterización de prácticas de socialización política**
 
 En esta sección se muestran los indicadores que refieren a prácticas de socialización durante diferentes periodos. Primero, las Tablas \@ref(tab:w1-3-4-soci-liceo) y \@ref(tab:w1-3-4-soci-familia) caracterizan los últimos dos años de secundaria (p.e. participación política formal, activista y comunitaria de la familia de origen), luego en la Tabla \@ref(tab:w1-rec-estall-pleb-soci-fam) se caracterizan actividades familiares durante el periodo referido al estallido social, durante el año 2020, y finalmente en los últimos dos semestres de 2020. Se incorporaron indicadores independientes para padre y madre.
@@ -372,14 +370,14 @@ knitr::kable(x = table01,
 ```
 
 
-### Ola 2: Participación en Educación terciaria y primer semestre 2021
+### Ola 2: Caracterización en Educación terciaria y Participación primer semestre 2021
 
 Esta sección tiene por objetivo caracterizar la experiencia de aquellos encuestados que cursan o cursaron la educación terciaria (ver Tabla \@ref(tab:w2-educ-sup-parti)
 ). Además, se incluyen una serie de indicadores que refieren a la participación y socialización política que también se encuentran presentes en la primera medición, pero en este caso se hace referencia al periodo reciente que abarca los primeros meses del año 2021.
 
 \pagebreak 
 
-<!-- **Tabla : Participación política en educación terciaria [AQUI] ** -->
+<!-- **Tabla : Participación y socialización política en educación terciaria [AQUI] ** -->
 
 ```{r w2-educ-sup-parti}
 pacman::p_load(knitr,kableExtra,dplyr)
@@ -403,7 +401,7 @@ knitr::kable(x = table01,
 ```
 
 
-Adicionalmente a la participación, la Tabla \@ref(tab:w2-educ-sup-soci) incluye una serie de preguntas que buscan capturar las prácticas de socialización política al interior de los establecimientos de educación superior. Estas preguntas son de carácter retrospectivo para quienes han transitado o terminado el ciclo terciario de educación y de reporte actual para quienes siguen cursando el ciclo de estudios.
+Adicionalmente a la participación, la Tabla \@ref(tab:w2-educ-sup-soci) incluye una serie de preguntas que buscan capturar las prácticas de socialización política al interior de las instituciones de educación superior. Estas preguntas son de carácter retrospectivo para quienes han transitado o terminado el ciclo terciario de educación y de reporte actual para quienes siguen cursando el ciclo de estudios.
 
 <!-- **Tabla : Socialización política en educación terciaria [AQUI] ** -->
 
@@ -457,21 +455,6 @@ knitr::kable(x = table01,
   kableExtra::column_spec(column = 2,width = "11cm") %>%   
   kableExtra::collapse_rows(columns = c(1,2)) 
 ```
-
-
-<!-- **Tabla : Socialización política en la familia durante el primer semestre de 2021 [AQUI]** ??-->
-
-```{r}
-
-```
-
-
-<!-- **Tabla : Socialización política en la familia durante el segundo semestre de 2021 [AQUI]** ??-->
-
-```{r}
-
-```
-
 
 
 ### Ola 3: Participación en segundo semestre de 2021
@@ -563,6 +546,6 @@ Siguiendo las recomendaciones de la _American Association for Public Opinion Res
 * Casos con IP duplicadas (se conserva el caso que ingresa primero).
 
 
-[^1]: En el sistema educacional chileno la educación secundaria es denominada Educación Media, la cual consta de cuatro niveles. En este estudio se aborda la experiencia de participación política durante el tercer y cuarto año de este ciclo.
+[^1]: En el sistema educacional chileno el ciclo educativo consisten 12 años (8 de educación básica y 4 de educación secundaria). La educación secundaria es denominada Educación Media consta de cuatro niveles durante los años 9º, 10º, 11º y 12º de ciclo educativo. En este estudio se aborda la experiencia de participación política durante el 11º y 12º año del ciclo.
 
 # Referencias bibliográficas
