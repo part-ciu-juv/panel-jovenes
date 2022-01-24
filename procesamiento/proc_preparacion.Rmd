@@ -63,11 +63,9 @@ pacman::p_load(dplyr,       # Manipulacion de datos
 # Datos
 
 ```{r}
-df_wave01 <- 
-  haven::read_sav(file = "input/data/original/Ola_1.sav")
-
-df_wave02 <- 
-  haven::read_sav(file = "input/data/original/Ola_2.sav")
+df_wave01 <- haven::read_sav(file = "input/data/original/Ola_1.sav")
+df_wave02 <- haven::read_sav(file = "input/data/original/Ola_2.sav")
+df_wave03 <- haven::read_sav(file = "input/data/original/Ola_3.sav")
 ```
 
 # Preparación
@@ -81,6 +79,9 @@ df_weights2 <-
   df_wave02 %>% 
   filter(Finished==1)
 
+df_weights3 <- 
+  df_wave03 %>% 
+  filter(Finished==1)
 
 df_piloto2 <- 
   df_piloto %>% 
@@ -96,6 +97,10 @@ df_weights2 %>% # guardar id finales
   select(ticket) %>% 
   xlsx::write.xlsx("output/id_ola2.xlsx")
 
+df_weights3 %>% # guardar id finales
+  select(ticket) %>% 
+  xlsx::write.xlsx("output/id_ola3.xlsx")
+
 df_piloto2 %>% # guardar id finales piloto
   select(ticket,Q15_1) %>% 
   filter(!is.na(Q15_1)) %>% 
@@ -106,4 +111,5 @@ df_piloto2 %>% # guardar id finales piloto
 ```{r}
 summary(df_weights$Duration__in_seconds_)/60 #mediana de tiempo de encuesta
 summary(df_weights2$Duration__in_seconds_)/60 #mediana de tiempo de encuesta
+summary(df_weights3$Duration__in_seconds_)/60 #mediana de tiempo de encuesta
 ```
