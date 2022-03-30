@@ -1,0 +1,402 @@
+---
+title: "Ficha Técnica (Ola 3)"
+author: "Fondecyt regular Nº1190508"
+output: 
+  bookdown::pdf_document2:
+    toc: false
+    includes:
+      in_header: columns.tex
+geometry: "left=2cm,right=2cm,top=2cm,bottom=2cm"      
+editor_options: 
+  chunk_output_type: console
+header-includes:
+  - \usepackage[spanish,es-tabla,es-nodecimaldot]{babel}
+  - \usepackage{times}           # Times New Roman
+  - \usepackage{caption}
+  - \captionsetup[figure,table]{labelfont={bf},labelformat={default},labelsep=period}
+  - \usepackage{graphicx}
+  - \usepackage{float}
+  - \usepackage{booktabs}
+  - \usepackage{longtable}
+  - \usepackage{array}
+  - \usepackage{multirow}
+  - \usepackage{wrapfig}
+  - \usepackage{float}
+  - \usepackage{colortbl}
+  - \usepackage{pdflscape}
+  - \usepackage{tabu}
+  - \usepackage{threeparttable} 
+---
+```{r render, eval=FALSE, include=FALSE}
+rmarkdown::render(input = here::here("procesamiento/ficha-tecnica-w03.Rmd"),
+                  output_format = "bookdown::pdf_document2",
+                  output_file = here::here("output/ficha-tecnica-w03.pdf"))
+```
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  warning = FALSE,# mostrar advertencias durante la generación del libro de códigos
+  message = FALSE,# mostrar mensajes durante la generación del libro de códigos
+  error = FALSE,# no interrumpir la generación del libro de códigos en caso de errores,
+                # suele ser mejor para la depuración
+  echo = FALSE  # mostrar el código R
+  )
+```
+
+```{r}
+if (!require("pacman")) install.packages("pacman") # si no tenemos la librería packman instalada, se instala.
+pacman::p_load(tidyverse, haven,codebook, ggplot2,sjPlot,knitr,kableExtra,questionr,sjlabelled) # cargamos nuestras librerías
+```
+
+```{r}
+data <- read_sav(
+  url(
+    "https://github.com/part-ciu-juv/panel-jovenes/raw/main/input/data/original/Ola_3.sav" 
+  ))
+```
+
+```{r}
+#recodificar -99 como perdidos
+
+data$cs_03[data$cs_03==-99]<- NA
+
+data <-
+  data %>%  
+  mutate(edad1 =
+           case_when(cs_03 <= 20 ~ 1,         
+                     cs_03 >20 & cs_03 <= 25 ~ 2,
+                     cs_03 > 25  ~ 3))
+
+data$edad1 <- factor(data$edad1, levels=c("1","2","3"), labels=c("18 - 20","21 - 25", "26 - 30"))
+```
+
+```{r}
+finished<- data %>%
+  group_by(Finished) %>%
+  summarise(n=n()) %>%
+  ungroup()
+screenout<- data %>%
+  filter(is.na(cs_01) | is.na(cs_02) | is.na(cs_03)) %>%
+  summarise(n=n()) %>%
+  ungroup()
+```
+
+```{r message=FALSE, warning=FALSE}
+load(here::here("input/data/original/rdata-casen/casen_edadcat.Rdata"))
+load(here::here("input/data/original/rdata-casen/casen_sexo.RData"))
+load(here::here("input/data/original/rdata-casen/casen_educat.Rdata"))
+educat   <- educat   %>% select(var=EDQ, prop=rel.freq)
+edadcat <- edadcat %>% select(var=edad,prop=rel.freq)
+sex2  <- sex2  %>% select(var=sexo,prop=rel.freq)
+
+edadcat$var <- car::recode(edadcat$var,
+"'18 a 20 años'='18 - 20';
+'21 a 25 años' ='21 - 25';
+'26 a 30 años' ='26 - 30'")
+tab1  <- bind_rows(sex2,edadcat,educat)
+age01 <- questionr::freq(as_character(as_factor(data$edad1))) %>% na.omit()
+sex01 <- questionr::freq(as_character(as_factor(data$cs_01))) %>% na.omit()
+data$edcat2 <- car::recode(data$cs_02,recodes = "1:3=1; 4:5=2; 6=3; 7=4; 8=5; 9:10=6")
+data$edcat2 <- set_labels(data$edcat2,labels = educat$var)
+edu01 <- freq(as_character(as_factor(data$edcat2)),valid = T) %>% na.omit()
+edu01$var <- rownames(edu01)
+age01$var <- rownames(age01)
+sex01$var <- rownames(sex01)
+edu01 <-edu01 %>% select(var,prop=`val%`)
+age01 <-age01 %>% select(var,prop=`val%`)
+sex01 <-sex01 %>% select(var,prop=`val%`)
+tab2  <- bind_rows(sex01,age01,edu01)
+tab3  <- left_join(tab1,tab2,"var")
+```
+
+
+:::::: {.cols data-latex=""}
+::: {.col data-latex="{0.3\textwidth}"}
+_Título del Estudio_
+:::
+
+::: {.col data-latex="{0.02\textwidth}"}
+\ 
+:::
+
+::: {.col data-latex="{0.65\textwidth}"}
+"Participación ciudadana juvenil: entre la Reproducción social y la socialización política" (Ola 2)
+:::
+::::::
+
+
+:::::: {.cols data-latex=""}
+::: {.col data-latex="{0.3\textwidth}"}
+_Fecha de trabajo de campo_
+:::
+
+::: {.col data-latex="{0.02\textwidth}"}
+\ 
+:::
+
+::: {.col data-latex="{0.65\textwidth}"}
+Inicio: 4 de Octubre del 2021
+Término: 14 de Octubre del 2021
+:::
+::::::
+
+:::::: {.cols data-latex=""}
+::: {.col data-latex="{0.3\textwidth}"}
+_Investigadores_
+:::
+
+::: {.col data-latex="{0.02\textwidth}"}
+\ 
+:::
+
+::: {.col data-latex="{0.65\textwidth}"}
+
+**Investigador Principal**: Daniel Miranda Fuenzalida, Investigador de MIDE UC, Escuela de Psicología de la Pontificia Universidad Católica de Chile
+:::
+::::::
+
+:::::: {.cols data-latex=""}
+::: {.col data-latex="{0.3\textwidth}"}
+_Tipo de muestra_
+:::
+
+::: {.col data-latex="{0.02\textwidth}"}
+\ 
+:::
+
+::: {.col data-latex="{0.65\textwidth}"}
+
+La población objetivo del estudio son jóvenes Chilenos, de edad comprendida entre 18 y 30 años, que permita evaluar el modelo empleado en grupos etarios diferentes. La muestra se elaboró a través de un muestreo muestreo no probabilístico por cuotas.Las variables empleada en la elaboración de las cuotas son sexo, edad y nivel educacional. La Tabla 1 muestra las respectivas freceuncias y su porcentaje de cuotas. 
+
+```{r echo=FALSE, warning=FALSE}
+kable(na.omit(tab3),
+      digits = 1, booktabs=T,
+      col.names = c(" ","Casen","Cuotas"),
+      linesep = "",
+      caption = "Distribución de muestra planificada y lograda") %>% 
+  kable_styling(full_width = FALSE,latex_options = c("HOLD_position"),font_size = 8) %>% 
+  pack_rows("Sexo", 1, 2) %>%
+  pack_rows("Edad", 3, 5) %>% 
+  pack_rows("Educación", 6, 11)  %>% 
+  footnote(general = "Datos Casen están ponderados",footnote_as_chunk = T)
+
+```
+
+:::
+::::::
+
+:::::: {.cols data-latex=""}
+::: {.col data-latex="{0.3\textwidth}"}
+_Tipo de muestra_
+:::
+
+::: {.col data-latex="{0.02\textwidth}"}
+\ 
+:::
+
+::: {.col data-latex="{0.65\textwidth}"}
+En términos territoriales, la muestra está conformada principalmente por las regiones Metropolitana, Valparaíso y Biobío La Tabla 2 muestra un detalle de la distribución según todas las regiones del estudio.
+
+```{r echo=FALSE, warning=FALSE}
+data$region<- car::recode(data$cs_04,
+                          recode= "13=1;
+                          113=2; 
+                          10=3; 
+                          c(4,27,67)=4; 
+                          c(68,127,158)=5;
+                          c(1,24,64,86,192,153,255,281,287,310,333,339,341)=6;
+                          c(35,36,58,63,83,90,110,112,114,118,121,122,125,126,133,136,145,146,147,162,164,174,188,195,207,213,214,223,230,233,234,251,258,264,266,282,292,295,302,309,312,320,342)=7;
+                          c(135,142,257,261,288)=8;
+                          c(79,150,170,208,313)=9;
+                          c(16,43,49,253,283)=10;
+                          c(19,62,69,91,106,300,314)=11;
+                          c(29,72,137,340)=12;
+                          c(202,331)=13;
+                          c(32,193,235,237,256)=14;
+                          c(42,189)=15",as.factor = T)
+data$comuna.f <-as_character(as_factor(data$cs_04))
+
+data$region<- factor(x = data$region,levels = levels(data$region),
+                     labels = c("Arica y Parinacota","Tarapacá","Antofagasta","Atacama",
+                                "Coquimbo","Valparaíso","Metropolitana","Gral. Lib. Bernardo O'Higgins",
+                                "Región del Maule","Ñuble","Biobío","Araucanía","Los Ríos","Los 
+                                Lagos","Aysén"), ordered = T)
+data %>% 
+  select(region) %>% 
+  na.omit() %>% group_by(region) %>% summarise(n=n()) %>% mutate(freq = round((n / sum(n))*100,2))%>% 
+  kable(col.names = c("Región","N","%"), 
+        caption = "Distribución de muestra lograda por región.",
+        linesep = "",
+        booktabs=T) %>% 
+  kable_styling(full_width = FALSE,latex_options = c("HOLD_position"),font_size = 9)
+```
+
+:::
+::::::
+
+
+:::::: {.cols data-latex=""}
+::: {.col data-latex="{0.3\textwidth}"}
+_Estrategia de campo_
+:::
+
+::: {.col data-latex="{0.02\textwidth}"}
+\ 
+:::
+
+::: {.col data-latex="{0.65\textwidth}"}
+
+Con la finalidad de contar con datos que permitan cubrir el modelo de manera completa se propone levantar un “Estudio Panel de Participación Ciudadana Juvenil 2020-2022”. Este permitira evaluar longitudinalmente a los jóvenes durante el año uno y el año tres del proyecto, para capturar el cambio en las condiciones sociopolíticas de los jóvenes y en qué medida persisten los efectos de la socialización política familiar y/o las condiciones socioeconómicas de la familia.
+este estudio cubrirá todos los aspectos presentes en el modelo analítico propuesto:caracterización socioeconómica de los padres, caracterización socioeconómica y logro académico de los hijos, caracterización de prácticas de socialización políticas familiar y caracterización de los diferentes tipos de participación ciudadana juvenil.
+La entidad a cargo del trabajo de campo brinda un servicio de paneles online, dentro de los cuales se cuenta con una serie de personas que han sido previamente contactadas y que han acordado participar de este tipo de estudios vía invitación. 
+
+:::
+::::::
+
+:::::: {.cols data-latex=""}
+::: {.col data-latex="{0.3\textwidth}"}
+_Entidades a cargo trabajo de campo_
+:::
+
+::: {.col data-latex="{0.02\textwidth}"}
+\ 
+:::
+
+::: {.col data-latex="{0.65\textwidth}"}
+La entidad a cargo del trabajo de campo fue la empresa [*Netquest*](https://www.netquest.com/es/encuestas-online-investigacion)
+:::
+::::::
+
+
+:::::: {.cols data-latex=""}
+::: {.col data-latex="{0.3\textwidth}"}
+_Modo de aplicación_
+:::
+
+::: {.col data-latex="{0.02\textwidth}"}
+\ 
+:::
+
+::: {.col data-latex="{0.65\textwidth}"}
+Cuestionario autoadministrado online. Se empleó la plataforma Qualtrics.
+:::
+::::::
+
+:::::: {.cols data-latex=""}
+::: {.col data-latex="{0.3\textwidth}"}
+_Numero de respuestas_
+:::
+
+::: {.col data-latex="{0.02\textwidth}"}
+\ 
+:::
+
+::: {.col data-latex="{0.65\textwidth}"}
+`r dim(data)[1]`
+:::
+::::::
+
+:::::: {.cols data-latex=""}
+::: {.col data-latex="{0.3\textwidth}"}
+_Detalles de la muestra_
+:::
+
+::: {.col data-latex="{0.02\textwidth}"}
+\ 
+:::
+
+::: {.col data-latex="{0.65\textwidth}"}
+Siguiendo los estándares definidos por la _American Association for Public Opinion Research_ (AAPOR) en su novena edición [(AAPOR, 2016)](https://www.aapor.org/AAPOR_Main/media/publications/Standard-Definitions20169theditionfinal.pdf), la Tabla 3 muestra la descripción de la muestra según los criterios enunciados.
+
+
+```{r}
+# Paso I: Duplicados base completa
+ip1 <- questionr::freq(data$IPAddress,total = TRUE) %>% # Frecuencia de cada IP
+  rownames_to_column() %>%                              # ID para IP
+  filter(n>=2)                                          # Keep IP >=2
+
+datip01 <- data %>% 
+  filter(IPAddress %in% ip1$rowname, Finished==1) %>% # Filtro ip duplicada y Finished=1
+  select(ResponseId,IPAddress,Finished,cs_01,cs_03, cs_02,everything ()) %>% 
+  arrange(IPAddress,Finished) # Ordenar la base según IP y Finished para observar patrón 
+
+# Paso II: Duplicados base Finished==1
+ip2 <- questionr::freq(x = datip01$IPAddress,total = TRUE) %>%  # Frecuencia de cada IP
+        rownames_to_column() %>%                                # ID para IP
+        filter(n>=2)                                            # Keep IP >=2
+
+datip03 <- datip01 %>% 
+  filter(IPAddress %in% ip2$rowname) %>% # Filtro ip duplicada y Finished=1
+  select(ResponseId,IPAddress, cs_01, cs_03, cs_02, StartDate, EndDate) %>% 
+  arrange(IPAddress,cs_01,cs_03,cs_02) 
+
+dup1<- length(unique(datip03$IPAddress))
+# Paso III: Casos identifos
+identical_cases<- datip03 %>% 
+  group_by(IPAddress) %>% 
+  summarise(sexo=var(cs_01,na.rm = T),       # calcular varianza grupal  
+            edad=var(cs_03,na.rm = T),
+            edcep=var(cs_02,na.rm = T)) %>% 
+  filter(sexo==0 & edad==0 & edcep==0)      # filtrar x varianza 0 (caso identico)
+```
+
+```{r}
+
+library(readxl)
+survey_info2 <- read_excel(here::here("input/templates/survey-info2.xlsx"))
+
+n <- c(finished$n[1]+finished$n[2],
+  finished$n[2],
+  finished$n[1],
+  0,
+  0,
+  screenout$n[1]+length(unique(identical_cases$IPAddress)),
+  screenout$n[1],
+  length(unique(identical_cases$IPAddress)))
+
+
+survey_info2$code <- paste0("(",survey_info2$code,")")
+survey_info2$n <- n
+
+kable(survey_info2,col.names = c("Item","","N"),
+      caption = "Descripción de logro",
+      linesep = "",
+      booktabs=T) %>% 
+  kable_styling(full_width = FALSE,latex_options = c("HOLD_position"),font_size = 9) %>% 
+  add_indent(c(2,3,7,8))
+```
+:::
+::::::
+
+
+
+:::::: {.cols data-latex=""}
+::: {.col data-latex="{0.3\textwidth}"}
+_Idioma_
+:::
+
+::: {.col data-latex="{0.02\textwidth}"}
+\ 
+:::
+
+::: {.col data-latex="{0.65\textwidth}"}
+Español
+:::
+::::::
+
+
+:::::: {.cols data-latex=""}
+::: {.col data-latex="{0.3\textwidth}"}
+_Ponderadores disponibles_
+:::
+
+::: {.col data-latex="{0.02\textwidth}"}
+\ 
+:::
+
+::: {.col data-latex="{0.65\textwidth}"}
+No 
+:::
+::::::
+

@@ -14,7 +14,6 @@ editor_options:
   chunk_output_type: console
 ---
 
-
 # Setup
 
 ```{r include=FALSE}
@@ -63,53 +62,117 @@ pacman::p_load(dplyr,       # Manipulacion de datos
 # Datos
 
 ```{r}
-df_wave01 <- haven::read_sav(file = "input/data/original/Ola_1.sav")
-df_wave02 <- haven::read_sav(file = "input/data/original/Ola_2.sav")
-df_wave03 <- haven::read_sav(file = "input/data/original/Ola_3.sav")
+df_wave01 <- haven::read_sav(file = here::here("input/data/original/Ola_1.sav"))
+df_wave02 <- haven::read_sav(file = here::here("input/data/original/Ola_2.sav"))
+df_wave03 <- haven::read_sav(file = here::here("input/data/original/Ola_3.sav"))
+
+weight_wave01 <- haven::read_dta(file = here::here("input/data/proc/weight_w01.dta"))
 ```
 
-# Preparación
+# Ola 1
 
 ```{r}
-df_weights <- 
+# names(df_wave01)
+
+#seleccionar ID proveniente de la variable ticket
+df_wave01$folio_encuestado<- stringr::str_split(df_wave01$ticket,pattern = "_",simplify = T)[,1]
+df_wave01 <- left_join(x = df_wave01,y = weight_wave01, by ="ticket")
+
+
+head(df_wave01$ticket)
+data_w01 <- 
   df_wave01 %>% 
-  filter(ci==1,Finished==1)
+  select(
+    idencuestado=ticket,
+    folio_encuestado,
+    consentimiento=ci,
+    cs_01:cs_15, 
+    everything()) %>% 
+  rename(s4_03_1_0=s4_03_1.0,
+         s4_03_2_0=s4_03_2.0,
+         s4_03_3_0=s4_03_3.0,
+         s4_03_4_0=s4_03_4.0,
+         s4_03_5_0=s4_03_5.0,
+         s4_03_6_0=s4_03_6.0)
 
-df_weights2 <- 
+# etiquetado
+sjlabelled::set_label(data_w01$idencuestado) <- "Identificador encuestado (original)"
+sjlabelled::set_label(data_w01$folio_encuestado) <- "Folio encuestado (panel)"
+sjlabelled::set_label(data_w01$consentimiento) <- "Consentimiento informado"
+
+sjPlot::view_df(data_w01, 
+                show.na = T,
+                show.frq = T, 
+                show.prc = T,
+                file = here::here("output/codebook_w01.html"))
+
+# Guardar datos
+save(data_w01,file = here::here("output/data_01.RData"))
+haven::write_dta(data = data_w01,path = here::here("output/data_01.dta"))
+```
+
+
+# Ola 2
+
+```{r}
+names(df_wave02)
+head(df_wave02$ticket)
+
+#seleccionar ID proveniente de la variable ticket
+df_wave02$folio_encuestado<- stringr::str_split(df_wave02$ticket,pattern = "_",simplify = T)[,1]
+
+data_w02 <- 
   df_wave02 %>% 
-  filter(Finished==1)
+  select(
+    idencuestado=ticket,
+    folio_encuestado,
+    cs_01:cs_15, 
+    everything())
 
-df_weights3 <- 
+# etiquetado
+sjlabelled::set_label(data_w02$idencuestado) <- "Identificador encuestado (original)"
+sjlabelled::set_label(data_w02$folio_encuestado) <- "Folio encuestado (panel)"
+
+
+
+sjPlot::view_df(data_w02, 
+                show.na = T,
+                show.frq = T, 
+                show.prc = T,
+                file = here::here("output/codebook_w02.html"))
+# Guardar datos
+save(data_w02,file = here::here("output/data_02.RData"))
+haven::write_dta(data = data_w02,path = here::here("output/data_02.dta"))
+```
+
+# Ola 3
+
+```{r}
+names(df_wave03)
+head(df_wave03$ticket)
+
+#seleccionar ID proveniente de la variable ticket
+df_wave03$folio_encuestado<- stringr::str_split(df_wave03$ticket,pattern = "_",simplify = T)[,1]
+
+data_w03 <- 
   df_wave03 %>% 
-  filter(Finished==1)
+  select(
+    idencuestado=ticket,
+    folio_encuestado,
+    cs_01:cs_15, 
+    everything())
 
-df_piloto2 <- 
-  df_piloto %>% 
-  filter(Q83==4,Finished==1)
-```
+# etiquetado
+sjlabelled::set_label(data_w03$idencuestado) <- "Identificador encuestado (original)"
+sjlabelled::set_label(data_w03$folio_encuestado) <- "Folio encuestado (panel)"
 
-```{r}
-df_weights %>% # guardar id finales
-  select(ticket) %>% 
-  xlsx::write.xlsx("output/id_ola1.xlsx")
+sjPlot::view_df(data_w03, 
+                show.na = T,
+                show.frq = T, 
+                show.prc = T,
+                file = here::here("output/codebook_w03.html"))
 
-df_weights2 %>% # guardar id finales
-  select(ticket) %>% 
-  xlsx::write.xlsx("output/id_ola2.xlsx")
-
-df_weights3 %>% # guardar id finales
-  select(ticket) %>% 
-  xlsx::write.xlsx("output/id_ola3.xlsx")
-
-df_piloto2 %>% # guardar id finales piloto
-  select(ticket,Q15_1) %>% 
-  filter(!is.na(Q15_1)) %>% 
-  select(-Q15_1) %>% 
-  xlsx::write.xlsx("output/id_ola1_piloto.xlsx")
-```
-
-```{r}
-summary(df_weights$Duration__in_seconds_)/60 #mediana de tiempo de encuesta
-summary(df_weights2$Duration__in_seconds_)/60 #mediana de tiempo de encuesta
-summary(df_weights3$Duration__in_seconds_)/60 #mediana de tiempo de encuesta
+# Guardar datos
+save(data_w03,file = here::here("output/data_03.RData"))
+haven::write_dta(data = data_w03,path = here::here("output/data_03.dta"))
 ```

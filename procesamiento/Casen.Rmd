@@ -1,0 +1,100 @@
+---
+title: "Quotas Participacion Política Juvenil"
+author: "Jorge Matamala"
+output: html_document
+---
+
+
+```{r}
+pacman::p_load(tidyverse,sjPlot,sjmisc, knitr,kableExtra)
+```
+
+
+```{r}
+# load(url("https://github.com/jciturras/data-chile/raw/main/data/casen-2017/casen2017.RData"))
+# save(casen2017,file = "casen2017.RData")
+load(url("https://github.com/jciturras/data-chile/raw/main/data/casen-2017/casen2017.RData"))
+# load(file = "casen2017.RData")
+```
+
+```{r eval=FALSE, include=FALSE}
+view_df(casen2017)
+```
+
+
+# Tramos en CASEN
+
+¿Cuál fue el nivel más alto alcanzado o el nivel educacional actual?
+
+```{r}
+dat01<- casen2017 %>% 
+  select(sexo,edad,educ=e6a,e6b,expr) %>% 
+  filter(edad %in% c(18:30))
+
+sjPlot::view_df(dat01[,c("educ")])
+sjmisc::frq(x = dat01$educ,
+            weights = dat01$expr)
+
+```
+
+# Tramos en cuestionario:
+
+1. Sin estudios 
+2. Educación Básica incompleta 
+3. Educación Básica completa
+4. Educación Media incompleta
+5. Educación Media completa
+6. Técnico Superior incompleta
+7. Técnico Superior completa
+8. Universitaria incompleta
+9. Universitaria completa
+10. Estudios de postgrado (magíster o doctorado)
+
+
+# Recodificación 
+
+## Educación
+```{r}
+dat01$edurec <- car::recode(dat01$educ,recodes = "1:7=1;8:11=2;12=3;13=4;14=5;15:17=6;99=NA",as.numeric = T)
+
+dat01$edurec <- sjlabelled::set_labels(x = dat01$edurec,labels = c("Básica completa o menos"=1,
+                                                                   "Educación media o menos"=2,
+                                                                   "Educación Técnica Superior Incompleta"=3,
+                                                                   "Educación Técnica Superior Completa"=4,
+                                                                   "Profesional Incompleta"=5,
+                                                                   "Profesional Completa o más"=6))
+dat01$edurec <- sjlabelled::set_label(dat01$edurec,label = "Nivel Educacional (18 a 30 años)")
+```
+
+
+
+## Edad
+
+```{r}
+frq(dat01$edad,weights = 	dat01$expr,show.na = F)
+
+dat01$edadgrupo <- car::recode(var = dat01$edad,recodes = "1:20=1;21:25=2;26:30=3",as.numeric = T)
+dat01$edadgrupo <-sjlabelled::set_labels(x = dat01$edadgrupo,labels= c("18 a 20 años"=1,"21 a 25 años"=2,"26 a 30 años"=3))
+dat01$edadgrupo <-sjlabelled::set_label(x = dat01$edadgrupo,label = "Edad agrupada") 
+frq(dat01$edadgrupo,weights = 	dat01$expr,show.na = F)
+```
+
+#creación de objetos
+
+```{r}
+sex2  <- frq(dat01$sexo,weights = 	dat01$expr,show.na = F) %>% data.frame() %>% select(label,frq,raw.prc)  %>% 
+  rename("sexo"=label,"freq"=frq,"rel.freq"=raw.prc) 
+edadcat <- frq(dat01$edadgrupo,weights = 	dat01$expr,show.na = F) %>% data.frame() %>% select(label,frq,raw.prc) %>% 
+  rename("edad"=label,"freq"=frq,"rel.freq"=raw.prc)
+educat  <- frq(dat01$edurec,weights = 	dat01$expr,show.na = F) %>% data.frame() %>% select(label,frq,raw.prc) %>% 
+  rename("EDQ"=label,"freq"=frq,"rel.freq"=raw.prc)
+```
+
+```{r}
+save(edadcat, file = "casen_edadcat.Rdata")
+save(sex2, file = "casen_sexo.Rdata")
+save(educat, file = "casen_educat.Rdata")
+```
+
+
+
