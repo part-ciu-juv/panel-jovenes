@@ -1,19 +1,19 @@
-# Estudio Panel Jóvenes
+# Repositorio de Datos:
 
-Título: "Participación ciudadana juvenil: entre la Reproducción social y la socialización política"
+## Proyecto: "Participación ciudadana juvenil: entre la Reproducción social y la socialización política"
 
-Fondecyt Iniciación Nº1190508
 
-Investigador Principal: Daniel Miranda, MIDE UC - damiran1@uc.cl  
+**Fuente de financiamiento:** Fondecyt Iniciación (Nº1190508)
+
+**Adjudicación:** 2019.
+
+**Investigador responsable:** Daniel Miranda (MIDE UC) - damiran1@uc.cl  
 
 
 **Contenido del repositorio:**
 
 ```
-│   .gitignore
-│   panel-jovenes.Rproj
 │   README.md
-│   _config.yml
 │
 ├───input
 │   ├───bib
@@ -77,7 +77,6 @@ Investigador Principal: Daniel Miranda, MIDE UC - damiran1@uc.cl
         ficha-tecnica-panel.Rmd
         ficha-tecnica-w01.Rmd
         ficha-tecnica-w02.Rmd
-        ficha-tecnica-w03.log
         ficha-tecnica-w03.Rmd
         proc_analysis-casen.Rmd
         proc_preparacion.Rmd
