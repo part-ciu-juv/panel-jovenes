@@ -1,6 +1,6 @@
 ---
 title: "Ficha Técnica"
-author: "Fondecyt regular Nº1190508"
+author: "Fondecyt Iniciación Nº1190508"
 output: 
   bookdown::pdf_document2:
     toc: false
