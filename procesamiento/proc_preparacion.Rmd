@@ -59,13 +59,6 @@ pacman::p_load(dplyr,       # Manipulacion de datos
 
 ```
 
-# Datos
-
-```{r}
-
-```
-
-
 # Ola 1
 
 ```{r}
@@ -299,6 +292,52 @@ data_w01 <- data_w01 %>%
     op_pol_abo = s4_04_4,
     op_pol_inm = s4_04_5
   )
+
+
+# Identificar duplicados
+ip1 <- questionr::freq(data_w01$IPAddress,total = TRUE) %>% # Frecuencia de cada IP
+  rownames_to_column() %>%                              # ID para IP
+  filter(n>=2)                                          # Keep IP >=2
+
+datip01 <- data_w01 %>% 
+  filter(IPAddress %in% ip1$rowname, Finished==1) %>% # Filtro ip duplicada y Finished=1
+  select(ResponseId,IPAddress,Finished,cs_genero,cs_edad, cs_educ,everything ()) %>% 
+  arrange(IPAddress,Finished) # Ordenar la base según IP y Finished para observar patrón 
+
+# Paso II: Duplicados base Finished==1
+ip2 <- questionr::freq(x = datip01$IPAddress,total = TRUE) %>%  # Frecuencia de cada IP
+        rownames_to_column() %>%                                # ID para IP
+        filter(n>=2)                                            # Keep IP >=2
+
+datip03 <- datip01 %>% 
+  filter(IPAddress %in% ip2$rowname) %>% # Filtro ip duplicada y Finished=1
+  select(ResponseId,IPAddress, cs_genero,cs_edad, cs_educ, StartDate, EndDate) %>% 
+  arrange(IPAddress,cs_genero,cs_edad, cs_educ) 
+
+dup1<- length(unique(datip03$IPAddress))
+# Paso III: Casos identifos
+identical_cases_w01<- datip03 %>% 
+  group_by(IPAddress) %>% 
+  summarise(sexo=var(cs_genero,na.rm = T),       # calcular varianza grupal  
+            edad=var(cs_edad,na.rm = T),
+            edcep=var(cs_educ,na.rm = T)) %>% 
+  filter(sexo==0 & edad==0 & edcep==0)      # filtrar x varianza 0 (caso identico)
+
+data_w01 %>% 
+  filter(IPAddress %in% identical_cases_w01$IPAddress) %>% 
+  select(ResponseId,IPAddress,StartDate, EndDate) %>% 
+  arrange(IPAddress,StartDate)
+
+# eliminar: 
+data_w01 <-
+  data_w01 %>%
+  filter(!(
+    ResponseId %in% c(
+      "R_21vxpjb2LRmDn17",
+      "R_9Y33wTAg7HBSEAp",
+      "R_1Q3pnX4WYL0Okdo"
+    )
+  ))
 
 data_w01$IPAddress <- NULL
 # #rename de variables
@@ -569,6 +608,52 @@ data_w02 <- data_w02 %>%
     op_pol_abo = act_12_8,
     op_pol_inm = act_12_9
   )
+
+# DUPLICADOS: Ola 2.............................................................
+ip1 <- questionr::freq(data_w02$IPAddress,total = TRUE) %>% # Frecuencia de cada IP
+  rownames_to_column() %>%                              # ID para IP
+  filter(n>=2)                                          # Keep IP >=2
+
+datip01 <- data_w02 %>% 
+  filter(IPAddress %in% ip1$rowname, Finished==1) %>% # Filtro ip duplicada y Finished=1
+  select(ResponseId,IPAddress,Finished,cs_genero,cs_edad, cs_educ,everything ()) %>% 
+  arrange(IPAddress,Finished) # Ordenar la base según IP y Finished para observar patrón 
+
+# Paso II: Duplicados base Finished==1
+ip2 <- questionr::freq(x = datip01$IPAddress,total = TRUE) %>%  # Frecuencia de cada IP
+        rownames_to_column() %>%                                # ID para IP
+        filter(n>=2)                                            # Keep IP >=2
+
+datip03 <- datip01 %>% 
+  filter(IPAddress %in% ip2$rowname) %>% # Filtro ip duplicada y Finished=1
+  select(ResponseId,IPAddress, cs_genero,cs_edad, cs_educ, StartDate, EndDate) %>% 
+  arrange(IPAddress,cs_genero,cs_edad, cs_educ) 
+
+dup1<- length(unique(datip03$IPAddress))
+# Paso III: Casos identifos
+identical_cases_w02<- datip03 %>% 
+  group_by(IPAddress) %>% 
+  summarise(sexo=var(cs_genero,na.rm = T),       # calcular varianza grupal  
+            edad=var(cs_edad,na.rm = T),
+            edcep=var(cs_educ,na.rm = T)) %>% 
+  filter(sexo==0 & edad==0 & edcep==0)      # filtrar x varianza 0 (caso identico)
+
+
+data_w02 %>% 
+  filter(IPAddress %in% identical_cases_w02$IPAddress) %>% 
+  select(ResponseId,IPAddress,StartDate, EndDate) %>% 
+  arrange(IPAddress,StartDate)
+
+# eliminar: 
+data_w02 <-
+  data_w02 %>%
+  filter(!(
+    ResponseId %in% c(
+      "R_2AFF3L5fP9gWJmB",
+      "R_cObKssORAA8hRDP"
+    )
+  ))
+
 data_w02$IPAddress <- NULL
 # etiquetado
 sjlabelled::set_label(data_w02$idencuestado) <- "Identificador encuestado (original)"
@@ -770,6 +855,51 @@ data_w03 <- data_w03 %>%
     op_pol_inm = act_12_9
   )
 
+ip1 <- questionr::freq(data_w03$IPAddress,total = TRUE) %>% # Frecuencia de cada IP
+  rownames_to_column() %>%                              # ID para IP
+  filter(n>=2)                                          # Keep IP >=2
+
+datip01 <- data_w03 %>% 
+  filter(IPAddress %in% ip1$rowname, Finished==1) %>% # Filtro ip duplicada y Finished=1
+  select(ResponseId,IPAddress,Finished,cs_genero,cs_edad, cs_educ,everything ()) %>% 
+  arrange(IPAddress,Finished) # Ordenar la base según IP y Finished para observar patrón 
+
+# Paso II: Duplicados base Finished==1
+ip2 <- questionr::freq(x = datip01$IPAddress,total = TRUE) %>%  # Frecuencia de cada IP
+        rownames_to_column() %>%                                # ID para IP
+        filter(n>=2)                                            # Keep IP >=2
+
+datip03 <- datip01 %>% 
+  filter(IPAddress %in% ip2$rowname) %>% # Filtro ip duplicada y Finished=1
+  select(ResponseId,IPAddress, cs_genero,cs_edad, cs_educ, StartDate, EndDate) %>% 
+  arrange(IPAddress,cs_genero,cs_edad, cs_educ) 
+
+dup1<- length(unique(datip03$IPAddress))
+# Paso III: Casos identifos
+identical_cases_w03<- datip03 %>% 
+  group_by(IPAddress) %>% 
+  summarise(sexo=var(cs_genero,na.rm = T),       # calcular varianza grupal  
+            edad=var(cs_edad,na.rm = T),
+            edcep=var(cs_educ,na.rm = T)) %>% 
+  filter(sexo==0 & edad==0 & edcep==0)      # filtrar x varianza 0 (caso identico)
+
+
+data_w03 %>% 
+  filter(IPAddress %in% identical_cases_w03$IPAddress) %>% 
+  select(ResponseId,IPAddress,StartDate, EndDate) %>% 
+  arrange(IPAddress,StartDate)
+
+# eliminar: 
+data_w03 <-
+  data_w03 %>%
+  filter(!(
+    ResponseId %in% c(
+      "R_2PcFkpEtnxphM80",
+      "R_1FQSqTv761ucvvD",
+      "R_10pVfDYK6vgRPP4"
+    )
+  ))
+
 data_w03$IPAddress <- NULL
 # etiquetado
 sjlabelled::set_label(data_w03$idencuestado) <- "Identificador encuestado (original)"
@@ -787,6 +917,78 @@ sjPlot::view_df(data_w03,
 # Guardar datos
 save(data_w03,file = here::here("output/data_03.RData"))
 haven::write_dta(data = data_w03,path = here::here("output/data_03.dta"))
+```
+
+
+```{r}
+load(here::here("output/data_01.RData"))
+load(here::here("output/data_02.RData"))
+load(here::here("output/data_03.RData"))
+
+library(dplyr)
+
+#Incluir sufijo de ola en nombres de variables
+data_w01b <- data_w01 %>% dplyr::rename_all(funs(paste0(.,"_w01"))) %>% 
+  rename(idencuestado = idencuestado_w01,
+         folio_encuestado = folio_encuestado_w01)
+set_label(data_w01b) <- paste0(get_label(data_w01b)," (w01) ") 
+
+data_w02b <- data_w02 %>% dplyr::rename_all(funs(paste0(.,"_w02"))) %>% 
+    rename(folio_encuestado = folio_encuestado_w02) %>% 
+    select(-idencuestado_w02)
+
+set_label(data_w02b) <- paste0(get_label(data_w02b)," (w02) ") 
+
+data_w03b <- data_w03 %>% dplyr::rename_all(funs(paste0(.,"_w03"))) %>% 
+    rename(folio_encuestado = folio_encuestado_w03) %>%  
+    select(-idencuestado_w03)
+
+set_label(data_w03b) <- paste0(get_label(data_w02b)," (w03) ") 
+
+data_wide <- 
+  full_join(data_w01b,data_w02b, by = "folio_encuestado") %>% 
+  full_join(data_w03b, by = "folio_encuestado")
+
+
+data_wide <- data_wide %>% 
+  select(-c(RecipientLastName_w03,	
+            RecipientFirstName_w03,
+            RecipientEmail_w03,
+            ExternalReference_w03,
+            LocationLatitude_w03,
+            LocationLongitude_w03,
+            DistributionChannel_w03,	
+            UserLanguage_w03,
+            
+            RecipientLastName_w02,	
+            RecipientFirstName_w02,
+            RecipientEmail_w02,
+            ExternalReference_w02,
+            LocationLatitude_w02,
+            LocationLongitude_w02,
+            DistributionChannel_w02,	
+            UserLanguage_w02,
+            
+            RecipientLastName_w01,	
+            RecipientFirstName_w01,
+            RecipientEmail_w01,
+            ExternalReference_w01,
+            LocationLatitude_w01,
+            LocationLongitude_w01,
+            DistributionChannel_w01,	
+            UserLanguage_w01
+            ))
+
+
+sjPlot::view_df(data_wide,
+                show.na = T,
+                show.frq = T,
+                show.prc = T,
+                file = here::here("output/codebook_wide.html")
+                )
+
+# Guardar datos
+save(data_wide,file = here::here("output/data_wide.RData"))
 ```
 
 
