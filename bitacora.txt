@@ -1,0 +1,15 @@
+* En PACES revisar N de padres que tienen en w01 y en w02
+
+* Medición de diversificación
+
+* P.ej: sumatoria del listado dicotimizado de las preguntas de participación 
+* El voto debe estar solo porque no son las mismas elecciones (voto e intención de voto)
+
+* Crear ponderador de w02 y w03
+* Atención en los duplicados 
+* Elegir al más completo y/o más reciente
+* Ponderador en ficha técnica
+* eliminar la IP
+* mantener privado
+* Homologar nombres de variables entre olas
+* en ficha tecnica la vinculación de las bbdd

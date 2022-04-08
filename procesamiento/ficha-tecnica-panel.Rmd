@@ -26,6 +26,7 @@ header-includes:
   - \usepackage{pdflscape}
   - \usepackage{tabu}
   - \usepackage{threeparttable} 
+always_allow_html: true  
 ---
 
 ```{r render, eval=FALSE, include=FALSE}
@@ -51,20 +52,20 @@ pacman::p_load(tidyverse, haven,codebook, ggplot2,sjPlot,knitr,kableExtra,questi
 
 ```{r}
 data_w01 <- read_sav(
-  url(
-    "https://github.com/part-ciu-juv/panel-jovenes/raw/main/input/data/original/Ola_1.sav"
+  here::here(
+    "input/data/original/Ola_1.sav"
   )
 )
 
 data_w02 <- read_sav(
-  url(
-    "https://github.com/part-ciu-juv/panel-jovenes/raw/main/input/data/original/Ola_2.sav"
+  here::here(
+    "input/data/original/Ola_2.sav"
   )
 )
 
 data_w03 <- read_sav(
-  url(
-    "https://github.com/part-ciu-juv/panel-jovenes/raw/main/input/data/original/Ola_3.sav"
+  here::here(
+    "input/data/original/Ola_3.sav"
   )
 )
 ```
@@ -294,6 +295,7 @@ data_w01 %>%
   kable(col.names = c("Región","N","%"), 
         caption = "Distribución de muestra lograda en la Ola 1 por región.",
         linesep = "",
+        format = "latex",
         booktabs=T) %>% 
   kable_styling(full_width = FALSE,latex_options = c("HOLD_position"),font_size = 9)
 ```
@@ -564,6 +566,7 @@ survey_info$n_w03 <- n_w03
 kable(survey_info,col.names = c("Item","","Ola 1","Ola 2","Ola 3"),
       caption = "Descripción de logro",
       linesep = "",
+      format = "latex",
       booktabs=T) %>% 
   kable_styling(full_width = FALSE,
                 latex_options = c("HOLD_position"),
@@ -615,13 +618,13 @@ Dado el diseño longitudinal del estudio, disponemos a continuación de una brev
 * si deseamos vincular una base de datos, por ejemplo, la ola 1 y ola 2, podemos emplear el siguiente código:
 
 ```{r echo=TRUE}
-load(here::here("ipo-data-template/03-output/study_w01.RData"))
-load(here::here("ipo-data-template/03-output/study_w02.RData"))
+load(here::here("output/data_01.RData"))
+load(here::here("output/data_02.RData"))
 
 library(dplyr)
 
-data_wide <- left_join(x = study_w01, #datos ola 1
-                       y = study_w02, #datos ola 2
+data_wide <- left_join(x = data_w01, #datos ola 1
+                       y = data_w02, #datos ola 2
                        by = "folio_encuestado", #identificador 
                        #aplica sufijo a variables que se repiten entre olas
                        suffix = c("_w01",
@@ -630,5 +633,5 @@ data_wide <- left_join(x = study_w01, #datos ola 1
 
 # Revisar consistencia en variable sexo
 data_wide[data_wide==-999] <- NA # declarar NA
-cor(data_wide$sexo_w01,data_wide$sexo_w02, use="complete.obs")
+cor(data_wide$cs_01_w01,data_wide$cs_01_w02, use="complete.obs")
 ```
