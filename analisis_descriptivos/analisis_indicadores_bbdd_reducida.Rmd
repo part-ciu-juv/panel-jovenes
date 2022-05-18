@@ -1,0 +1,919 @@
+---
+title: "Análisis indicadores de participación política (base de datos reducida a ola 3)"
+author: "Anais Herrera-Leighton"
+output: 
+  html_document:
+    toc: yes
+    code_folding: hide
+    toc_float: 
+      collapsed: true
+      smooth_scroll: false
+      number_sections: false
+    #css: "https://jciturras.github.io/ayudantia-sol3051/style.css"    
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+```
+
+```{r}
+pacman::p_load(sjPlot, sjlabelled,readr, summarytools, haven, dplyr,kableExtra,readxl, ggplot2,ggtext)
+```
+
+# Análisis limitado al N de la ola 3
+## Cargar bbdd
+```{r}
+ola1<-read_dta("input/data_01.dta")
+ola2<-read_dta("input/data_02.dta")
+ola3<-read_dta("input/data_03.dta")
+```
+## Juntar bbdd
+```{r}
+data_wide0 <- left_join(x = ola3, #datos ola 1
+y = ola2, #datos ola 2
+by = "folio_encuestado", #identificador
+#aplica sufijo a variables que se repiten entre olas
+suffix = c("_w03",
+"_w02")) %>%
+left_join(ola1,
+by = "folio_encuestado")
+
+data_wide_n <- data_wide0 %>% dplyr::select(part_pol_online_info_21b, part_pol_online_post_21b, part_pol_online_com_21b, part_pol_online_seg_21b, conv_padres_21b, folio_encuestado)
+data_wide_n =na.omit(data_wide_n)
+
+data_wide <- left_join(x = data_wide_n,
+y = data_wide0,
+by = "folio_encuestado")
+```
+
+# Ola 1
+
+## Participación política durante 3ro y 4to medio
+
+__Durante el periodo en que cursaba 3° y 4° Medio, ¿realizó algunas de las siguientes actividades (dentro o fuera del liceo)?__
+
++	Votar en elecciones estudiantiles (s2_p_e_05_1)
+
++ Ser candidato para representar a la clase o parte del centro de alumnos (s2_p_e_05_2)
+
++ Ser parte del centro de alumnos (s2_p_e_05_3)
+
++ Participar en marchas o protestas pacíficas (s2_p_e_05_4)
+
++ Participar en marchas o protestas con disturbios (s2_p_e_05_5)
+
++ Participar en bloqueo de calles o carreteras (s2_p_e_05_6)
+
++ Pintar o rayar paredes con demandas o consignas (s2_p_e_05_7)
+
++ Participar en la toma de un edificio o institución (s2_p_e_05_8)
+
++ Trabajar como voluntario en servicios a la comunidad (s2_p_e_05_9)
+
++ Firmar peticiones, presencialmente o por internet (s2_p_e_05_10)
+
++ Colectas de dinero o bienes para ayudar a otros (s2_p_e_05_11)
+
++ Participar en una marcha con mis amigos (s2_p_e_05_12)
+
++ Participar en una marcha con compañeros del colegio (s2_p_e_05_13)
+
++ Participar en una marcha con alguno de mis padres (s2_p_e_05_14)
+
++ Participar en una marcha con otros miembros de mi familia (s2_p_e_05_15)
+
+__Durante el periodo en que cursaba 3° y 4° Medio, ¿con que frecuencia realizaba las siguientes actividades?__
+
++ Usar internet para buscar información sobre temas sociales y/o políticos (s2_p_f_01_5)
+
++ Postear imágenes o mensajes acerca de temas sociales y/o políticos en internet (s2_p_f_01_6)
+
++ Compartir o comentar en el posteo de otra persona acerca de temas sociales y políticos (s2_p_f_01_7)
+
++ Seguir a personas en redes sociales por su contenido sobre temas sociales y políticos (s2_p_f_01_8)
+
+__Durante el periodo en que cursaba 3° y 4° Medio, ¿con que frecuencia realizaba las siguientes actividades?__
+
++ Hablar con sus padres sobre temas sociales y/o políticos (s2_p_f_01_1)
+
+### Tabla descriptivos 1
+
+```{r,echo=FALSE}
+# Seleccionar y renombrar variables de la base de datos de estudiantes.                               
+data_part_3y4_1 <- data_wide  %>% dplyr::select(starts_with("part_pol"),starts_with("marcha"), -starts_with("part_pol_m_"), -starts_with("part_pol_p_"), -starts_with("part_pol_info_"), -starts_with("part_pol_online"), -part_pol_marc_pac, -part_pol_marc_dis, -part_pol_fem, -part_pol_cac, -part_pol_cab, -part_pol_cam, -part_pol_bloq, -part_pol_com, -ends_with("_w02"), -ends_with("_w03"), -ends_with("_21"), -ends_with("_21b"), -ends_with("_20"), -ends_with(".x"), weight_w01)#, -s2_p_e_05_12, -s2_p_e_05_13, -s2_p_e_05_14, -s2_p_e_05_15) 
+
+data_part_3y4_1 =na.omit(data_part_3y4_1)
+```
+
+```{r}
+sjlabelled::set_label(data_part_3y4_1) = gsub('Durante el periodo en que cursaba 3° y 4° Medio,', '',sjlabelled::get_label(data_part_3y4_1)) #eliminar espacio
+
+sjlabelled::set_label(data_part_3y4_1) = gsub('¿realizó algunas de las siguientes actividades (dentro o fuera del liceo)?', '',sjlabelled::get_label(data_part_3y4_1)) #eliminar espacio
+
+sjlabelled::set_label(data_part_3y4_1) = gsub('(dentro o fuera del liceo)?', '',sjlabelled::get_label(data_part_3y4_1)) #eliminar espacio
+  
+set_label(data_part_3y4_1) <- chartr("(", " ", get_label(data_part_3y4_1))
+set_label(data_part_3y4_1) <- chartr(")", " ", get_label(data_part_3y4_1))
+set_label(data_part_3y4_1) <- chartr("?", " ", get_label(data_part_3y4_1))
+set_label(data_part_3y4_1) <- chartr("-", " ", get_label(data_part_3y4_1))
+```
+#### simple
+```{r}
+part_3y4_1= data_part_3y4_1 %>% summarise(escala=names(data_part_3y4_1),get_label(data_part_3y4_1), casos=apply(data_part_3y4_1, 2, function(x) sum(!is.na(x))), media=apply(data_part_3y4_1, 2, function(x) round(mean(x, na.rm=T, ),1)), ds=apply(data_part_3y4_1, 2, function(x) round(sd(x, na.rm=T),1)),  "% nunca + casi nunca"=paste0(round(apply(data_part_3y4_1, 2, function(x) sum(x==1|x==2,na.rm = T))*100/n(),1),"%"),"% a veces + frecuentemente"=paste0(round(apply(data_part_3y4_1, 2, function(x) sum(x==3|x==4,na.rm = T))*100/n(),1),"%"))
+
+write.table(part_3y4_1, "output/bbdd_reducida/data_part_3y4_1.csv",sep = ";",row.names = FALSE)
+```
+#### ponderado
+```{r}
+part_3y4_1= data_part_3y4_1 %>% summarise(escala=names(data_part_3y4_1),get_label(data_part_3y4_1), casos=apply(data_part_3y4_1, 2, function(x) sum(!is.na(x))), media=apply(data_part_3y4_1, 2, function(x) round(weighted.mean(x, weight_w01, na.rm=T, ),1)), ds=apply(data_part_3y4_1, 2, function(x) round(sd(x, na.rm=T),1)),  "% nunca + casi nunca"=paste0(round(apply(data_part_3y4_1, 2, function(x) sum(x==1|x==2,na.rm = T))*100/n(),1),"%"),"% a veces + frecuentemente"=paste0(round(apply(data_part_3y4_1, 2, function(x) sum(x==3|x==4,na.rm = T))*100/n(),1),"%"))
+
+write.table(part_3y4_1, "output/bbdd_reducida/pond_red_data_part_3y4_1.csv",sep = ";",row.names = FALSE)
+```
+### Tabla descriptivos 2
+
+```{r,echo=FALSE}
+# Seleccionar y renombrar variables de la base de datos de estudiantes.                               
+data_part_3y4_2 <- data_wide  %>% dplyr::select(part_pol_online, part_online_post, part_online_com, part_online_seg, conv_padr_poli, weight_w01)
+
+data_part_3y4_2 =na.omit(data_part_3y4_2)
+```
+
+```{r}
+sjlabelled::set_label(data_part_3y4_2) = gsub('Durante el periodo en que cursaba 3° y 4° Medio,', '',sjlabelled::get_label(data_part_3y4_2)) #eliminar espacio
+
+sjlabelled::set_label(data_part_3y4_2) = gsub('¿con que frecuencia realizaba las siguientes actividades?', '',sjlabelled::get_label(data_part_3y4_2)) #eliminar espacio
+
+  
+set_label(data_part_3y4_2) <- chartr("(", " ", get_label(data_part_3y4_2))
+set_label(data_part_3y4_2) <- chartr(")", " ", get_label(data_part_3y4_2))
+set_label(data_part_3y4_2) <- chartr("?", " ", get_label(data_part_3y4_2))
+set_label(data_part_3y4_2) <- chartr("-", " ", get_label(data_part_3y4_2))
+```
+#### simple
+```{r}
+part_3y4_2= data_part_3y4_2 %>% summarise(escala=names(data_part_3y4_2),get_label(data_part_3y4_2), casos=apply(data_part_3y4_2, 2, function(x) sum(!is.na(x))), media=apply(data_part_3y4_2, 2, function(x) round(mean(x, na.rm=T),1)), ds=apply(data_part_3y4_2, 2, function(x) round(sd(x, na.rm=T),1)),  "% nunca + casi nunca"=paste0(round(apply(data_part_3y4_2, 2, function(x) sum(x==1|x==2,na.rm = T))*100/n(),1),"%"),"% a veces + frecuentemente"=paste0(round(apply(data_part_3y4_2, 2, function(x) sum(x==3|x==4,na.rm = T))*100/n(),1),"%"))
+
+write.table(part_3y4_2, "output/bbdd_reducida/data_part_3y4_2.csv",sep = ";",row.names = FALSE)
+```
+#### ponderado
+```{r}
+part_3y4_2= data_part_3y4_2 %>% summarise(escala=names(data_part_3y4_2),get_label(data_part_3y4_2), casos=apply(data_part_3y4_2, 2, function(x) sum(!is.na(x))), media=apply(data_part_3y4_2, 2, function(x) round(weighted.mean(x, weight_w01, na.rm=T),1)), ds=apply(data_part_3y4_2, 2, function(x) round(sd(x, na.rm=T),1)),  "% nunca + casi nunca"=paste0(round(apply(data_part_3y4_2, 2, function(x) sum(x==1|x==2,na.rm = T))*100/n(),1),"%"),"% a veces + frecuentemente"=paste0(round(apply(data_part_3y4_2, 2, function(x) sum(x==3|x==4,na.rm = T))*100/n(),1),"%"))
+
+write.table(part_3y4_2, "output/bbdd_reducida/pond_red_data_part_3y4_2.csv",sep = ";",row.names = FALSE)
+```
+
+## Participación política durante estallido social
+
+__Pensando en el periodo del estallido social, entre octubre de 2019 y enero de 2020, ¿realizó alguna de las siguientes actividades?__
+
++	Firmar una petición, presencialmente o por internet (s3_es_01_1)
+
++ Participar en una marcha o manifestación pacífica (s3_es_01_2)
+
++ Participar en una marcha o manifestación con disturbios (s3_es_01_3)
+
++ Participar en marchas del movimiento feminista (s3_es_01_4)
+
++ Participar en cacerolazos (s3_es_01_5)
+
++ Participar de Cabildos o Asambleas Territoriales (s3_es_01_6)
+
++ Participar en bloqueo de calles o carreteras (s3_es_01_7)
+
++ Pintar o rayar paredes con demandas o consignas (s3_es_01_8)
+
++ Participar en la toma de un edificio o institución (s3_es_01_9)
+
++ Trabajar como voluntario en servicios a la comunidad (s3_es_01_10)
+
+__Pensando en el periodo del estallido social, entre octubre de 2019 y enero de 2020, ¿con que frecuencia realizó las siguientes actividades?__
+
++ Usar internet para buscar información sobre temas sociales y/o políticos (s3_es_02_5)
+
++ Postear imágenes o mensajes acerca de temas sociales y/o políticos en internet (s3_es_02_6)
+
++ Compartir o comentar en el posteo de otra persona acerca de temas sociales y políticos (s3_es_02_7)
+
++ Seguir a personas en redes sociales por su contenido sobre temas sociales y políticos (s3_es_02_8)
+
+__Pensando en el periodo del estallido social, entre octubre de 2019 y enero de 2020, ¿con que frecuencia realizó las siguientes actividades?__
+
++ Hablar con sus padres sobre temas sociales y/o políticos (s3_es_02_1)
+
+### Tabla descriptivos 1
+
+```{r,echo=FALSE}
+# Seleccionar y renombrar variables de la base de datos de estudiantes.
+data_part_es_1 <- data_wide  %>% dplyr::select((starts_with("part_pol") | starts_with("marcha")) & ends_with("_21"), -starts_with("part_pol_info_"), -starts_with("part_pol_online_"), weight_w01)#, -s3_es_01_11, -s3_es_01_12, -s3_es_01_13, -s3_es_01_14) 
+
+data_part_es_1 =na.omit(data_part_es_1)
+```
+
+```{r, echo=FALSE}
+sjlabelled::set_label(data_part_es_1) = gsub('Pensando en el periodo del estallido social, entre octubre de 2019 y enero de 2020,', '',sjlabelled::get_label(data_part_es_1)) #eliminar espacio
+
+sjlabelled::set_label(data_part_es_1) = gsub('¿realizó alguna de las siguientes actividades?', '',sjlabelled::get_label(data_part_es_1)) #eliminar espacio
+
+set_label(data_part_es_1) <- chartr("?", " ", get_label(data_part_es_1))
+set_label(data_part_es_1) <- chartr("-", " ", get_label(data_part_es_1))
+```
+#### simple
+```{r}
+part_es_1= data_part_es_1 %>% summarise(escala=names(data_part_es_1),get_label(data_part_es_1), casos=apply(data_part_es_1, 2, function(x) sum(!is.na(x))), media=apply(data_part_es_1, 2, function(x) round(mean(x, na.rm=T),1)), ds=apply(data_part_es_1, 2, function(x) round(sd(x, na.rm=T),1)),  "% nunca + casi nunca"=paste0(round(apply(data_part_es_1, 2, function(x) sum(x==1|x==2,na.rm = T))*100/n(),1),"%"),"% a veces + frecuentemente"=paste0(round(apply(data_part_es_1, 2, function(x) sum(x==3|x==4,na.rm = T))*100/n(),1),"%"))
+
+write.table(part_es_1, "output/bbdd_reducida/data_part_es_1.csv",sep = ";",row.names = FALSE)
+```
+#### ponderado
+```{r}
+part_es_1= data_part_es_1 %>% summarise(escala=names(data_part_es_1),get_label(data_part_es_1), casos=apply(data_part_es_1, 2, function(x) sum(!is.na(x))), media=apply(data_part_es_1, 2, function(x) round(weighted.mean(x, weight_w01,  na.rm=T),1)), ds=apply(data_part_es_1, 2, function(x) round(sd(x, na.rm=T),1)),  "% nunca + casi nunca"=paste0(round(apply(data_part_es_1, 2, function(x) sum(x==1|x==2,na.rm = T))*100/n(),1),"%"),"% a veces + frecuentemente"=paste0(round(apply(data_part_es_1, 2, function(x) sum(x==3|x==4,na.rm = T))*100/n(),1),"%"))
+
+write.table(part_es_1, "output/bbdd_reducida/pond_red_data_part_es_1.csv",sep = ";",row.names = FALSE)
+```
+
+
+### Tabla descriptivos 2
+
+```{r,echo=FALSE}
+# Seleccionar y renombrar variables de la base de datos de estudiantes.                               
+data_part_es_2 <- data_wide  %>% dplyr::select(part_pol_online_info_21, part_pol_online_post_21, part_pol_online_com_21, part_pol_online_seg_21, conv_padres_21, weight_w01)#, -s3_es_01_11, -s3_es_01_12, -s3_es_01_13, -s3_es_01_14) 
+
+data_part_es_2 =na.omit(data_part_es_2)
+```
+
+```{r, echo=FALSE}
+sjlabelled::set_label(data_part_es_2) = gsub('Pensando en el periodo del estallido social, entre octubre de 2019 y enero de 2020,', '',sjlabelled::get_label(data_part_es_2)) #eliminar espacio
+
+sjlabelled::set_label(data_part_es_2) = gsub('¿con que frecuencia realizó las siguientes actividades?', '',sjlabelled::get_label(data_part_es_2)) #eliminar espacio
+
+set_label(data_part_es_2) <- chartr("?", " ", get_label(data_part_es_2))
+set_label(data_part_es_2) <- chartr("-", " ", get_label(data_part_es_2))
+```
+#### simple
+```{r}
+part_es_2= data_part_es_2 %>% summarise(escala=names(data_part_es_2),get_label(data_part_es_2), casos=apply(data_part_es_2, 2, function(x) sum(!is.na(x))), media=apply(data_part_es_2, 2, function(x) round(mean(x, na.rm=T),1)), ds=apply(data_part_es_2, 2, function(x) round(sd(x, na.rm=T),1)),  "% nunca + casi nunca"=paste0(round(apply(data_part_es_2, 2, function(x) sum(x==1|x==2,na.rm = T))*100/n(),1),"%"),"% a veces + frecuentemente"=paste0(round(apply(data_part_es_2, 2, function(x) sum(x==3|x==4,na.rm = T))*100/n(),1),"%"))
+
+write.table(part_es_2, "output/bbdd_reducida/data_part_es_2.csv",sep = ";",row.names = FALSE)
+```
+
+#### ponderado
+```{r}
+part_es_2= data_part_es_2 %>% summarise(escala=names(data_part_es_2),get_label(data_part_es_2), casos=apply(data_part_es_2, 2, function(x) sum(!is.na(x))), media=apply(data_part_es_2, 2, function(x) round(weighted.mean(x, weight_w01, na.rm=T),1)), ds=apply(data_part_es_2, 2, function(x) round(sd(x, na.rm=T),1)),  "% nunca + casi nunca"=paste0(round(apply(data_part_es_2, 2, function(x) sum(x==1|x==2,na.rm = T))*100/n(),1),"%"),"% a veces + frecuentemente"=paste0(round(apply(data_part_es_2, 2, function(x) sum(x==3|x==4,na.rm = T))*100/n(),1),"%"))
+
+write.table(part_es_2, "output/bbdd_reducida/pond_red_data_part_es_2.csv",sep = ";",row.names = FALSE)
+```
+
+
+## Participación política durante el 2020
+
+__Ahora, pensando en el año 2020, entre marzo y diciembre de 2020, ¿realizó alguna de las siguientes actividades?__
+
++ Firmar una petición, presencialmente o por internet (s3_pc_01_1)
+
++ Participar en una marcha o manifestación pacífica (s3_pc_01_2)
+
++ Participar en una marcha o manifestación con disturbios (s3_pc_01_3)
+
++ Participar en marchas del movimiento feminista (s3_pc_01_4)
+
++ Participar en cacerolazos (s3_pc_01_5)
+
++ Participar de Cabildos o Asambleas Territoriales (s3_pc_01_6)
+
++ Participar en bloqueo de calles o carreteras (s3_pc_01_7)
+
++ Pintar o rayar paredes con demandas o consignas (s3_pc_01_8)
+
++ Participar en la toma de un edificio o institución (s3_pc_01_9)
+
++ Trabajar como voluntario en servicios a la comunidad (s3_pc_01_10)
+
+__Ahora, pensando en el año 2020, entre marzo y diciembre de 2020, ¿con que frecuencia realizó las siguientes actividades?__
+
++ Usar internet para buscar información sobre temas sociales y/o políticos (s3_pc_02_5)
+
++ Postear imágenes o mensajes acerca de temas sociales y/o políticos en internet (s3_pc_02_6)
+
++ Compartir o comentar en el posteo de otra persona acerca de temas sociales y políticos (s3_pc_02_7)
+
++ Seguir a personas en redes sociales por su contenido sobre temas sociales y políticos (s3_pc_02_8)
+
+__Ahora, pensando en el año 2020, entre marzo y diciembre de 2020, ¿con que frecuencia realizó las siguientes actividades?__
+
++ Hablar con sus padres sobre temas sociales y/o políticos (s3_pc_02_1)
+
+### Tabla descriptivos 1
+
+```{r,echo=FALSE}
+data_part_20_1 <- data_wide  %>% dplyr::select((starts_with("part_pol") | starts_with("marcha")) & ends_with("_20"), -starts_with("part_pol_info"), -starts_with("part_pol_online"),weight_w01)#, -s3_pc_01_11, -s3_pc_01_12, -s3_pc_01_13, -s3_pc_01_14) 
+
+data_part_20_1 =na.omit(data_part_20_1)
+```
+
+```{r, echo=FALSE}
+sjlabelled::set_label(data_part_20_1) = gsub('Ahora, pensando en el año 2020, entre marzo y diciembre de 2020,', '',sjlabelled::get_label(data_part_20_1)) #eliminar espacio
+
+sjlabelled::set_label(data_part_20_1) = gsub('¿realizó alguna de las siguientes actividades?', '',sjlabelled::get_label(data_part_20_1)) #eliminar espacio
+
+set_label(data_part_20_1) <- chartr("?", " ", get_label(data_part_20_1))
+set_label(data_part_20_1) <- chartr("-", " ", get_label(data_part_20_1))
+```
+#### simple
+```{r}
+part_20_1= data_part_20_1 %>% summarise(escala=names(data_part_20_1),get_label(data_part_20_1), casos=apply(data_part_20_1, 2, function(x) sum(!is.na(x))), media=apply(data_part_20_1, 2, function(x) round(mean(x, na.rm=T),1)), ds=apply(data_part_20_1, 2, function(x) round(sd(x, na.rm=T),1)),  "% nunca + casi nunca"=paste0(round(apply(data_part_20_1, 2, function(x) sum(x==1|x==2,na.rm = T))*100/n(),1),"%"),"% a veces + frecuentemente"=paste0(round(apply(data_part_20_1, 2, function(x) sum(x==3|x==4,na.rm = T))*100/n(),1),"%"))
+
+write.table(part_20_1, "output/bbdd_reducida/data_part_20_1.csv",sep = ";",row.names = FALSE)
+```
+#### ponderado
+```{r}
+part_20_1= data_part_20_1 %>% summarise(escala=names(data_part_20_1),get_label(data_part_20_1), casos=apply(data_part_20_1, 2, function(x) sum(!is.na(x))), media=apply(data_part_20_1, 2, function(x) round(weighted.mean(x, weight_w01, na.rm=T),1)), ds=apply(data_part_20_1, 2, function(x) round(sd(x, na.rm=T),1)),  "% nunca + casi nunca"=paste0(round(apply(data_part_20_1, 2, function(x) sum(x==1|x==2,na.rm = T))*100/n(),1),"%"),"% a veces + frecuentemente"=paste0(round(apply(data_part_20_1, 2, function(x) sum(x==3|x==4,na.rm = T))*100/n(),1),"%"))
+
+write.table(part_20_1, "output/bbdd_reducida/pond_red_data_part_20_1.csv",sep = ";",row.names = FALSE)
+```
+### Tabla descriptivos 2
+
+```{r,echo=FALSE}
+data_part_20_2 <- data_wide  %>% dplyr::select(part_pol_online_info_20, part_pol_online_post_20, part_pol_online_com_20, part_pol_online_seg_20, conv_padres_20,weight_w01)#, -s3_pc_01_11, -s3_pc_01_12, -s3_pc_01_13, -s3_pc_01_14) 
+
+data_part_20_2 =na.omit(data_part_20_2)
+```
+
+```{r, echo=FALSE}
+sjlabelled::set_label(data_part_20_2) = gsub('Ahora, pensando en el año 2020, entre marzo y diciembre de 2020,', '',sjlabelled::get_label(data_part_20_2)) #eliminar espacio
+
+sjlabelled::set_label(data_part_20_2) = gsub('¿con que frecuencia realizó las siguientes actividades?', '',sjlabelled::get_label(data_part_20_2)) #eliminar espacio
+  
+set_label(data_part_20_2) <- chartr("?", " ", get_label(data_part_20_2))
+set_label(data_part_20_2) <- chartr("-", " ", get_label(data_part_20_2))
+```
+
+#### simple
+```{r}
+part_20_2= data_part_20_2 %>% summarise(escala=names(data_part_20_2),get_label(data_part_20_2), casos=apply(data_part_20_2, 2, function(x) sum(!is.na(x))), media=apply(data_part_20_2, 2, function(x) round(mean(x, na.rm=T),1)), ds=apply(data_part_20_2, 2, function(x) round(sd(x, na.rm=T),1)),  "% nunca + casi nunca"=paste0(round(apply(data_part_20_2, 2, function(x) sum(x==1|x==2,na.rm = T))*100/n(),1),"%"),"% a veces + frecuentemente"=paste0(round(apply(data_part_20_2, 2, function(x) sum(x==3|x==4,na.rm = T))*100/n(),1),"%"))
+
+write.table(part_20_2, "output/bbdd_reducida/data_part_20_2.csv",sep = ";",row.names = FALSE)
+```
+
+#### ponderado
+```{r}
+part_20_2= data_part_20_2 %>% summarise(escala=names(data_part_20_2),get_label(data_part_20_2), casos=apply(data_part_20_2, 2, function(x) sum(!is.na(x))), media=apply(data_part_20_2, 2, function(x) round(weighted.mean(x, weight_w01, na.rm=T),1)), ds=apply(data_part_20_2, 2, function(x) round(sd(x, na.rm=T),1)),  "% nunca + casi nunca"=paste0(round(apply(data_part_20_2, 2, function(x) sum(x==1|x==2,na.rm = T))*100/n(),1),"%"),"% a veces + frecuentemente"=paste0(round(apply(data_part_20_2, 2, function(x) sum(x==3|x==4,na.rm = T))*100/n(),1),"%"))
+
+write.table(part_20_2, "output/bbdd_reducida/pond_red_data_part_20_2.csv",sep = ";",row.names = FALSE)
+```
+
+# Ola 2
+
+## Participación política durante la educación superior (para quienes ya no estudian)
+
+__Durante el periodo en que cursó sus estudios de Educación Superior, ¿con qué frecuencia realizó las siguientes actividades (dentro o fuera de la institución)?__
+
++	Firmar una petición, presencialmente o por internet (edsup_09_1)
+
++ Participar en una marcha o manifestación pacífica (edsup_09_2)
+
++ Participar en una marcha o manifestación con disturbios (edsup_09_3)
+
++ Participar en marchas del movimiento feminista (edsup_09_4)
+
++ Participar en cacerolazos (edsup_09_5)
+
++ Participar de Cabildos o Asambleas Territoriales (edsup_09_6)
+
++ Participar en la campaña de candidatos (edsup_09_7)
+
++ Participar en bloqueo de calles o carreteras (edsup_09_8)
+
++ Pintar o rayar paredes con demandas o consignas (edsup_09_9)
+
++ Participar en la toma de un edificio o institución (edsup_09_10)
+
++ Trabajar como voluntario en servicios a la comunidad (edsup_09_11)
+
+__Durante el periodo en que cursó sus estudios de Educación Superior, ¿con qué frecuencia realizó las siguientes actividades? __
+
++ Usar internet para buscar información sobre temas sociales y/o políticos (edsup_10_5)
+
++ Postear imágenes o mensajes acerca de temas sociales y/o políticos en internet (edsup_10_6)
+
++ Compartir o comentar en el posteo de otra persona acerca de temas sociales y políticos (edsup_10_7)
+
++ Seguir a personas en redes sociales por su contenido sobre temas sociales y políticos (edsup_10_8)
+
+__Durante el periodo en que cursó sus estudios de Educación Superior, ¿con qué frecuencia realizó las siguientes actividades?__
+
++ Hablar con sus padres sobre temas sociales y/o políticos (edsup_10_1)
+
+### Tabla descriptivos 1
+
+```{r,echo=FALSE}
+# Seleccionar y renombrar variables de la base de datos de estudiantes.                               
+part_pol_edsup_est_egre_1 <- data_wide  %>% dplyr::select(starts_with("est_egre_part_pol"),starts_with("est_egre_marcha"),weight_w02, -starts_with("est_egre_part_pol_info"), -starts_with("est_egre_part_pol_online"))#, -ends_with("_21b"), -ends_with("_21"), -ends_with("_21b"), -starts_with("est_egre_part_pol"))#, -edsup_09_12, -edsup_09_13, -edsup_09_14, -edsup_09_15) 
+
+part_pol_edsup_est_egre_1 =na.omit(part_pol_edsup_est_egre_1)
+```
+
+```{r, echo=FALSE}
+sjlabelled::set_label(part_pol_edsup_est_egre_1) = gsub('Durante el periodo en que cursó sus estudios de Educación Superior,', '',sjlabelled::get_label(part_pol_edsup_est_egre_1)) #eliminar espacio
+
+sjlabelled::set_label(part_pol_edsup_est_egre_1) = gsub('¿con qué frecuencia realizó las siguientes actividades (dentro o fuera de la institución)?', '',sjlabelled::get_label(part_pol_edsup_est_egre_1)) #eliminar espacio
+
+sjlabelled::set_label(part_pol_edsup_est_egre_1) = gsub('(dentro o fuera de la institución)', '',sjlabelled::get_label(part_pol_edsup_est_egre_1)) #eliminar espacio
+
+set_label(part_pol_edsup_est_egre_1) <- chartr("(", " ", get_label(part_pol_edsup_est_egre_1))
+set_label(part_pol_edsup_est_egre_1) <- chartr(")", " ", get_label(part_pol_edsup_est_egre_1))
+set_label(part_pol_edsup_est_egre_1) <- chartr("?", " ", get_label(part_pol_edsup_est_egre_1))
+set_label(part_pol_edsup_est_egre_1) <- chartr("-", " ", get_label(part_pol_edsup_est_egre_1))
+```
+#### simple
+```{r}
+part_edsup_est_egre_1= part_pol_edsup_est_egre_1 %>% summarise(escala=names(part_pol_edsup_est_egre_1),get_label(part_pol_edsup_est_egre_1), casos=apply(part_pol_edsup_est_egre_1, 2, function(x) sum(!is.na(x))), media=apply(part_pol_edsup_est_egre_1, 2, function(x) round(mean(x, na.rm=T),1)), ds=apply(part_pol_edsup_est_egre_1, 2, function(x) round(sd(x, na.rm=T),1)),  "% nunca + casi nunca"=paste0(round(apply(part_pol_edsup_est_egre_1, 2, function(x) sum(x==1|x==2,na.rm = T))*100/n(),1),"%"),"% a veces + frecuentemente"=paste0(round(apply(part_pol_edsup_est_egre_1, 2, function(x) sum(x==3|x==4,na.rm = T))*100/n(),1),"%"))
+
+write.table(part_edsup_est_egre_1, "output/bbdd_reducida/data_part_edsup_est_egre_1.csv",sep = ";",row.names = FALSE)
+```
+#### ponderado
+```{r}
+part_edsup_est_egre_1= part_pol_edsup_est_egre_1 %>% summarise(escala=names(part_pol_edsup_est_egre_1),get_label(part_pol_edsup_est_egre_1), casos=apply(part_pol_edsup_est_egre_1, 2, function(x) sum(!is.na(x))), media=apply(part_pol_edsup_est_egre_1, 2, function(x) round(weighted.mean(x, weight_w02,  na.rm=T),1)), ds=apply(part_pol_edsup_est_egre_1, 2, function(x) round(sd(x, na.rm=T),1)),  "% nunca + casi nunca"=paste0(round(apply(part_pol_edsup_est_egre_1, 2, function(x) sum(x==1|x==2,na.rm = T))*100/n(),1),"%"),"% a veces + frecuentemente"=paste0(round(apply(part_pol_edsup_est_egre_1, 2, function(x) sum(x==3|x==4,na.rm = T))*100/n(),1),"%"))
+
+write.table(part_edsup_est_egre_1, "output/bbdd_reducida/pond_red_data_part_edsup_est_egre_1.csv",sep = ";",row.names = FALSE)
+```
+
+### Tabla descriptivos 2
+
+```{r,echo=FALSE}
+# Seleccionar y renombrar variables de la base de datos de estudiantes.                               
+part_pol_edsup_est_egre_2 <- data_wide  %>% dplyr::select(starts_with("est_egre_part_pol_online"),  est_egre_conv_padres,weight_w02)#, -edsup_09_12, -edsup_09_13, -edsup_09_14, -edsup_09_15) 
+
+part_pol_edsup_est_egre_2 =na.omit(part_pol_edsup_est_egre_2)
+```
+
+```{r, echo=FALSE}
+sjlabelled::set_label(part_pol_edsup_est_egre_2) = gsub('Durante el periodo en que cursó sus estudios de Educación Superior,', '',sjlabelled::get_label(part_pol_edsup_est_egre_2)) #eliminar espacio
+
+sjlabelled::set_label(part_pol_edsup_est_egre_2) = gsub('¿con qué frecuencia realizó las siguientes actividades?', '',sjlabelled::get_label(part_pol_edsup_est_egre_2)) #eliminar espacio
+
+set_label(part_pol_edsup_est_egre_2) <- chartr("(", " ", get_label(part_pol_edsup_est_egre_2))
+set_label(part_pol_edsup_est_egre_2) <- chartr(")", " ", get_label(part_pol_edsup_est_egre_2))
+set_label(part_pol_edsup_est_egre_2) <- chartr("?", " ", get_label(part_pol_edsup_est_egre_2))
+set_label(part_pol_edsup_est_egre_2) <- chartr("-", " ", get_label(part_pol_edsup_est_egre_2))
+```
+#### simple
+```{r}
+part_edsup_est_egre_2= part_pol_edsup_est_egre_2 %>% summarise(escala=names(part_pol_edsup_est_egre_2),get_label(part_pol_edsup_est_egre_2), casos=apply(part_pol_edsup_est_egre_2, 2, function(x) sum(!is.na(x))), media=apply(part_pol_edsup_est_egre_2, 2, function(x) round(mean(x, na.rm=T),1)), ds=apply(part_pol_edsup_est_egre_2, 2, function(x) round(sd(x, na.rm=T),1)),  "% nunca + casi nunca"=paste0(round(apply(part_pol_edsup_est_egre_2, 2, function(x) sum(x==1|x==2,na.rm = T))*100/n(),1),"%"),"% a veces + frecuentemente"=paste0(round(apply(part_pol_edsup_est_egre_2, 2, function(x) sum(x==3|x==4,na.rm = T))*100/n(),1),"%"))
+
+write.table(part_edsup_est_egre_2, "output/bbdd_reducida/data_part_edsup_est_egre_2.csv",sep = ";",row.names = FALSE)
+```
+#### ponderado 
+```{r}
+part_edsup_est_egre_2= part_pol_edsup_est_egre_2 %>% summarise(escala=names(part_pol_edsup_est_egre_2),get_label(part_pol_edsup_est_egre_2), casos=apply(part_pol_edsup_est_egre_2, 2, function(x) sum(!is.na(x))), media=apply(part_pol_edsup_est_egre_2, 2, function(x) round(weighted.mean(x, weight_w02,  na.rm=T),1)), ds=apply(part_pol_edsup_est_egre_2, 2, function(x) round(sd(x, na.rm=T),1)),  "% nunca + casi nunca"=paste0(round(apply(part_pol_edsup_est_egre_2, 2, function(x) sum(x==1|x==2,na.rm = T))*100/n(),1),"%"),"% a veces + frecuentemente"=paste0(round(apply(part_pol_edsup_est_egre_2, 2, function(x) sum(x==3|x==4,na.rm = T))*100/n(),1),"%"))
+
+write.table(part_edsup_est_egre_2, "output/bbdd_reducida/pond_red_data_part_edsup_est_egre_2.csv",sep = ";",row.names = FALSE)
+```
+## Participación política durante la educación superior (para quienes aún estudian)
+
+__Considerando los últimos meses, el primer semestre de 2021, ¿con qué frecuencia realizó las siguientes actividades?__
+
++	Firmar una petición, presencialmente o por internet (part_act_01_1)
+
++ Participar en una marcha o manifestación pacífica (part_act_01_2)
+
++ Participar en una marcha o manifestación con disturbios (part_act_01_3)
+
++ Participar en marchas del movimiento feminista (part_act_01_4)
+
++ Participar en cacerolazos (part_act_01_5)
+
++ Participar de Cabildos o Asambleas Territoriales (part_act_01_6)
+
++ Participar en la campaña de candidatos (part_act_01_7)
+
++ Participar en bloqueo de calles o carreteras (part_act_01_8)
+
++ Pintar o rayar paredes con demandas o consignas (part_act_01_9)
+
++ Participar en la toma de un edificio o institución (part_act_01_10)
+
++ Trabajar como voluntario en servicios a la comunidad (part_act_01_11)
+
+__Considerando los últimos meses, el primer semestre de 2021, ¿con qué frecuencia realizó las siguientes actividades?__
+
++ Usar internet para buscar información sobre temas sociales y/o políticos (part_act_02_5)
+
++ Postear imágenes o mensajes acerca de temas sociales y/o políticos en internet (part_act_02_6)
+
++ Compartir o comentar en el posteo de otra persona acerca de temas sociales y políticos (part_act_02_7)
+
++ Seguir a personas en redes sociales por su contenido sobre temas sociales y políticos (part_act_02_8)
+
+__Considerando los últimos meses, el primer semestre de 2021, ¿con qué frecuencia realizó las siguientes actividades?__
+
++ Hablar con sus padres sobre temas sociales y/o políticos (part_act_02_1)
+
+### Tabla descriptivos 1
+
+```{r,echo=FALSE}
+# Seleccionar y renombrar variables de la base de datos de estudiantes.
+data_est_act_1 = data_wide %>%  filter(est_actual==1) %>% as.data.frame()
+part_pol_edsup_est_act_1 <- data_est_act_1 %>% dplyr::select(starts_with("part_pol"), starts_with("marcha"), -ends_with("_21b"), -ends_with("_21"), -ends_with(".y"), -ends_with("_20"), -starts_with("part_pol_m_"), -starts_with("part_pol_p_"), -starts_with("part_pol_info"), -starts_with("part_pol_online"), -part_pol_voto, -part_pol_cand, -part_pol_cealum, -part_pol_marcha_pas, -part_pol_marcha_dis, -part_pol_bloqueo, -part_pol_volunt, -part_pol_donar, weight_w02) 
+
+part_pol_edsup_est_act_1 =na.omit(part_pol_edsup_est_act_1)
+```
+
+```{r, echo=FALSE}
+sjlabelled::set_label(part_pol_edsup_est_act_1) = gsub('Considerando los últimos meses, el primer semestre de 2021,', '',sjlabelled::get_label(part_pol_edsup_est_act_1)) #eliminar espacio
+
+sjlabelled::set_label(part_pol_edsup_est_act_1) = gsub('¿con qué frecuencia realizó las siguientes actividades?', '',sjlabelled::get_label(part_pol_edsup_est_act_1)) #eliminar espacio
+
+set_label(part_pol_edsup_est_act_1) <- chartr("?", " ", get_label(part_pol_edsup_est_act_1))
+set_label(part_pol_edsup_est_act_1) <- chartr("-", " ", get_label(part_pol_edsup_est_act_1))
+```
+#### simple
+```{r}
+part_edsup_est_act_1= part_pol_edsup_est_act_1 %>% summarise(escala=names(part_pol_edsup_est_act_1),get_label(part_pol_edsup_est_act_1), casos=apply(part_pol_edsup_est_act_1, 2, function(x) sum(!is.na(x))), media=apply(part_pol_edsup_est_act_1, 2, function(x) round(mean(x, na.rm=T),1)), ds=apply(part_pol_edsup_est_act_1, 2, function(x) round(sd(x, na.rm=T),1)),  "% nunca + casi nunca"=paste0(round(apply(part_pol_edsup_est_act_1, 2, function(x) sum(x==1|x==2,na.rm = T))*100/n(),1),"%"),"% a veces + frecuentemente"=paste0(round(apply(part_pol_edsup_est_act_1, 2, function(x) sum(x==3|x==4,na.rm = T))*100/n(),1),"%"))
+
+write.table(part_edsup_est_act_1, "output/bbdd_reducida/data_part_edsup_est_act_1.csv",sep = ";",row.names = FALSE)
+```
+#### ponderado
+```{r}
+part_edsup_est_act_1= part_pol_edsup_est_act_1 %>% summarise(escala=names(part_pol_edsup_est_act_1),get_label(part_pol_edsup_est_act_1), casos=apply(part_pol_edsup_est_act_1, 2, function(x) sum(!is.na(x))), media=apply(part_pol_edsup_est_act_1, 2, function(x) round(weighted.mean(x, weight_w02,  na.rm=T),1)), ds=apply(part_pol_edsup_est_act_1, 2, function(x) round(sd(x, na.rm=T),1)),  "% nunca + casi nunca"=paste0(round(apply(part_pol_edsup_est_act_1, 2, function(x) sum(x==1|x==2,na.rm = T))*100/n(),1),"%"),"% a veces + frecuentemente"=paste0(round(apply(part_pol_edsup_est_act_1, 2, function(x) sum(x==3|x==4,na.rm = T))*100/n(),1),"%"))
+
+write.table(part_edsup_est_act_1, "output/bbdd_reducida/pond_red_data_part_edsup_est_act_1.csv",sep = ";",row.names = FALSE)
+```
+
+### Tabla descriptivos 2
+
+```{r,echo=FALSE}
+# Seleccionar y renombrar variables de la base de datos de estudiantes.
+data_est_act_1 = data_wide %>%  filter(est_actual==1) %>% as.data.frame()
+part_pol_edsup_est_act_2 <- data_est_act_1 %>% dplyr::select(part_pol_online_info, part_pol_online_post, part_pol_online_com, part_pol_online_seg, conv_padres,weight_w02) 
+
+part_pol_edsup_est_act_2 =na.omit(part_pol_edsup_est_act_2)
+```
+
+```{r, echo=FALSE}
+sjlabelled::set_label(part_pol_edsup_est_act_2) = gsub('Considerando los últimos meses, el primer semestre de 2021,', '',sjlabelled::get_label(part_pol_edsup_est_act_2)) #eliminar espacio
+
+sjlabelled::set_label(part_pol_edsup_est_act_2) = gsub('¿con qué frecuencia realizó las siguientes actividades?', '',sjlabelled::get_label(part_pol_edsup_est_act_2)) #eliminar espacio
+
+set_label(part_pol_edsup_est_act_2) <- chartr("?", " ", get_label(part_pol_edsup_est_act_2))
+set_label(part_pol_edsup_est_act_2) <- chartr("-", " ", get_label(part_pol_edsup_est_act_2))
+```
+#### simple
+```{r}
+part_edsup_est_act_2= part_pol_edsup_est_act_2 %>% summarise(escala=names(part_pol_edsup_est_act_2),get_label(part_pol_edsup_est_act_2), casos=apply(part_pol_edsup_est_act_2, 2, function(x) sum(!is.na(x))), media=apply(part_pol_edsup_est_act_2, 2, function(x) round(mean(x, na.rm=T),1)), ds=apply(part_pol_edsup_est_act_2, 2, function(x) round(sd(x, na.rm=T),1)),  "% nunca + casi nunca"=paste0(round(apply(part_pol_edsup_est_act_2, 2, function(x) sum(x==1|x==2,na.rm = T))*100/n(),1),"%"),"% a veces + frecuentemente"=paste0(round(apply(part_pol_edsup_est_act_2, 2, function(x) sum(x==3|x==4,na.rm = T))*100/n(),1),"%"))
+
+write.table(part_edsup_est_act_2, "output/bbdd_reducida/data_part_edsup_est_act_2.csv",sep = ";",row.names = FALSE)
+```
+#### ponderado 
+```{r}
+part_edsup_est_act_2= part_pol_edsup_est_act_2 %>% summarise(escala=names(part_pol_edsup_est_act_2),get_label(part_pol_edsup_est_act_2), casos=apply(part_pol_edsup_est_act_2, 2, function(x) sum(!is.na(x))), media=apply(part_pol_edsup_est_act_2, 2, function(x) round(weighted.mean(x, weight_w02,  na.rm=T),1)), ds=apply(part_pol_edsup_est_act_2, 2, function(x) round(sd(x, na.rm=T),1)),  "% nunca + casi nunca"=paste0(round(apply(part_pol_edsup_est_act_2, 2, function(x) sum(x==1|x==2,na.rm = T))*100/n(),1),"%"),"% a veces + frecuentemente"=paste0(round(apply(part_pol_edsup_est_act_2, 2, function(x) sum(x==3|x==4,na.rm = T))*100/n(),1),"%"))
+
+write.table(part_edsup_est_act_2, "output/bbdd_reducida/pond_red_data_part_edsup_est_act_2.csv",sep = ";",row.names = FALSE)
+```
+## Participación política durante los últimos meses
+
+__Considerando los últimos meses, el primer semestre de 2021, ¿con qué frecuencia realizó las siguientes actividades?__
+
++	Firmar una petición, presencialmente o por internet (part_act_01_1)
+
++ Participar en una marcha o manifestación pacífica (part_act_01_2)
+
++ Participar en una marcha o manifestación con disturbios (part_act_01_3)
+
++ Participar en marchas del movimiento feminista (part_act_01_4)
+
++ Participar en cacerolazos (part_act_01_5)
+
++ Participar de Cabildos o Asambleas Territoriales (part_act_01_6)
+
++ Participar en la campaña de candidatos (part_act_01_7)
+
++ Participar en bloqueo de calles o carreteras (part_act_01_8)
+
++ Pintar o rayar paredes con demandas o consignas (part_act_01_9)
+
++ Participar en la toma de un edificio o institución (part_act_01_10)
+
++ Trabajar como voluntario en servicios a la comunidad (part_act_01_11)
+
+__Considerando los últimos meses, el primer semestre de 2021, ¿con qué frecuencia realizó las siguientes actividades?__
+
++ Usar internet para buscar información sobre temas sociales y/o políticos (part_act_02_5)
+
++ Postear imágenes o mensajes acerca de temas sociales y/o políticos en internet (part_act_02_6)
+
++ Compartir o comentar en el posteo de otra persona acerca de temas sociales y políticos (part_act_02_7)
+
++ Seguir a personas en redes sociales por su contenido sobre temas sociales y políticos (part_act_02_8)
+
+__Considerando los últimos meses, el primer semestre de 2021, ¿con qué frecuencia realizó las siguientes actividades?__
+
++ Hablar con sus padres sobre temas sociales y/o políticos (part_act_02_1)
+
+### Tabla descriptivos 1
+
+```{r,echo=FALSE}
+data_part_pol_21_1s_1 <- data_wide  %>% dplyr::select(starts_with("part_pol"), starts_with("marcha"),-starts_with("part_pol_m_"),-starts_with("part_pol_p_"),-starts_with("part_pol_info"),-starts_with("part_pol_online"),-ends_with("_w02"), -ends_with("_w03"), -ends_with("_21"), -ends_with("_21b"), -ends_with("_20"), -ends_with(".y"), -part_pol_voto, -part_pol_cand, -part_pol_cealum, -part_pol_marcha_pas, -part_pol_marcha_dis, -part_pol_bloqueo, -part_pol_volunt, -part_pol_donar,weight_w02)#, -part_act_01_12, -part_act_01_13, -part_act_01_14, -part_act_01_15) 
+data_part_pol_21_1s_1 =na.omit(data_part_pol_21_1s_1)
+```
+
+```{r, echo=FALSE}
+sjlabelled::set_label(data_part_pol_21_1s_1) = gsub('Considerando los últimos meses, el primer semestre de 2021,', '',sjlabelled::get_label(data_part_pol_21_1s_1)) #eliminar espacio
+
+sjlabelled::set_label(data_part_pol_21_1s_1) = gsub('¿con qué frecuencia realizó las siguientes actividades?', '',sjlabelled::get_label(data_part_pol_21_1s_1)) #eliminar espacio
+
+set_label(data_part_pol_21_1s_1) <- chartr("?", " ", get_label(data_part_pol_21_1s_1))
+set_label(data_part_pol_21_1s_1) <- chartr("-", " ", get_label(data_part_pol_21_1s_1))
+```
+#### simple
+```{r}
+part_21_1s_1 = data_part_pol_21_1s_1 %>% summarise(escala=names(data_part_pol_21_1s_1),get_label(data_part_pol_21_1s_1), casos=apply(data_part_pol_21_1s_1, 2, function(x) sum(!is.na(x))), media=apply(data_part_pol_21_1s_1, 2, function(x) round(mean(x, na.rm=T),1)), ds=apply(data_part_pol_21_1s_1, 2, function(x) round(sd(x, na.rm=T),1)),  "% nunca + casi nunca"=paste0(round(apply(data_part_pol_21_1s_1, 2, function(x) sum(x==1|x==2,na.rm = T))*100/n(),1),"%"),"% a veces + frecuentemente"=paste0(round(apply(data_part_pol_21_1s_1, 2, function(x) sum(x==3|x==4,na.rm = T))*100/n(),1),"%"))
+
+write.table(part_21_1s_1, "output/bbdd_reducida/data_part_21_1s_1.csv",sep = ";",row.names = FALSE)
+```
+#### ponderado 
+```{r}
+part_21_1s_1 = data_part_pol_21_1s_1 %>% summarise(escala=names(data_part_pol_21_1s_1),get_label(data_part_pol_21_1s_1), casos=apply(data_part_pol_21_1s_1, 2, function(x) sum(!is.na(x))), media=apply(data_part_pol_21_1s_1, 2, function(x) round(weighted.mean(x, weight_w02, na.rm=T),1)), ds=apply(data_part_pol_21_1s_1, 2, function(x) round(sd(x, na.rm=T),1)),  "% nunca + casi nunca"=paste0(round(apply(data_part_pol_21_1s_1, 2, function(x) sum(x==1|x==2,na.rm = T))*100/n(),1),"%"),"% a veces + frecuentemente"=paste0(round(apply(data_part_pol_21_1s_1, 2, function(x) sum(x==3|x==4,na.rm = T))*100/n(),1),"%"))
+
+write.table(part_21_1s_1, "output/bbdd_reducida/pond_red_data_part_21_1s_1.csv",sep = ";",row.names = FALSE)
+```
+
+### Tabla descriptivos 2
+
+```{r,echo=FALSE}
+data_part_pol_21_1s_2 <- data_wide  %>% dplyr::select(part_pol_online_info, part_pol_online_post, part_pol_online_com, part_pol_online_seg, conv_padres,weight_w02)#, -part_act_01_12, -part_act_01_13, -part_act_01_14, -part_act_01_15) 
+data_part_pol_21_1s_2 =na.omit(data_part_pol_21_1s_2)
+```
+
+```{r, echo=FALSE}
+sjlabelled::set_label(data_part_pol_21_1s_2) = gsub('Considerando los últimos meses, el primer semestre de 2021,', '',sjlabelled::get_label(data_part_pol_21_1s_2)) #eliminar espacio
+
+sjlabelled::set_label(data_part_pol_21_1s_2) = gsub('¿con qué frecuencia realizó las siguientes actividades?', '',sjlabelled::get_label(data_part_pol_21_1s_2)) #eliminar espacio
+
+set_label(data_part_pol_21_1s_2) <- chartr("?", " ", get_label(data_part_pol_21_1s_2))
+set_label(data_part_pol_21_1s_2) <- chartr("-", " ", get_label(data_part_pol_21_1s_2))
+```
+#### simple
+```{r}
+part_21_1s_2 = data_part_pol_21_1s_2 %>% summarise(escala=names(data_part_pol_21_1s_2),get_label(data_part_pol_21_1s_2), casos=apply(data_part_pol_21_1s_2, 2, function(x) sum(!is.na(x))), media=apply(data_part_pol_21_1s_2, 2, function(x) round(mean(x, na.rm=T),1)), ds=apply(data_part_pol_21_1s_2, 2, function(x) round(sd(x, na.rm=T),1)),  "% nunca + casi nunca"=paste0(round(apply(data_part_pol_21_1s_2, 2, function(x) sum(x==1|x==2,na.rm = T))*100/n(),1),"%"),"% a veces + frecuentemente"=paste0(round(apply(data_part_pol_21_1s_2, 2, function(x) sum(x==3|x==4,na.rm = T))*100/n(),1),"%"))
+
+write.table(part_21_1s_2, "output/bbdd_reducida/data_part_21_1s_2.csv",sep = ";",row.names = FALSE)
+```
+#### ponderado
+```{r}
+part_21_1s_2 = data_part_pol_21_1s_2 %>% summarise(escala=names(data_part_pol_21_1s_2),get_label(data_part_pol_21_1s_2), casos=apply(data_part_pol_21_1s_2, 2, function(x) sum(!is.na(x))), media=apply(data_part_pol_21_1s_2, 2, function(x) round(weighted.mean(x, weight_w02, na.rm=T),1)), ds=apply(data_part_pol_21_1s_2, 2, function(x) round(sd(x, na.rm=T),1)),  "% nunca + casi nunca"=paste0(round(apply(data_part_pol_21_1s_2, 2, function(x) sum(x==1|x==2,na.rm = T))*100/n(),1),"%"),"% a veces + frecuentemente"=paste0(round(apply(data_part_pol_21_1s_2, 2, function(x) sum(x==3|x==4,na.rm = T))*100/n(),1),"%"))
+
+write.table(part_21_1s_2, "output/bbdd_reducida/pond_red_data_part_21_1s_2.csv",sep = ";",row.names = FALSE)
+```
+# Ola 3
+
+## Participación política durante el segundo semestre de 2021
+
+__Considerando los últimos meses, el segundo semestre de 2021 (entre agosto y diciembre), ¿con qué frecuencia realizó las siguientes actividades?__
+
++	Firmar una petición, presencialmente o por internet (part_act_01_1)
+
++ Participar en una marcha o manifestación pacífica (part_act_01_2)
+
++ Participar en una marcha o manifestación con disturbios (part_act_01_3)
+
++ Participar en marchas del movimiento feminista (part_act_01_4)
+
++ Participar en cacerolazos (part_act_01_5)
+
++ Participar de Cabildos o Asambleas Territoriales (part_act_01_6)
+
++ Participar en la campaña de candidatos (part_act_01_7)
+
++ Participar en bloqueo de calles o carreteras (part_act_01_8)
+
++ Pintar o rayar paredes con demandas o consignas (part_act_01_9)
+
++ Participar en la toma de un edificio o institución (part_act_01_10)
+
++ Trabajar como voluntario en servicios a la comunidad (part_act_01_11)
+
+__Considerando los últimos meses, el segundo semestre de 2021 (entre agosto y diciembre), ¿con qué frecuencia realizó las siguientes actividades?__
+
++ Usar internet para buscar información sobre temas sociales y/o políticos (part_act_02_5)
+
++ Postear imágenes o mensajes acerca de temas sociales y/o políticos en internet (part_act_02_6)
+
++ Compartir o comentar en el posteo de otra persona acerca de temas sociales y políticos (part_act_02_7)
+
++ Seguir a personas en redes sociales por su contenido sobre temas sociales y políticos (part_act_02_8)
+
+__Considerando los últimos meses, el segundo semestre de 2021 (entre agosto y diciembre), ¿con qué frecuencia realizó las siguientes actividades?__
+
++ Hablar con sus padres sobre temas sociales y/o políticos (part_act_02_1)
+
+### Tabla descriptivos 1
+
+```{r,echo=FALSE}
+data_part_pol_21_2s_1 <- data_wide %>% dplyr::select((starts_with("part_pol") | starts_with("marcha")) & ends_with("_21b"),weight_w03, -starts_with("part_pol_info"))#, -part_act_01_12, -part_act_01_13, -part_act_01_14, -part_act_01_15) 
+
+data_part_pol_21_2s_1 =na.omit(data_part_pol_21_2s_1)
+```
+
+```{r, echo=FALSE}
+sjlabelled::set_label(data_part_pol_21_2s_1) = gsub('Considerando los últimos meses, el segundo semestre de 2021  entre agosto y diciembre ,', '',sjlabelled::get_label(data_part_pol_21_2s_1)) #eliminar espacio
+
+sjlabelled::set_label(data_part_pol_21_2s_1) = gsub('¿con qué frecuencia realizó las siguientes actividades?', '',sjlabelled::get_label(data_part_pol_21_2s_1)) #eliminar espacio
+
+set_label(data_part_pol_21_2s_1) <- chartr("¿", " ", get_label(data_part_pol_21_2s_1))
+set_label(data_part_pol_21_2s_1) <- chartr("?", " ", get_label(data_part_pol_21_2s_1))
+set_label(data_part_pol_21_2s_1) <- chartr("(", " ", get_label(data_part_pol_21_2s_1))
+set_label(data_part_pol_21_2s_1) <- chartr(")", " ", get_label(data_part_pol_21_2s_1))
+set_label(data_part_pol_21_2s_1) <- chartr("-", " ", get_label(data_part_pol_21_2s_1))
+```
+#### simple
+```{r}
+part_21_2s_1= data_part_pol_21_2s_1 %>% summarise(
+  escala=names(data_part_pol_21_2s_1),get_label(data_part_pol_21_2s_1), 
+  casos=apply(data_part_pol_21_2s_1, 2, function(x) sum(!is.na(x))), 
+  media=apply(data_part_pol_21_2s_1, 2, function(x) round(mean(x, na.rm=T),1)), 
+  ds=apply(data_part_pol_21_2s_1, 2, function(x) round(sd(x, na.rm=T),1)), 
+  "% nunca + casi nunca"=paste0(round(apply(data_part_pol_21_2s_1, 2, function(x) sum(x==1|x==2,na.rm = T))*100/n(),1),"%"),
+  "% a veces + frecuentemente"=paste0(round(apply(data_part_pol_21_2s_1, 2, function(x) sum(x==3|x==4,na.rm = T))*100/n(),1),"%"))
+
+write.table(part_21_2s_1, "output/bbdd_reducida/data_part_21_2s_1.csv",sep = ";",row.names = FALSE)
+```
+#### ponderado 
+```{r}
+part_21_2s_1= data_part_pol_21_2s_1 %>% summarise(
+  escala=names(data_part_pol_21_2s_1),get_label(data_part_pol_21_2s_1), 
+  casos=apply(data_part_pol_21_2s_1, 2, function(x) sum(!is.na(x))), 
+  media=apply(data_part_pol_21_2s_1, 2, function(x) round(weighted.mean(x, weight_w03, na.rm=T),1)), 
+  ds=apply(data_part_pol_21_2s_1, 2, function(x) round(sd(x, na.rm=T),1)), 
+  "% nunca + casi nunca"=paste0(round(apply(data_part_pol_21_2s_1, 2, function(x) sum(x==1|x==2,na.rm = T))*100/n(),1),"%"),
+  "% a veces + frecuentemente"=paste0(round(apply(data_part_pol_21_2s_1, 2, function(x) sum(x==3|x==4,na.rm = T))*100/n(),1),"%"))
+
+write.table(part_21_2s_1, "output/bbdd_reducida/pond_red_data_part_21_2s_1.csv",sep = ";",row.names = FALSE)
+```
+### Tabla descriptivos 2
+```{r,echo=FALSE}
+data_part_pol_21_2s_2 <- data_wide %>% dplyr::select(part_pol_online_info_21b.x, part_pol_online_post_21b.x, part_pol_online_com_21b.x, part_pol_online_seg_21b.x, conv_padres_21b.x, weight_w03)#, -part_act_01_12, -part_act_01_13, -part_act_01_14, -part_act_01_15) 
+data_part_pol_21_2s_2 =na.omit(data_part_pol_21_2s_2)
+```
+
+```{r, echo=FALSE}
+sjlabelled::set_label(data_part_pol_21_2s_2) = gsub('Considerando los últimos meses, el segundo semestre de 2021  entre agosto y diciembre ,', '',sjlabelled::get_label(data_part_pol_21_2s_2)) #eliminar espacio
+
+sjlabelled::set_label(data_part_pol_21_2s_2) = gsub('¿con qué frecuencia realizó las siguientes actividades?', '',sjlabelled::get_label(data_part_pol_21_2s_2)) #eliminar espacio
+
+set_label(data_part_pol_21_2s_2) <- chartr("¿", " ", get_label(data_part_pol_21_2s_2))
+set_label(data_part_pol_21_2s_2) <- chartr("?", " ", get_label(data_part_pol_21_2s_2))
+set_label(data_part_pol_21_2s_2) <- chartr("(", " ", get_label(data_part_pol_21_2s_2))
+set_label(data_part_pol_21_2s_2) <- chartr(")", " ", get_label(data_part_pol_21_2s_2))
+set_label(data_part_pol_21_2s_2) <- chartr("-", " ", get_label(data_part_pol_21_2s_2))
+```
+#### simple
+```{r}
+part_21_2s_2= data_part_pol_21_2s_2 %>% summarise(
+  escala=names(data_part_pol_21_2s_2),get_label(data_part_pol_21_2s_2), 
+  casos=apply(data_part_pol_21_2s_2, 2, function(x) sum(!is.na(x))), 
+  media=apply(data_part_pol_21_2s_2, 2, function(x) round(mean(x, na.rm=T),1)), 
+  ds=apply(data_part_pol_21_2s_2, 2, function(x) round(sd(x, na.rm=T),1)), 
+  "% nunca + casi nunca"=paste0(round(apply(data_part_pol_21_2s_2, 2, function(x) sum(x==1|x==2,na.rm = T))*100/n(),1),"%"),
+  "% a veces + frecuentemente"=paste0(round(apply(data_part_pol_21_2s_2, 2, function(x) sum(x==3|x==4,na.rm = T))*100/n(),1),"%"))
+
+write.table(part_21_2s_2, "output/bbdd_reducida/data_part_21_2s_2.csv",sep = ";",row.names = FALSE)
+```
+#### ponderado
+```{r}
+part_21_2s_2= data_part_pol_21_2s_2 %>% summarise(
+  escala=names(data_part_pol_21_2s_2),get_label(data_part_pol_21_2s_2), 
+  casos=apply(data_part_pol_21_2s_2, 2, function(x) sum(!is.na(x))), 
+  media=apply(data_part_pol_21_2s_2, 2, function(x) round(weighted.mean(x, weight_w03,  na.rm=T),1)), 
+  ds=apply(data_part_pol_21_2s_2, 2, function(x) round(sd(x, na.rm=T),1)), 
+  "% nunca + casi nunca"=paste0(round(apply(data_part_pol_21_2s_2, 2, function(x) sum(x==1|x==2,na.rm = T))*100/n(),1),"%"),
+  "% a veces + frecuentemente"=paste0(round(apply(data_part_pol_21_2s_2, 2, function(x) sum(x==3|x==4,na.rm = T))*100/n(),1),"%"))
+
+write.table(part_21_2s_2, "output/bbdd_reducida/pond_red_data_part_21_2s_2.csv",sep = ";",row.names = FALSE)
+```
+## Participación política durante el segundo semestre de 2021 (para quienes aún estudian)
+
+__Considerando los últimos meses, el segundo semestre de 2021 (entre agosto y diciembre), ¿con qué frecuencia realizó las siguientes actividades?__
+
++	Firmar una petición, presencialmente o por internet (part_act_01_1)
+
++ Participar en una marcha o manifestación pacífica (part_act_01_2)
+
++ Participar en una marcha o manifestación con disturbios (part_act_01_3)
+
++ Participar en marchas del movimiento feminista (part_act_01_4)
+
++ Participar en cacerolazos (part_act_01_5)
+
++ Participar de Cabildos o Asambleas Territoriales (part_act_01_6)
+
++ Participar en la campaña de candidatos (part_act_01_7)
+
++ Participar en bloqueo de calles o carreteras (part_act_01_8)
+
++ Pintar o rayar paredes con demandas o consignas (part_act_01_9)
+
++ Participar en la toma de un edificio o institución (part_act_01_10)
+
++ Trabajar como voluntario en servicios a la comunidad (part_act_01_11)
+
+__Considerando los últimos meses, el segundo semestre de 2021 (entre agosto y diciembre), ¿con qué frecuencia realizó las siguientes actividades?__
+
++ Usar internet para buscar información sobre temas sociales y/o políticos (part_act_02_5)
+
++ Postear imágenes o mensajes acerca de temas sociales y/o políticos en internet (part_act_02_6)
+
++ Compartir o comentar en el posteo de otra persona acerca de temas sociales y políticos (part_act_02_7)
+
++ Seguir a personas en redes sociales por su contenido sobre temas sociales y políticos (part_act_02_8)
+
+__Considerando los últimos meses, el segundo semestre de 2021 (entre agosto y diciembre), ¿con qué frecuencia realizó las siguientes actividades?__
+
++ Hablar con sus padres sobre temas sociales y/o políticos (part_act_02_1)
+
+### Tabla descriptivos 1
+
+```{r,echo=FALSE}
+data_est_act3 = data_wide %>%  filter(est_actual==1) %>% as.data.frame()
+data_part_pol_21_2s_1_estact <- data_est_act3 %>% dplyr::select((starts_with("part_pol") | starts_with("marcha")) & ends_with("_21b"),weight_w03, -starts_with("part_pol_info"))#, -part_act_01_12, -part_act_01_13, -part_act_01_14, -part_act_01_15) 
+
+data_part_pol_21_2s_1_estact =na.omit(data_part_pol_21_2s_1_estact)
+```
+
+```{r, echo=FALSE}
+sjlabelled::set_label(data_part_pol_21_2s_1_estact) = gsub('Considerando los últimos meses, el segundo semestre de 2021  entre agosto y diciembre ,', '',sjlabelled::get_label(data_part_pol_21_2s_1_estact)) #eliminar espacio
+
+sjlabelled::set_label(data_part_pol_21_2s_1_estact) = gsub('¿con qué frecuencia realizó las siguientes actividades?', '',sjlabelled::get_label(data_part_pol_21_2s_1_estact)) #eliminar espacio
+
+set_label(data_part_pol_21_2s_1_estact) <- chartr("¿", " ", get_label(data_part_pol_21_2s_1_estact))
+set_label(data_part_pol_21_2s_1_estact) <- chartr("?", " ", get_label(data_part_pol_21_2s_1_estact))
+set_label(data_part_pol_21_2s_1_estact) <- chartr("(", " ", get_label(data_part_pol_21_2s_1_estact))
+set_label(data_part_pol_21_2s_1_estact) <- chartr(")", " ", get_label(data_part_pol_21_2s_1_estact))
+set_label(data_part_pol_21_2s_1_estact) <- chartr("-", " ", get_label(data_part_pol_21_2s_1_estact))
+```
+#### simple
+```{r}
+part_21_2s_1_estact= data_part_pol_21_2s_1_estact %>% summarise(
+  escala=names(data_part_pol_21_2s_1_estact),get_label(data_part_pol_21_2s_1_estact), 
+  casos=apply(data_part_pol_21_2s_1_estact, 2, function(x) sum(!is.na(x))), 
+  media=apply(data_part_pol_21_2s_1_estact, 2, function(x) round(mean(x, na.rm=T),1)), 
+  ds=apply(data_part_pol_21_2s_1_estact, 2, function(x) round(sd(x, na.rm=T),1)), 
+  "% nunca + casi nunca"=paste0(round(apply(data_part_pol_21_2s_1_estact, 2, function(x) sum(x==1|x==2,na.rm = T))*100/n(),1),"%"),
+  "% a veces + frecuentemente"=paste0(round(apply(data_part_pol_21_2s_1_estact, 2, function(x) sum(x==3|x==4,na.rm = T))*100/n(),1),"%"))
+
+write.table(part_21_2s_1_estact, "output/bbdd_reducida/data_part_21_2s_1_estact.csv",sep = ";",row.names = FALSE)
+```
+#### ponderado
+```{r}
+part_21_2s_1_estact= data_part_pol_21_2s_1_estact %>% summarise(
+  escala=names(data_part_pol_21_2s_1_estact),get_label(data_part_pol_21_2s_1_estact), 
+  casos=apply(data_part_pol_21_2s_1_estact, 2, function(x) sum(!is.na(x))), 
+  media=apply(data_part_pol_21_2s_1_estact, 2, function(x) round(weighted.mean(x, weight_w03, na.rm=T),1)), 
+  ds=apply(data_part_pol_21_2s_1_estact, 2, function(x) round(sd(x, na.rm=T),1)), 
+  "% nunca + casi nunca"=paste0(round(apply(data_part_pol_21_2s_1_estact, 2, function(x) sum(x==1|x==2,na.rm = T))*100/n(),1),"%"),
+  "% a veces + frecuentemente"=paste0(round(apply(data_part_pol_21_2s_1_estact, 2, function(x) sum(x==3|x==4,na.rm = T))*100/n(),1),"%"))
+
+write.table(part_21_2s_1_estact, "output/bbdd_reducida/pond_red_data_part_21_2s_1_estact.csv",sep = ";",row.names = FALSE)
+```
+### Tabla descriptivos 2
+
+```{r,echo=FALSE}
+data_part_pol_21_2s_2_estact <- data_est_act3 %>% dplyr::select(part_pol_online_info_21b.x, part_pol_online_post_21b.x, part_pol_online_com_21b.x, part_pol_online_seg_21b.x, conv_padres_21b.x,weight_w03)#, -part_act_01_12, -part_act_01_13, -part_act_01_14, -part_act_01_15) 
+
+data_part_pol_21_2s_2_estact =na.omit(data_part_pol_21_2s_2_estact)
+```
+
+```{r, echo=FALSE}
+sjlabelled::set_label(data_part_pol_21_2s_2_estact) = gsub('Considerando los últimos meses, el segundo semestre de 2021  entre agosto y diciembre ,', '',sjlabelled::get_label(data_part_pol_21_2s_2_estact)) #eliminar espacio
+
+sjlabelled::set_label(data_part_pol_21_2s_2_estact) = gsub('¿con qué frecuencia realizó las siguientes actividades?', '',sjlabelled::get_label(data_part_pol_21_2s_2_estact)) #eliminar espacio
+
+set_label(data_part_pol_21_2s_2_estact) <- chartr("¿", " ", get_label(data_part_pol_21_2s_2_estact))
+set_label(data_part_pol_21_2s_2_estact) <- chartr("?", " ", get_label(data_part_pol_21_2s_2_estact))
+set_label(data_part_pol_21_2s_2_estact) <- chartr("(", " ", get_label(data_part_pol_21_2s_2_estact))
+set_label(data_part_pol_21_2s_2_estact) <- chartr(")", " ", get_label(data_part_pol_21_2s_2_estact))
+set_label(data_part_pol_21_2s_2_estact) <- chartr("-", " ", get_label(data_part_pol_21_2s_2_estact))
+```
+#### simple
+```{r}
+part_21_2s_2_estact= data_part_pol_21_2s_2_estact %>% summarise(
+  escala=names(data_part_pol_21_2s_2_estact),get_label(data_part_pol_21_2s_2_estact), 
+  casos=apply(data_part_pol_21_2s_2_estact, 2, function(x) sum(!is.na(x))), 
+  media=apply(data_part_pol_21_2s_2_estact, 2, function(x) round(mean(x, na.rm=T),1)), 
+  ds=apply(data_part_pol_21_2s_2_estact, 2, function(x) round(sd(x, na.rm=T),1)), 
+  "% nunca + casi nunca"=paste0(round(apply(data_part_pol_21_2s_2_estact, 2, function(x) sum(x==1|x==2,na.rm = T))*100/n(),1),"%"),
+  "% a veces + frecuentemente"=paste0(round(apply(data_part_pol_21_2s_2_estact, 2, function(x) sum(x==3|x==4,na.rm = T))*100/n(),1),"%"))
+
+write.table(part_21_2s_2_estact, "output/bbdd_reducida/data_part_21_2s_2_estact.csv",sep = ";",row.names = FALSE)
+```
+#### ponderado 
+```{r}
+part_21_2s_2_estact= data_part_pol_21_2s_2_estact %>% summarise(
+  escala=names(data_part_pol_21_2s_2_estact),get_label(data_part_pol_21_2s_2_estact), 
+  casos=apply(data_part_pol_21_2s_2_estact, 2, function(x) sum(!is.na(x))), 
+  media=apply(data_part_pol_21_2s_2_estact, 2, function(x) round(weighted.mean(x, weight_w03, na.rm=T),1)), 
+  ds=apply(data_part_pol_21_2s_2_estact, 2, function(x) round(sd(x, na.rm=T),1)), 
+  "% nunca + casi nunca"=paste0(round(apply(data_part_pol_21_2s_2_estact, 2, function(x) sum(x==1|x==2,na.rm = T))*100/n(),1),"%"),
+  "% a veces + frecuentemente"=paste0(round(apply(data_part_pol_21_2s_2_estact, 2, function(x) sum(x==3|x==4,na.rm = T))*100/n(),1),"%"))
+
+write.table(part_21_2s_2_estact, "output/bbdd_reducida/pond_red_data_part_21_2s_2_estact.csv",sep = ";",row.names = FALSE)
+```
