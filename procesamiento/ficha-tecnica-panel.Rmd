@@ -96,8 +96,18 @@ _Fecha de trabajo de campo_
 :::
 
 ::: {.col data-latex="{0.65\textwidth}"}
-Inicio: 4 de Octubre del 2021
-Término: 14 de Octubre del 2021
+
+* **Ola 1**:
+  * Inicio: `r as.Date(min(data_w01$StartDate))`
+  * Término: `r as.Date(max(data_w01$EndDate))`
+
+* **Ola 2**: 
+  * Inicio: `r as.Date(min(data_w02$StartDate))` 
+  * Término: `r as.Date(max(data_w02$EndDate))`
+
+* **Ola 3**:
+  * Inicio: `r as.Date(min(data_w03$StartDate))`
+  * Término: `r as.Date(max(data_w03$EndDate))`
 :::
 ::::::
 

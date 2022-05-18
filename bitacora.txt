@@ -5,11 +5,34 @@
 * P.ej: sumatoria del listado dicotimizado de las preguntas de participación 
 * El voto debe estar solo porque no son las mismas elecciones (voto e intención de voto)
 
-* Crear ponderador de w02 y w03
+* Crear ponderador de w02 y w03 (LISTO)
 * Atención en los duplicados 
 * Elegir al más completo y/o más reciente
-* Ponderador en ficha técnica
-* eliminar la IP
-* mantener privado
-* Homologar nombres de variables entre olas
+* Ponderador en ficha técnica (PENDIENTE)
+* eliminar la IP (LISTO)
+* mantener privado (LISTO)
+* Homologar nombres de variables entre olas (LISTO)
+
+
+Alternativo: https://ngreifer.github.io/WeightIt/reference/method_ebal.html
+
+Por hacer:
+
 * en ficha tecnica la vinculación de las bbdd
+* editar fechas de trabajo de campo en documentación
+* user: jmatamala1
+* revisar los weights y los missing ahí 
+
+
+* fijar tiempos:
+	- DEscribir tiempo colegio (3ro y 4to)
+	- describir tiempo estallido (2019)
+	- describir tiempo 2020
+	- describir tiempo 1er sem 2021
+	- describir tiempo 2do sem 2021
+
+
+# Analisis
+
+	- fijar en el tiempo atributos de la familia en t1
+	- establecer formas de medición de la participación política (formal, informal, diversidad)
