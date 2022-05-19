@@ -1,4 +1,4 @@
-# Repositorio de Datos:
+# Repositorio de datos:
 
 ## Proyecto: "Participación ciudadana juvenil: entre la Reproducción social y la socialización política"
 

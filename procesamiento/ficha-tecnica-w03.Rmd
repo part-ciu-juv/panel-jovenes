@@ -50,10 +50,7 @@ pacman::p_load(tidyverse, haven,codebook, ggplot2,sjPlot,knitr,kableExtra,questi
 ```
 
 ```{r}
-data <- read_sav(
-  url(
-    "https://github.com/part-ciu-juv/panel-jovenes/raw/main/input/data/original/Ola_3.sav" 
-  ))
+data <- haven::read_sav(file = here::here("input/data/original/Ola_3.sav"))
 ```
 
 ```{r}
@@ -136,8 +133,9 @@ _Fecha de trabajo de campo_
 :::
 
 ::: {.col data-latex="{0.65\textwidth}"}
-Inicio: 4 de Octubre del 2021
-Término: 14 de Octubre del 2021
+Inicio: `r as.Date(min(data$StartDate))`
+
+Término: `r as.Date(max(data$EndDate))`
 :::
 ::::::
 
@@ -173,7 +171,7 @@ La población objetivo del estudio son jóvenes Chilenos, de edad comprendida en
 kable(na.omit(tab3),
       digits = 1, booktabs=T,
       col.names = c(" ","Casen","Cuotas"),
-      linesep = "",
+      linesep = "",format = "latex",
       caption = "Distribución de muestra planificada y lograda") %>% 
   kable_styling(full_width = FALSE,latex_options = c("HOLD_position"),font_size = 8) %>% 
   pack_rows("Sexo", 1, 2) %>%
@@ -227,7 +225,7 @@ data %>%
   na.omit() %>% group_by(region) %>% summarise(n=n()) %>% mutate(freq = round((n / sum(n))*100,2))%>% 
   kable(col.names = c("Región","N","%"), 
         caption = "Distribución de muestra lograda por región.",
-        linesep = "",
+        linesep = "",format = "latex",
         booktabs=T) %>% 
   kable_styling(full_width = FALSE,latex_options = c("HOLD_position"),font_size = 9)
 ```
@@ -361,7 +359,7 @@ survey_info2$n <- n
 
 kable(survey_info2,col.names = c("Item","","N"),
       caption = "Descripción de logro",
-      linesep = "",
+      linesep = "",format = "latex",
       booktabs=T) %>% 
   kable_styling(full_width = FALSE,latex_options = c("HOLD_position"),font_size = 9) %>% 
   add_indent(c(2,3,7,8))

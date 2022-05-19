@@ -96,7 +96,11 @@ ebalance sexoWH	///
 edadWb2 edadWb3 ///
 educb2 educb3 educb4 educb5 educb6, ///
 manualtargets(0.496 0.400 0.385 0.43 0.084 0.071 0.235 0.122)	
-                     
+
+clonevar weight_na0_w01 = _webal
+replace weight_na0_w01=0 if weight_na0_w01==.
+codebook weight_na0_w01
+    
 * Sexo
 tab cs_01
 tab cs_01[aw=_webal]
@@ -112,7 +116,7 @@ tab educ [aw=_webal]
 rename _webal weight_w01
 
 * Eliminar variables
-keep ticket ResponseId weight
+keep ticket ResponseId weight_w01 weight_na0_w01
 
 save "input\data\proc\weight_w01.dta", replace
 
@@ -204,7 +208,11 @@ tab1 educb*,m
 ebalance sexoWH	///
 edadWb2 edadWb3 ///
 educb2 educb3 educb4 educb5 educb6, ///
-manualtargets(0.496 0.400 0.385 0.43 0.084 0.071 0.235 0.122)	
+manualtargets(0.496 0.400 0.385 0.43 0.084 0.071 0.235 0.122)
+
+clonevar weight_na0_w02 = _webal
+replace weight_na0_w02=0 if weight_na0_w02==.
+codebook weight_na0_w02	
                      
 * Sexo
 tab cs_01
@@ -221,7 +229,7 @@ tab educ [aw=_webal]
 rename _webal weight_w02
 
 * Eliminar variables
-keep ticket ResponseId weight
+keep ticket ResponseId weight_w02 weight_na0_w02
 
 save "input\data\proc\weight_w02.dta", replace
 
@@ -314,6 +322,10 @@ ebalance sexoWH	///
 edadWb2 edadWb3 ///
 educb2 educb3 educb4 educb5 educb6, ///
 manualtargets(0.496 0.400 0.385 0.43 0.084 0.071 0.235 0.122)	
+
+clonevar weight_na0_w03 = _webal
+replace weight_na0_w03=0 if weight_na0_w03==.
+codebook weight_na0_w03	
                      
 * Sexo
 tab cs_01
@@ -330,6 +342,6 @@ tab educ [aw=_webal]
 rename _webal weight_w03
 
 * Eliminar variables
-keep ticket ResponseId weight
+keep ticket ResponseId weight_w03 weight_na0_w03
 
 save "input\data\proc\weight_w03.dta", replace
