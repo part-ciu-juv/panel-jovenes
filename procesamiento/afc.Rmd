@@ -18,7 +18,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 ```
 
 ```{r}
-pacman::p_load(sjPlot, sjlabelled,readr, summarytools, haven, dplyr,kableExtra,readxl, ggplot2,ggtext)
+pacman::p_load(lavaan, haven, dplyr)
 ```
 
 # Cargar bbdd
@@ -128,7 +128,7 @@ Los criterios para analizar el valor del estadístico KMO son:
 
 ##### __Esfericidad__
 ```{r }
-psych::cortest.bartlett(corMat, n = 3432)
+psych::cortest.bartlett(corMat, n = 3432) #el n que se debe indicar es el número de casos de la base de datos que estamos utilizando para el análisis
 ```
 
 Este criterio alude a en qué medida la varianza de la matriz es suficiente. Si rechazamos la hipótesis nula (p=<0.05) de que la varianza es 0, significa que hay suficientes elementos comunes. En este sentido, como la hipótesis nula es que no hay relaciones, esperamos rechazarla.  
@@ -147,7 +147,8 @@ La normalidad de los indicadores no es tan relevante porque hay métodos robusto
 #### __Especificación y estimación del modelo__
 ```{r }
 # Selección de variables
-part_pol_3y4= data_wide %>% dplyr::select(part_pol_firma_w01, part_pol_marcha_pas, part_pol_marcha_dis, part_pol_bloqueo, part_pol_rayar_w01, part_pol_toma_w01, part_pol_online, part_online_post, part_online_com, part_online_seg, weight_w01)
+
+#part_pol_3y4= data_wide %>% dplyr::select(part_pol_firma_w01, part_pol_marcha_pas, part_pol_marcha_dis, part_pol_bloqueo, part_pol_rayar_w01, part_pol_toma_w01, part_pol_online, part_online_post, part_online_com, part_online_seg, weight_w01)
 
 # Especificación del modelo
 afc1 <- '
