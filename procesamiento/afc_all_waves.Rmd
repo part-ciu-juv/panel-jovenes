@@ -42,24 +42,23 @@ by = "folio_encuestado")
 
 # Tipos de participación y frases a utilizar
 
-_Activismo no disruptivo_
-
-+ Firmar una petición, presencialmente o por internet (part_pol_firma_21)
-+ Participar en una marcha o manifestación pacífica (part_pol_marc_pac_21)
+_Activismo no disruptivo
++ Firmar una petición, presencialmente o por internet
++ Participar en una marcha o manifestación pacífica 
 
 _Activismo disruptivo_
 
-+ Participar en una marcha o manifestación con disturbios (part_pol_marc_dis_21)
-+ Participar en bloqueo de calles o carreteras (part_pol_bloq_21)
-+ Pintar o rayar paredes con demandas o consignas (part_pol_rayar_21)
-+ Participar en la toma de un edificio o institución (part_pol_toma_21)
++ Participar en una marcha o manifestación con disturbios
++ Participar en bloqueo de calles o carreteras
++ Pintar o rayar paredes con demandas o consignas
++ Participar en la toma de un edificio o institución 
 
 _Activismo online_
 
-+ Usar internet para buscar información sobre temas sociales y/o políticos (part_pol_online_info_21)
-+ Postear imágenes o mensajes acerca de temas sociales y/o políticos en internet (part_pol_online_post_21)
-+ Compartir o comentar en el posteo de otra persona acerca de temas sociales y políticos (part_pol_online_com_21)
-+ Seguir a personas en redes sociales por su contenido sobre temas sociales y políticos (part_pol_online_seg_21)
++ Usar internet para buscar información sobre temas sociales y/o políticos 
++ Postear imágenes o mensajes acerca de temas sociales y/o políticos en internet 
++ Compartir o comentar en el posteo de otra persona acerca de temas sociales y políticos
++ Seguir a personas en redes sociales por su contenido sobre temas sociales y políticos
 
 __Activismo social o comunitario__
 
@@ -67,7 +66,7 @@ __Activismo social o comunitario__
 
 # Introducción al Análisis Factorial Confirmatorio (AFC)
 ## Variable ejemplo: Participación política durante estallido social
-### Descriptivos
+### Descriptivos5
 ```{r}
 part_pol_est= data_wide %>% dplyr::select(part_pol_firma_21, part_pol_marc_pac_21, part_pol_marc_dis_21, part_pol_bloq_21, part_pol_rayar_21, part_pol_toma_21, part_pol_online_info_21, part_pol_online_post_21, part_pol_online_com_21, part_pol_online_seg_21)
 summary(part_pol_est)
@@ -204,3 +203,5 @@ __Rangos recomendados:__
 + RMSEA: Cercano a 0.06 o menos
 
 + SRMR: Cercano a 0.08 o menos
+
+##
