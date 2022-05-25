@@ -1,6 +1,5 @@
 ---
-title: "Análisis Factorial Confirmatorio todas las olas"
-author: "Anais Herrera-Leighton"
+title: "Análisis Factorial Confirmatorio"
 output: 
   html_document:
     toc: yes
@@ -30,13 +29,13 @@ ola3<-read_dta("../input/data/proc/data_03.dta")
 
 # Juntar bbdd
 ```{r}
-data_wide <- left_join(x = ola3, #datos ola 3
+data_wide <- full_join(x = ola1, #datos ola 1
 y = ola2, #datos ola 2
 by = "folio_encuestado", #identificador
 #aplica sufijo a variables que se repiten entre olas
-suffix = c("_w03",
+suffix = c("_w01",
 "_w02")) %>%
-left_join(ola1,
+left_join(ola3,
 by = "folio_encuestado")
 ```
 
@@ -65,6 +64,94 @@ __Activismo social o comunitario__
 + Trabajar como voluntario en servicios a la comunidad (debido a que es sólo un indicador, **_no_** se incorporará en el AFC)
 
 # Análisis Factorial Confirmatorio (AFC)
+## Variable: Participación política durante 3ro y 4to medio
+### Descriptivos
+```{r}
+part_pol_3y4= data_wide %>% dplyr::select(part_pol_firma_w01, part_pol_marcha_pas, part_pol_marcha_dis, part_pol_bloqueo, part_pol_rayar_w01, part_pol_toma_w01, part_pol_online, part_online_post, part_online_com, part_online_seg)
+summary(part_pol_3y4)
+```
+
+### Análisis correlacional
+```{r}
+corMat_3y4  <- cor(part_pol_3y4, use="na.or.complete", method = "kendall")  # estimar matriz pearson
+options(digits=3) # decimales
+#print(corMat)
+
+#stargazer::stargazer(corMat, title="correlaciones", type = "text") #Latex table
+```
+
+
+```{r }
+M_3y4=cor(part_pol_3y4, use="na.or.complete")
+corrplot::corrplot(M_3y4, type="lower",
+      order="AOE", cl.pos="b", tl.pos="d") #agrega nombres en diag.
+```
+
+```{r }
+sjp.corr(part_pol_3y4, na.deletion = c("listwise"))
+```
+
+### __AFC__
+#### __Análisis de supuestos__
+##### __KMO: factorizabilidad__
+
+```{r }
+psych::KMO(corMat_3y4) 
+```
+
+##### __Esfericidad__
+```{r }
+psych::cortest.bartlett(corMat_3y4, n = 3432) #el n que se debe indicar es el número de casos de la base de datos que estamos utilizando para el análisis
+```
+
+
+##### __Normalidad (univariada)__
+```{r }
+shapiro.test(part_pol_3y4$part_pol_firma_w01)
+shapiro.test(part_pol_3y4$part_pol_marcha_pas)
+shapiro.test(part_pol_3y4$part_pol_marcha_dis)
+shapiro.test(part_pol_3y4$part_pol_bloqueo)
+shapiro.test(part_pol_3y4$part_pol_rayar_w01)
+shapiro.test(part_pol_3y4$part_pol_toma_w01)
+shapiro.test(part_pol_3y4$part_pol_online)
+shapiro.test(part_pol_3y4$part_online_post)
+shapiro.test(part_pol_3y4$part_online_com)
+shapiro.test(part_pol_3y4$part_online_seg)
+```
+
+#### __Especificación y estimación del modelo__
+```{r }
+# Especificación del modelo
+afc0 <- '
+act_no_disrup =~ part_pol_firma_w01 + part_pol_marcha_pas
+act_disrup =~ part_pol_marcha_dis + part_pol_bloqueo + part_pol_rayar_w01 + part_pol_toma_w01
+act_online =~ part_pol_online + part_online_post + part_online_com + part_online_seg
+'
+```
+
+```{r }
+# Estimación del modelo
+fit_0 <- lavaan::cfa(afc0, data=part_pol_3y4, ordered=T)
+```
+
+#### __Interpretación de resultados__
+
+```{r}
+lavaan::summary(fit_0, fit.measures=T, standardized=T)
+```
+
+
+```{r }
+show(fit_0) # Resumen ajuste general
+```
+
+
+```{r}
+lavaan::fitMeasures(fit_0, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr"))
+```
+
+### Reporte 3ero y 4to
+
 ## Variable: Participación política durante estallido social
 ### Descriptivos
 ```{r}
@@ -99,23 +186,10 @@ sjp.corr(part_pol_est, na.deletion = c("listwise"))
 ```{r }
 psych::KMO(corMat_est) 
 ```
-Los criterios para analizar el valor del estadístico KMO son:
-
-+	0.00 to 0.49 inaceptable.
-
-+	0.50 to 0.59 miserable.
-
-+	0.60 to 0.69 mediocre.
-
-+	0.70 to 0.79 medio.
-
-+	0.80 to 0.89 meritorio.
-
-+	0.90 to 1.00 maravilloso.
 
 ##### __Esfericidad__
 ```{r }
-psych::cortest.bartlett(corMat_est, n = 1101)
+psych::cortest.bartlett(corMat_est, n = 3432)
 ```
 
 ##### __Normalidad (univariada)__
@@ -163,16 +237,8 @@ show(fit_1) # Resumen ajuste general
 ```{r}
 lavaan::fitMeasures(fit_1, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr"))
 ```
-__Rangos recomendados:__
 
-+ CFI: Cercano a 0.95 o más
-
-+ TLI: Cercano a 0.95 o más
-
-+ RMSEA: Cercano a 0.06 o menos
-
-+ SRMR: Cercano a 0.08 o menos
-
+### Reporte estallido
 
 
 ## Variable: Participación política durante 2020
@@ -209,26 +275,11 @@ sjp.corr(part_pol_20, na.deletion = c("listwise"))
 ```{r }
 psych::KMO(corMat_20) 
 ```
-Los criterios para analizar el valor del estadístico KMO son:
-
-+	0.00 to 0.49 inaceptable.
-
-+	0.50 to 0.59 miserable.
-
-+	0.60 to 0.69 mediocre.
-
-+	0.70 to 0.79 medio.
-
-+	0.80 to 0.89 meritorio.
-
-+	0.90 to 1.00 maravilloso.
 
 ##### __Esfericidad__
 ```{r }
-psych::cortest.bartlett(corMat_20, n = 1101)
+psych::cortest.bartlett(corMat_20, n = 3432)
 ```
-
-Este criterio alude a en qué medida la varianza de la matriz es suficiente. Si rechazamos la hipótesis nula (p=<0.05) de que la varianza es 0, significa que hay suficientes elementos comunes. En este sentido, como la hipótesis nula es que no hay relaciones, esperamos rechazarla.  
 
 ##### __Normalidad (univariada)__
 ```{r }
@@ -247,19 +298,14 @@ shapiro.test(part_pol_20$part_pol_online_seg_20)
 #### __Especificación y estimación del modelo__
 ```{r }
 afc2 <- '
-+ act_no_disrup =~ part_pol_firma_20 + part_pol_marc_pac_20
-+ act_disrup =~ part_pol_marc_dis_20 + part_pol_bloq_20 + part_pol_rayar_20 + part_pol_toma_20
-+ act_online =~ part_pol_online_info_20 + part_pol_online_post_20 + part_pol_online_com_20+ part_pol_online_seg_20'
+act_no_disrup =~ part_pol_firma_20 + part_pol_marc_pac_20
+act_disrup =~ part_pol_marc_dis_20 + part_pol_bloq_20 + part_pol_rayar_20 + part_pol_toma_20
+act_online =~ part_pol_online_info_20 + part_pol_online_post_20 + part_pol_online_com_20+ part_pol_online_seg_20'
 ```
 
 ```{r }
  # Estimación del modelo
 fit_2 <- lavaan::cfa(afc2, data=part_pol_20, ordered=T)
-```
-
-```{r }
-# Estimación del modelo
-fit_2 <- lavaan::cfa(afc2, data=part_pol_est, ordered=T)
 ```
 
 #### __Interpretación de resultados__
@@ -275,16 +321,8 @@ show(fit_2) # Resumen ajuste general
 ```{r}
 lavaan::fitMeasures(fit_2, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr"))
 ```
-__Rangos recomendados:__
 
-+ CFI: Cercano a 0.95 o más
-
-+ TLI: Cercano a 0.95 o más
-
-+ RMSEA: Cercano a 0.06 o menos
-
-+ SRMR: Cercano a 0.08 o menos
-
+### Reporte 2020
 
 ## Variable: Participación política primer semestre 2021
 ### Descriptivos
@@ -320,26 +358,12 @@ sjp.corr(part_pol_21.1, na.deletion = c("listwise"))
 ```{r }
 psych::KMO(corMat_21.1) 
 ```
-Los criterios para analizar el valor del estadístico KMO son:
-
-+	0.00 to 0.49 inaceptable.
-
-+	0.50 to 0.59 miserable.
-
-+	0.60 to 0.69 mediocre.
-
-+	0.70 to 0.79 medio.
-
-+	0.80 to 0.89 meritorio.
-
-+	0.90 to 1.00 maravilloso.
 
 ##### __Esfericidad__
 ```{r }
-psych::cortest.bartlett(corMat_21.1, n = 1101)
+psych::cortest.bartlett(corMat_21.1, n = 3432)
 ```
 
-Este criterio alude a en qué medida la varianza de la matriz es suficiente. Si rechazamos la hipótesis nula (p=<0.05) de que la varianza es 0, significa que hay suficientes elementos comunes. En este sentido, como la hipótesis nula es que no hay relaciones, esperamos rechazarla.  
 
 ##### __Normalidad (univariada)__
 ```{r }
@@ -381,15 +405,8 @@ show(fit_3) # Resumen ajuste general
 ```{r}
 lavaan::fitMeasures(fit_3, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr"))
 ```
-__Rangos recomendados:__
 
-+ CFI: Cercano a 0.95 o más
-
-+ TLI: Cercano a 0.95 o más
-
-+ RMSEA: Cercano a 0.06 o menos
-
-+ SRMR: Cercano a 0.08 o menos
+### Reporte primer seemestre 2021
 
 
 
@@ -429,26 +446,11 @@ sjp.corr(part_pol_21.2, na.deletion = c("listwise"))
 ```{r }
 psych::KMO(corMat_21.2) 
 ```
-Los criterios para analizar el valor del estadístico KMO son:
-
-+	0.00 to 0.49 inaceptable.
-
-+	0.50 to 0.59 miserable.
-
-+	0.60 to 0.69 mediocre.
-
-+	0.70 to 0.79 medio.
-
-+	0.80 to 0.89 meritorio.
-
-+	0.90 to 1.00 maravilloso.
 
 ##### __Esfericidad__
 ```{r }
-psych::cortest.bartlett(corMat_21.2, n = 1101)
+psych::cortest.bartlett(corMat_21.2, n = 3432)
 ```
-
-Este criterio alude a en qué medida la varianza de la matriz es suficiente. Si rechazamos la hipótesis nula (p=<0.05) de que la varianza es 0, significa que hay suficientes elementos comunes. En este sentido, como la hipótesis nula es que no hay relaciones, esperamos rechazarla.  
 
 ##### __Normalidad (univariada)__
 ```{r }
@@ -490,12 +492,5 @@ show(fit_4) # Resumen ajuste general
 ```{r}
 lavaan::fitMeasures(fit_4, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr"))
 ```
-__Rangos recomendados:__
 
-+ CFI: Cercano a 0.95 o más
-
-+ TLI: Cercano a 0.95 o más
-
-+ RMSEA: Cercano a 0.06 o menos
-
-+ SRMR: Cercano a 0.08 o menos
+### Reporte segundo semestre 2021
