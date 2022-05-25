@@ -28,6 +28,17 @@ ola2<-read_dta("../input/data/proc/data_02.dta")
 ola3<-read_dta("../input/data/proc/data_03.dta")
 ```
 
+#bbdd ola3 
+```{r}
+data_wide <- left_join(x = ola3, #datos ola 3
+y = ola2, #datos ola 2
+by = "folio_encuestado", #identificador
+#aplica sufijo a variables que se repiten entre olas
+suffix = c("_w03",
+"_w02")) %>%
+left_join(ola1,
+by = "folio_encuestado")
+```
 
 # Tipos de participación y frases a utilizar
 

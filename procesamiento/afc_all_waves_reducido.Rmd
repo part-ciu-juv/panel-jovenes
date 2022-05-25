@@ -30,13 +30,13 @@ ola3<-read_dta("../input/data/proc/data_03.dta")
 
 # Juntar bbdd
 ```{r}
-data_wide <- full_join(x = ola1, #datos ola 1
+data_wide <- left_join(x = ola3, #datos ola 3
 y = ola2, #datos ola 2
 by = "folio_encuestado", #identificador
 #aplica sufijo a variables que se repiten entre olas
-suffix = c("_w01",
+suffix = c("_w03",
 "_w02")) %>%
-left_join(ola3,
+left_join(ola1,
 by = "folio_encuestado")
 ```
 
@@ -115,7 +115,7 @@ Los criterios para analizar el valor del estadístico KMO son:
 
 ##### __Esfericidad__
 ```{r }
-psych::cortest.bartlett(corMat_est, n = 3432)
+psych::cortest.bartlett(corMat_est, n = 1101)
 ```
 
 ##### __Normalidad (univariada)__
@@ -225,7 +225,7 @@ Los criterios para analizar el valor del estadístico KMO son:
 
 ##### __Esfericidad__
 ```{r }
-psych::cortest.bartlett(corMat_20, n = 3432)
+psych::cortest.bartlett(corMat_20, n = 1101)
 ```
 
 Este criterio alude a en qué medida la varianza de la matriz es suficiente. Si rechazamos la hipótesis nula (p=<0.05) de que la varianza es 0, significa que hay suficientes elementos comunes. En este sentido, como la hipótesis nula es que no hay relaciones, esperamos rechazarla.  
@@ -336,7 +336,7 @@ Los criterios para analizar el valor del estadístico KMO son:
 
 ##### __Esfericidad__
 ```{r }
-psych::cortest.bartlett(corMat_21.1, n = 3432)
+psych::cortest.bartlett(corMat_21.1, n = 1101)
 ```
 
 Este criterio alude a en qué medida la varianza de la matriz es suficiente. Si rechazamos la hipótesis nula (p=<0.05) de que la varianza es 0, significa que hay suficientes elementos comunes. En este sentido, como la hipótesis nula es que no hay relaciones, esperamos rechazarla.  
@@ -445,7 +445,7 @@ Los criterios para analizar el valor del estadístico KMO son:
 
 ##### __Esfericidad__
 ```{r }
-psych::cortest.bartlett(corMat_21.2, n = 3432)
+psych::cortest.bartlett(corMat_21.2, n = 1101)
 ```
 
 Este criterio alude a en qué medida la varianza de la matriz es suficiente. Si rechazamos la hipótesis nula (p=<0.05) de que la varianza es 0, significa que hay suficientes elementos comunes. En este sentido, como la hipótesis nula es que no hay relaciones, esperamos rechazarla.  
