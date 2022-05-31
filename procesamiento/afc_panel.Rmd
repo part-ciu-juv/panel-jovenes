@@ -1,0 +1,496 @@
+---
+title: "Análisis Factorial Confirmatorio"
+output: 
+  html_document:
+    toc: yes
+    code_folding: hide
+    toc_float: 
+      collapsed: true
+      smooth_scroll: false
+      number_sections: false
+    #css: "https://jciturras.github.io/ayudantia-sol3051/style.css"    
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+```
+
+```{r}
+pacman::p_load(sjPlot, sjlabelled,readr, summarytools, haven, dplyr,kableExtra,readxl, ggplot2,ggtext,lavaan)
+```
+
+# Cargar bbdd
+```{r}
+ola1<-read_dta("../input/data/proc/data_01.dta")
+ola2<-read_dta("../input/data/proc/data_02.dta")
+ola3<-read_dta("../input/data/proc/data_03.dta")
+```
+
+# Juntar bbdd
+```{r}
+data_wide <- full_join(x = ola1, #datos ola 1
+y = ola2, #datos ola 2
+by = "folio_encuestado", #identificador
+#aplica sufijo a variables que se repiten entre olas
+suffix = c("_w01",
+"_w02")) %>%
+left_join(ola3,
+by = "folio_encuestado")
+```
+
+# Tipos de participación y frases a utilizar
+
+_Activismo no disruptivo
++ Firmar una petición, presencialmente o por internet
++ Participar en una marcha o manifestación pacífica 
+
+_Activismo disruptivo_
+
++ Participar en una marcha o manifestación con disturbios
++ Participar en bloqueo de calles o carreteras
++ Pintar o rayar paredes con demandas o consignas
++ Participar en la toma de un edificio o institución 
+
+_Activismo online_
+
++ Usar internet para buscar información sobre temas sociales y/o políticos 
++ Postear imágenes o mensajes acerca de temas sociales y/o políticos en internet 
++ Compartir o comentar en el posteo de otra persona acerca de temas sociales y políticos
++ Seguir a personas en redes sociales por su contenido sobre temas sociales y políticos
+
+__Activismo social o comunitario__
+
++ Trabajar como voluntario en servicios a la comunidad (debido a que es sólo un indicador, **_no_** se incorporará en el AFC)
+
+# Análisis Factorial Confirmatorio (AFC)
+## Variable: Participación política durante 3ro y 4to medio
+### Descriptivos
+```{r}
+part_pol_3y4= data_wide %>% dplyr::select(part_pol_firma_w01, part_pol_marcha_pas, part_pol_marcha_dis, part_pol_bloqueo, part_pol_rayar_w01, part_pol_toma_w01, part_pol_online, part_online_post, part_online_com, part_online_seg)
+summary(part_pol_3y4)
+```
+
+### Análisis correlacional
+```{r}
+corMat_3y4  <- cor(part_pol_3y4, use="na.or.complete", method = "kendall")  # estimar matriz pearson
+options(digits=3) # decimales
+#print(corMat)
+
+#stargazer::stargazer(corMat, title="correlaciones", type = "text") #Latex table
+```
+
+
+```{r }
+M_3y4=cor(part_pol_3y4, use="na.or.complete")
+corrplot::corrplot(M_3y4, type="lower",
+      order="AOE", cl.pos="b", tl.pos="d") #agrega nombres en diag.
+```
+
+```{r }
+sjp.corr(part_pol_3y4, na.deletion = c("listwise"))
+```
+
+### __AFC__
+#### __Análisis de supuestos__
+##### __KMO: factorizabilidad__
+
+```{r }
+psych::KMO(corMat_3y4) 
+```
+
+##### __Esfericidad__
+```{r }
+psych::cortest.bartlett(corMat_3y4, n = 3432) #el n que se debe indicar es el número de casos de la base de datos que estamos utilizando para el análisis
+```
+
+
+##### __Normalidad (univariada)__
+```{r }
+shapiro.test(part_pol_3y4$part_pol_firma_w01)
+shapiro.test(part_pol_3y4$part_pol_marcha_pas)
+shapiro.test(part_pol_3y4$part_pol_marcha_dis)
+shapiro.test(part_pol_3y4$part_pol_bloqueo)
+shapiro.test(part_pol_3y4$part_pol_rayar_w01)
+shapiro.test(part_pol_3y4$part_pol_toma_w01)
+shapiro.test(part_pol_3y4$part_pol_online)
+shapiro.test(part_pol_3y4$part_online_post)
+shapiro.test(part_pol_3y4$part_online_com)
+shapiro.test(part_pol_3y4$part_online_seg)
+```
+
+#### __Especificación y estimación del modelo__
+```{r }
+# Especificación del modelo
+afc0 <- '
+act_no_disrup =~ part_pol_firma_w01 + part_pol_marcha_pas
+act_disrup =~ part_pol_marcha_dis + part_pol_bloqueo + part_pol_rayar_w01 + part_pol_toma_w01
+act_online =~ part_pol_online + part_online_post + part_online_com + part_online_seg
+'
+```
+
+```{r }
+# Estimación del modelo
+fit_0 <- lavaan::cfa(afc0, data=part_pol_3y4, ordered=T)
+```
+
+#### __Interpretación de resultados__
+
+```{r}
+lavaan::summary(fit_0, fit.measures=T, standardized=T)
+```
+
+
+```{r }
+show(fit_0) # Resumen ajuste general
+```
+
+
+```{r}
+lavaan::fitMeasures(fit_0, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr"))
+```
+
+### Reporte 3ero y 4to
+
+## Variable: Participación política durante estallido social
+### Descriptivos
+```{r}
+part_pol_est= data_wide %>% dplyr::select(part_pol_firma_21, part_pol_marc_pac_21, part_pol_marc_dis_21, part_pol_bloq_21, part_pol_rayar_21, part_pol_toma_21, part_pol_online_info_21, part_pol_online_post_21, part_pol_online_com_21, part_pol_online_seg_21)
+summary(part_pol_est)
+```
+
+### Análisis correlacional
+```{r}
+corMat_est  <- cor(part_pol_est, use="na.or.complete", method = "kendall")  # estimar matriz pearson
+options(digits=3) # decimales
+#print(corMat)
+
+#stargazer::stargazer(corMat, title="correlaciones", type = "text") #Latex table
+```
+
+
+```{r }
+M_est=cor(part_pol_est, use="na.or.complete")
+corrplot::corrplot(M_est, type="lower",
+      order="AOE", cl.pos="b", tl.pos="d") #agrega nombres en diag.
+```
+
+```{r }
+sjp.corr(part_pol_est, na.deletion = c("listwise"))
+```
+
+### __AFC__
+
+##### __KMO: factorizabilidad__
+
+```{r }
+psych::KMO(corMat_est) 
+```
+
+##### __Esfericidad__
+```{r }
+psych::cortest.bartlett(corMat_est, n = 3432)
+```
+
+##### __Normalidad (univariada)__
+```{r }
+shapiro.test(part_pol_est$part_pol_firma_21)
+shapiro.test(part_pol_est$part_pol_marc_pac_21)
+shapiro.test(part_pol_est$part_pol_marc_dis_21)
+shapiro.test(part_pol_est$part_pol_bloq_21)
+shapiro.test(part_pol_est$part_pol_rayar_21)
+shapiro.test(part_pol_est$part_pol_toma_21)
+shapiro.test(part_pol_est$part_pol_online_info_21)
+shapiro.test(part_pol_est$part_pol_online_post_21)
+shapiro.test(part_pol_est$part_pol_online_com_21)
+shapiro.test(part_pol_est$part_pol_online_seg_21)
+```
+
+#### __Especificación y estimación del modelo__
+```{r }
+# Especificación del modelo
+afc1 <- '
+act_no_disrup =~ part_pol_firma_21 + part_pol_marc_pac_21
+act_disrup =~ part_pol_marc_dis_21 + part_pol_bloq_21 + part_pol_rayar_21 + part_pol_toma_21
+act_online =~ part_pol_online_info_21 + part_pol_online_post_21 + part_pol_online_com_21+ part_pol_online_seg_21
+'
+```
+
+```{r }
+# Estimación del modelo
+fit_1 <- lavaan::cfa(afc1, data=part_pol_est, ordered=T)
+```
+
+#### __Interpretación de resultados__
+
+```{r}
+lavaan::summary(fit_1, fit.measures=T, standardized=T)
+```
+
+
+La función *show* nos muestra el principio de la tabla anterior, donde se presenta el tipo de estimador usado, la medida de ajuste de $\chi^2$ del modelo y los grados de libertad
+
+```{r }
+show(fit_1) # Resumen ajuste general
+```
+
+```{r}
+lavaan::fitMeasures(fit_1, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr"))
+```
+
+### Reporte estallido
+
+
+## Variable: Participación política durante 2020
+### Descriptivos
+```{r}
+part_pol_20= data_wide %>% dplyr::select(part_pol_firma_20, part_pol_marc_pac_20, part_pol_marc_dis_20, part_pol_bloq_20, part_pol_rayar_20, part_pol_toma_20,  part_pol_online_info_20, part_pol_online_post_20, part_pol_online_com_20, part_pol_online_seg_20)
+summary(part_pol_20)
+```
+
+### Análisis correlacional
+```{r}
+corMat_20  <- cor(part_pol_20, use="na.or.complete", method = "kendall")  # estimar matriz pearson
+options(digits=3) # decimales
+#print(corMat)
+
+#stargazer::stargazer(corMat, title="correlaciones", type = "text") #Latex table
+```
+
+
+```{r }
+M_20=cor(part_pol_20, use="na.or.complete")
+corrplot::corrplot(M_20, type="lower",
+      order="AOE", cl.pos="b", tl.pos="d") #agrega nombres en diag.
+```
+
+```{r }
+sjp.corr(part_pol_20, na.deletion = c("listwise"))
+```
+
+### __AFC__
+#### __Análisis de supuestos__
+##### __KMO: factorizabilidad__
+
+```{r }
+psych::KMO(corMat_20) 
+```
+
+##### __Esfericidad__
+```{r }
+psych::cortest.bartlett(corMat_20, n = 3432)
+```
+
+##### __Normalidad (univariada)__
+```{r }
+shapiro.test(part_pol_20$part_pol_firma_20)
+shapiro.test(part_pol_20$part_pol_marc_pac_20)
+shapiro.test(part_pol_20$part_pol_marc_dis_20)
+shapiro.test(part_pol_20$part_pol_bloq_20)
+shapiro.test(part_pol_20$part_pol_rayar_20)
+shapiro.test(part_pol_20$part_pol_toma_20)
+shapiro.test(part_pol_20$part_pol_online_info_20)
+shapiro.test(part_pol_20$part_pol_online_post_20)
+shapiro.test(part_pol_20$part_pol_online_com_20)
+shapiro.test(part_pol_20$part_pol_online_seg_20)
+```
+
+#### __Especificación y estimación del modelo__
+```{r }
+afc2 <- '
+act_no_disrup =~ part_pol_firma_20 + part_pol_marc_pac_20
+act_disrup =~ part_pol_marc_dis_20 + part_pol_bloq_20 + part_pol_rayar_20 + part_pol_toma_20
+act_online =~ part_pol_online_info_20 + part_pol_online_post_20 + part_pol_online_com_20+ part_pol_online_seg_20'
+```
+
+```{r }
+ # Estimación del modelo
+fit_2 <- lavaan::cfa(afc2, data=part_pol_20, ordered=T)
+```
+
+#### __Interpretación de resultados__
+
+```{r}
+lavaan::summary(fit_2, fit.measures=T, standardized=T)
+```
+
+```{r }
+show(fit_2) # Resumen ajuste general
+```
+
+```{r}
+lavaan::fitMeasures(fit_2, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr"))
+```
+
+### Reporte 2020
+
+## Variable: Participación política primer semestre 2021
+### Descriptivos
+```{r}
+part_pol_21.1= data_wide %>% dplyr::select(part_pol_firma_w02, part_pol_marc_pac, part_pol_marc_dis, part_pol_bloq, part_pol_rayar_w02, part_pol_toma_w02,  part_pol_online_info, part_pol_online_post, part_pol_online_com, part_pol_online_seg)
+summary(part_pol_21.1)
+```
+
+### Análisis correlacional
+```{r}
+corMat_21.1  <- cor(part_pol_21.1, use="na.or.complete", method = "kendall")  # estimar matriz pearson
+options(digits=3) # decimales
+#print(corMat)
+
+#stargazer::stargazer(corMat, title="correlaciones", type = "text") #Latex table
+```
+
+
+```{r }
+M_21.1=cor(part_pol_21.1, use="na.or.complete")
+corrplot::corrplot(M_21.1, type="lower",
+      order="AOE", cl.pos="b", tl.pos="d") #agrega nombres en diag.
+```
+
+```{r }
+sjp.corr(part_pol_21.1, na.deletion = c("listwise"))
+```
+
+### __AFC__
+#### __Análisis de supuestos__
+##### __KMO: factorizabilidad__
+
+```{r }
+psych::KMO(corMat_21.1) 
+```
+
+##### __Esfericidad__
+```{r }
+psych::cortest.bartlett(corMat_21.1, n = 3432)
+```
+
+
+##### __Normalidad (univariada)__
+```{r }
+shapiro.test(part_pol_21.1$part_pol_firma_w02)
+shapiro.test(part_pol_21.1$part_pol_marc_pac)
+shapiro.test(part_pol_21.1$part_pol_marc_dis)
+shapiro.test(part_pol_21.1$part_pol_bloq)
+shapiro.test(part_pol_21.1$part_pol_rayar_w02)
+shapiro.test(part_pol_21.1$part_pol_toma_w02)
+shapiro.test(part_pol_21.1$part_pol_online_info)
+shapiro.test(part_pol_21.1$part_pol_online_post)
+shapiro.test(part_pol_21.1$part_pol_online_com)
+shapiro.test(part_pol_21.1$part_pol_online_seg)
+```
+
+#### __Especificación y estimación del modelo__
+```{r }
+afc3 <- '
+act_no_disrup =~ part_pol_firma_w02 + part_pol_marc_pac
+act_disrup =~ part_pol_marc_dis + part_pol_bloq + part_pol_rayar_w02 + part_pol_toma_w02
+act_online =~ part_pol_online_info + part_pol_online_post + part_pol_online_com + part_pol_online_seg'
+```
+
+```{r }
+ # Estimación del modelo
+fit_3 <- lavaan::cfa(afc3, data=part_pol_21.1, ordered=T)
+```
+
+#### __Interpretación de resultados__
+
+```{r}
+lavaan::summary(fit_3, fit.measures=T, standardized=T)
+```
+
+```{r }
+show(fit_3) # Resumen ajuste general
+```
+
+```{r}
+lavaan::fitMeasures(fit_3, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr"))
+```
+
+### Reporte primer seemestre 2021
+
+
+
+
+
+## Variable: Participación política segundo semestre 2021
+### Descriptivos
+```{r}
+part_pol_21.2= data_wide %>% dplyr::select(part_pol_firma_21b, part_pol_marc_pac_21b, part_pol_marc_dis_21b, part_pol_bloq_21b, part_pol_rayar_21b, part_pol_toma_21b,  part_pol_online_info_21b, part_pol_online_post_21b, part_pol_online_com_21b, part_pol_online_seg_21b)
+summary(part_pol_21.1)
+```
+
+### Análisis correlacional
+```{r}
+corMat_21.2  <- cor(part_pol_21.2, use="na.or.complete", method = "kendall")  # estimar matriz pearson
+options(digits=3) # decimales
+#print(corMat)
+
+#stargazer::stargazer(corMat, title="correlaciones", type = "text") #Latex table
+```
+
+
+```{r }
+M_21.2=cor(part_pol_21.2, use="na.or.complete")
+corrplot::corrplot(M_21.2, type="lower",
+      order="AOE", cl.pos="b", tl.pos="d") #agrega nombres en diag.
+```
+
+```{r }
+sjp.corr(part_pol_21.2, na.deletion = c("listwise"))
+```
+
+### __AFC__
+#### __Análisis de supuestos__
+##### __KMO: factorizabilidad__
+
+```{r }
+psych::KMO(corMat_21.2) 
+```
+
+##### __Esfericidad__
+```{r }
+psych::cortest.bartlett(corMat_21.2, n = 3432)
+```
+
+##### __Normalidad (univariada)__
+```{r }
+shapiro.test(part_pol_21.2$part_pol_firma_21b)
+shapiro.test(part_pol_21.2$part_pol_marc_pac_21b)
+shapiro.test(part_pol_21.2$part_pol_marc_dis_21b)
+shapiro.test(part_pol_21.2$part_pol_bloq_21b)
+shapiro.test(part_pol_21.2$part_pol_rayar_21b)
+shapiro.test(part_pol_21.2$part_pol_toma_21b)
+shapiro.test(part_pol_21.2$part_pol_online_info_21b)
+shapiro.test(part_pol_21.2$part_pol_online_post_21b)
+shapiro.test(part_pol_21.2$part_pol_online_com_21b)
+shapiro.test(part_pol_21.2$part_pol_online_seg_21b)
+```
+
+#### __Especificación y estimación del modelo__
+```{r }
+afc4 <- '
+act_no_disrup =~ part_pol_firma_21b + part_pol_marc_pac_21b
+act_disrup =~ part_pol_marc_dis_21b + part_pol_bloq_21b + part_pol_rayar_21b + part_pol_toma_21b
+act_online =~ part_pol_online_info_21b + part_pol_online_post_21b + part_pol_online_com_21b + part_pol_online_seg_21b'
+```
+
+```{r }
+ # Estimación del modelo
+fit_4 <- lavaan::cfa(afc4, data=part_pol_21.2, ordered=T)
+```
+
+#### __Interpretación de resultados__
+
+```{r}
+lavaan::summary(fit_4, fit.measures=T, standardized=T)
+```
+
+```{r }
+show(fit_4) # Resumen ajuste general
+```
+
+```{r}
+lavaan::fitMeasures(fit_4, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr"))
+```
+
+### Reporte segundo semestre 2021
