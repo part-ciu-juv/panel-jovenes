@@ -18,7 +18,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 ```
 
 ```{r}
-pacman::p_load(lavaan, haven, dplyr)
+pacman::p_load(lavaan, sjPlot, haven, dplyr)
 ```
 
 # Cargar bbdd
@@ -90,7 +90,7 @@ corrplot::corrplot(M, type="lower",
 ```
 
 ```{r }
-sjp.corr(part_pol_3y4, na.deletion = c("listwise"))
+sjPlot::sjp.corr(part_pol_3y4, na.deletion = c("listwise"))
 ```
 
 ### __AFC__
@@ -146,10 +146,6 @@ La normalidad de los indicadores no es tan relevante porque hay métodos robusto
 
 #### __Especificación y estimación del modelo__
 ```{r }
-# Selección de variables
-
-#part_pol_3y4= data_wide %>% dplyr::select(part_pol_firma_w01, part_pol_marcha_pas, part_pol_marcha_dis, part_pol_bloqueo, part_pol_rayar_w01, part_pol_toma_w01, part_pol_online, part_online_post, part_online_com, part_online_seg, weight_w01)
-
 # Especificación del modelo
 afc1 <- '
 act_no_disrup =~ part_pol_firma_w01 + part_pol_marcha_pas
