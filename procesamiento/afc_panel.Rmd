@@ -152,6 +152,8 @@ lavaan::fitMeasures(fit_0, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "sr
 
 ### Reporte 3ero y 4to
 
+En los análisis se puede ver una dirección positiva y gran magnitud en la correlación entre las variables que miden un mismo constructo latente, solo con la excepción que hay una mayor correlación entre participación en marchas pacíficas con participación en marchas con disturbios que con firmar; además de ser casi todas las correlaciones significativas. Se revisó supuestos de factorizabilidad, el cual arrojó resultados más que meritorios para todas las variables; y de esfericidad, el que arrojó un chi cuadrado de 13738 (p<.01). Además se revisó la normalidad de las distribuciones, el cual arrojó que ninguna de las variables cumple con el supuesto de normalidad (p<.01). El modelo de análisis factorial confirmatorio arrojó un chi cuadrado de 372.145 con 32 grados de libertad (p<.01), la división de estos valores es mayor a 4 (11.6). Por último, cfi > .95 (.996), tli > .95 (.994); y rmsea = .06 (.061) y srmr < .08 (.049).
+
 ## Variable: Participación política durante estallido social
 ### Descriptivos
 ```{r}
@@ -240,6 +242,7 @@ lavaan::fitMeasures(fit_1, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "sr
 
 ### Reporte estallido
 
+En los análisis se puede ver una dirección positiva y gran magnitud en la correlación entre las variables que miden un mismo constructo latente, solo con la excepción que hay una mayor correlación entre participación en marchas pacíficas con participación en marchas con disturbios que con firmar; además de ser casi todas las correlaciones significativas. Se revisó supuestos de factorizabilidad, el cual arrojó resultados en su mayoría meritorios; y de esfericidad, el que arrojó un chi cuadrado de 15120 (p<.01). Además se revisó la normalidad de las distribuciones, el cual arrojó que ninguna de las variables cumple con el supuesto de normalidad (p<.01). El modelo de análisis factorial confirmatorio arrojó un chi cuadrado de 952.014 con 32 grados de libertad (p<.01), la división de estos valores es mayor a 4 (29.8). Por último, cfi > .95 (.991), tli > .95 (.987); y rmsea > .06 (.102) y srmr > .08 (.102).
 
 ## Variable: Participación política durante 2020
 ### Descriptivos
@@ -324,6 +327,8 @@ lavaan::fitMeasures(fit_2, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "sr
 
 ### Reporte 2020
 
+En los análisis se puede ver una dirección positiva y gran magnitud en la correlación entre las variables que miden un mismo constructo latente, excepto por marchas pacíficas con marchas con disturbios , además de ser casi todas las correlaciones significativas. Se revisó supuestos de factorabilidad, el cual arrojó resultados meritorios para casi todas las variables; y de esfericidad, el que arrojó un chi cuadrado de 18604 (p<0.05). Además se revisó la normalidad de las distribuciones, el cual arrojó que ninguna de las variables cumple con el supuesto de normalidad (p<0.05). El modelo de análisis factorial confirmatorio arrojó un chi cuadrado de 920.7 con 34 grados de libertad, la división de estos valores es mayor a 4 (28.8). Por último, cfi > .95 (.995), tli > .95 (.992); y rmsea > .06 (.101) y srmr > .08 (.09); por lo que se sugiere revisar estos dos últimos indicadores.
+
 ## Variable: Participación política primer semestre 2021
 ### Descriptivos
 ```{r}
@@ -407,7 +412,7 @@ lavaan::fitMeasures(fit_3, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "sr
 ```
 
 ### Reporte primer seemestre 2021
-
+En los análisis se puede ver una dirección positiva y gran magnitud en la correlación entre las variables que miden un mismo constructo latente, solo con la excepción que hay una mayor correlación entre participación en marchas pacíficas con participación en marchas con disturbios que con firmar; además de ser casi todas las correlaciones significativas. Se revisó supuestos de factorizabilidad, el cual arrojó resultados más que meritorios para casi todas las variables; y de esfericidad, el que arrojó un chi cuadrado de 17366 (p<.01). Además se revisó la normalidad de las distribuciones, el cual arrojó que ninguna de las variables cumple con el supuesto de normalidad (p<.01). El modelo de análisis factorial confirmatorio arrojó un chi cuadrado de 359.766 con 32 grados de libertad (p<.01), la división de estos valores es mayor a 4 (11.2). Por último, cfi > .95 (.995), tli > .95 (.993); y rmsea > .06 (.082) y srmr < .08 (.073).
 
 
 
@@ -494,3 +499,5 @@ lavaan::fitMeasures(fit_4, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "sr
 ```
 
 ### Reporte segundo semestre 2021
+
+En los análisis se puede ver una dirección positiva y gran magnitud en la correlación entre las variables que miden un mismo constructo latente, solo con la excepción que hay una mayor correlación entre participación en marchas pacíficas con participación en marchas con disturbios que con firmar; además de ser casi todas las correlaciones significativas. Se revisó supuestos de factorizabilidad, el cual arrojó resultados más que meritorios para casi todas las variables; y de esfericidad, el que arrojó un chi cuadrado de 13904 (p<.01). Además se revisó la normalidad de las distribuciones, el cual arrojó que ninguna de las variables cumple con el supuesto de normalidad (p<.01). El modelo de análisis factorial confirmatorio arrojó un chi cuadrado de 131.342 con 32 grados de libertad (p<.01), la división de estos valores es ligeramente mayor a 4 (4.1). Por último, cfi > .95 (.997), tli > .95 (.996); y rmsea < .06 (.054) y srmr < .08 (.065).
