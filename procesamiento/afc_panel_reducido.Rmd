@@ -67,7 +67,7 @@ __Activismo social o comunitario__
 ## Variable: Participación política durante 3ro y 4to medio
 ### Descriptivos
 ```{r}
-part_pol_3y4= data_wide %>% dplyr::select(part_pol_firma_w01, part_pol_marcha_pas, part_pol_marcha_dis, part_pol_bloqueo, part_pol_rayar_w01, part_pol_toma_w01, part_pol_online, part_online_post, part_online_com, part_online_seg)
+part_pol_3y4= data_wide %>% dplyr::select(part_pol_firma.y, part_pol_marcha_pas, part_pol_marcha_dis, part_pol_bloqueo, part_pol_rayar.y, part_pol_toma.y, part_pol_online, part_online_post, part_online_com, part_online_seg)
 summary(part_pol_3y4)
 ```
 
@@ -107,12 +107,12 @@ psych::cortest.bartlett(corMat_3y4, n = 1101) #el n que se debe indicar es el n�
 
 ##### __Normalidad (univariada)__
 ```{r }
-shapiro.test(part_pol_3y4$part_pol_firma_w01)
+shapiro.test(part_pol_3y4$part_pol_firma.y)
 shapiro.test(part_pol_3y4$part_pol_marcha_pas)
 shapiro.test(part_pol_3y4$part_pol_marcha_dis)
 shapiro.test(part_pol_3y4$part_pol_bloqueo)
-shapiro.test(part_pol_3y4$part_pol_rayar_w01)
-shapiro.test(part_pol_3y4$part_pol_toma_w01)
+shapiro.test(part_pol_3y4$part_pol_rayar.y)
+shapiro.test(part_pol_3y4$part_pol_toma.y)
 shapiro.test(part_pol_3y4$part_pol_online)
 shapiro.test(part_pol_3y4$part_online_post)
 shapiro.test(part_pol_3y4$part_online_com)
@@ -123,8 +123,8 @@ shapiro.test(part_pol_3y4$part_online_seg)
 ```{r }
 # Especificación del modelo
 afc0 <- '
-act_no_disrup =~ part_pol_firma_w01 + part_pol_marcha_pas
-act_disrup =~ part_pol_marcha_dis + part_pol_bloqueo + part_pol_rayar_w01 + part_pol_toma_w01
+act_no_disrup =~ part_pol_firma.y + part_pol_marcha_pas
+act_disrup =~ part_pol_marcha_dis + part_pol_bloqueo + part_pol_rayar.y + part_pol_toma.y
 act_online =~ part_pol_online + part_online_post + part_online_com + part_online_seg
 '
 ```
@@ -151,6 +151,9 @@ lavaan::fitMeasures(fit_0, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "sr
 ```
 
 ### Reporte 3ero y 4to
+
+
+En los análisis se puede ver una dirección positiva y gran magnitud en la correlación entre las variables que miden un mismo constructo latente, solo con la excepción que hay una mayor correlación entre participación en marchas pacíficas con participación en marchas con disturbios que con firmar; además de ser todas las correlaciones significativas. Se revisó supuestos de factorizabilidad, el cual arrojó resultados más que meritorios para todas las variables; y de esfericidad, el que arrojó un chi cuadrado de 4375 (p<.01). Además se revisó la normalidad de las distribuciones, el cual arrojó que ninguna de las variables cumple con el supuesto de normalidad (p<.01). El modelo de análisis factorial confirmatorio arrojó un chi cuadrado de 122.950 con 32 grados de libertad (p<.01), la división de estos valores es menor a 4 (3.84). Por último, cfi > .95 (.997), tli > .95 (.996); y rmsea < .06 (.051) y srmr < .08 (.049).
 
 ## Variable: Participación política durante estallido social
 ### Descriptivos
@@ -227,9 +230,6 @@ fit_1 <- lavaan::cfa(afc1, data=part_pol_est, ordered=T)
 lavaan::summary(fit_1, fit.measures=T, standardized=T)
 ```
 
-
-La función *show* nos muestra el principio de la tabla anterior, donde se presenta el tipo de estimador usado, la medida de ajuste de $\chi^2$ del modelo y los grados de libertad
-
 ```{r }
 show(fit_1) # Resumen ajuste general
 ```
@@ -240,6 +240,7 @@ lavaan::fitMeasures(fit_1, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "sr
 
 ### Reporte estallido
 
+En los análisis se puede ver una dirección positiva y gran magnitud en la correlación entre las variables que miden un mismo constructo latente, solo con la excepción que hay una mayor correlación entre participación en marchas pacíficas con participación en marchas con disturbios que con firmar; además de ser casi todas las correlaciones significativas. Se revisó supuestos de factorizabilidad, el cual arrojó resultados en su mayoría meritorios; y de esfericidad, el que arrojó un chi cuadrado de 4737 (p<.01). Además se revisó la normalidad de las distribuciones, el cual arrojó que ninguna de las variables cumple con el supuesto de normalidad (p<.01). El modelo de análisis factorial confirmatorio arrojó un chi cuadrado de 358.737 con 32 grados de libertad (p<.01), la división de estos valores es mayor a 4 (11.2). Por último, cfi > .95 (.991), tli > .95 (.987); y rmsea > .06 (.98) y srmr > .08 (.113).
 
 ## Variable: Participación política durante 2020
 ### Descriptivos
@@ -324,10 +325,12 @@ lavaan::fitMeasures(fit_2, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "sr
 
 ### Reporte 2020
 
+En los análisis se puede ver una dirección positiva y gran magnitud en la correlación entre las variables que miden un mismo constructo latente, excepto por marchas pacíficas con marchas con disturbios , además de ser casi todas las correlaciones significativas. Se revisó supuestos de factorabilidad, el cual arrojó resultados meritorios para casi todas las variables; y de esfericidad, el que arrojó un chi cuadrado de 5833 (p<.01). Además se revisó la normalidad de las distribuciones, el cual arrojó que ninguna de las variables cumple con el supuesto de normalidad (p<.01). El modelo de análisis factorial confirmatorio arrojó un chi cuadrado de 324.783 con 32 grados de libertad, la división de estos valores es mayor a 4 (14.1). Por último, cfi > .95 (.995), tli > .95 (.992); y rmsea > .06 (.092) y srmr > .08 (.1); por lo que se sugiere revisar estos dos últimos indicadores.
+
 ## Variable: Participación política primer semestre 2021
 ### Descriptivos
 ```{r}
-part_pol_21.1= data_wide %>% dplyr::select(part_pol_firma_w02, part_pol_marc_pac, part_pol_marc_dis, part_pol_bloq, part_pol_rayar_w02, part_pol_toma_w02,  part_pol_online_info, part_pol_online_post, part_pol_online_com, part_pol_online_seg)
+part_pol_21.1= data_wide %>% dplyr::select(part_pol_firma.x, part_pol_marc_pac, part_pol_marc_dis, part_pol_bloq, part_pol_rayar.x, part_pol_toma.x,  part_pol_online_info, part_pol_online_post, part_pol_online_com, part_pol_online_seg)
 summary(part_pol_21.1)
 ```
 
@@ -367,12 +370,12 @@ psych::cortest.bartlett(corMat_21.1, n = 1101)
 
 ##### __Normalidad (univariada)__
 ```{r }
-shapiro.test(part_pol_21.1$part_pol_firma_w02)
+shapiro.test(part_pol_21.1$part_pol_firma.x)
 shapiro.test(part_pol_21.1$part_pol_marc_pac)
 shapiro.test(part_pol_21.1$part_pol_marc_dis)
 shapiro.test(part_pol_21.1$part_pol_bloq)
-shapiro.test(part_pol_21.1$part_pol_rayar_w02)
-shapiro.test(part_pol_21.1$part_pol_toma_w02)
+shapiro.test(part_pol_21.1$part_pol_rayar.x)
+shapiro.test(part_pol_21.1$part_pol_toma.x)
 shapiro.test(part_pol_21.1$part_pol_online_info)
 shapiro.test(part_pol_21.1$part_pol_online_post)
 shapiro.test(part_pol_21.1$part_pol_online_com)
@@ -382,8 +385,8 @@ shapiro.test(part_pol_21.1$part_pol_online_seg)
 #### __Especificación y estimación del modelo__
 ```{r }
 afc3 <- '
-act_no_disrup =~ part_pol_firma_w02 + part_pol_marc_pac
-act_disrup =~ part_pol_marc_dis + part_pol_bloq + part_pol_rayar_w02 + part_pol_toma_w02
+act_no_disrup =~ part_pol_firma.x + part_pol_marc_pac
+act_disrup =~ part_pol_marc_dis + part_pol_bloq + part_pol_rayar.x + part_pol_toma.x
 act_online =~ part_pol_online_info + part_pol_online_post + part_pol_online_com + part_pol_online_seg'
 ```
 
@@ -406,22 +409,22 @@ show(fit_3) # Resumen ajuste general
 lavaan::fitMeasures(fit_3, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr"))
 ```
 
-### Reporte primer seemestre 2021
+### Reporte primer semestre 2021
 
-
+En los análisis se puede ver una dirección positiva y gran magnitud en la correlación entre las variables que miden un mismo constructo latente, solo con la excepción que hay una mayor correlación entre participación en marchas pacíficas con participación en marchas con disturbios que con firmar; además de ser casi todas las correlaciones significativas. Se revisó supuestos de factorizabilidad, el cual arrojó resultados más que meritorios para casi todas las variables; y de esfericidad, el que arrojó un chi cuadrado de 5812 (p<.01). Además se revisó la normalidad de las distribuciones, el cual arrojó que ninguna de las variables cumple con el supuesto de normalidad (p<.01). El modelo de análisis factorial confirmatorio arrojó un chi cuadrado de 269.274 con 32 grados de libertad (p<.01), la división de estos valores es mayor a 4 (8.41). Por último, cfi > .95 (.996), tli > .95 (.994); y rmsea > .06 (.083) y srmr < .08 (.072).
 
 
 
 ## Variable: Participación política segundo semestre 2021
 ### Descriptivos
 ```{r}
-part_pol_21.2= data_wide %>% dplyr::select(part_pol_firma_21b, part_pol_marc_pac_21b, part_pol_marc_dis_21b, part_pol_bloq_21b, part_pol_rayar_21b, part_pol_toma_21b,  part_pol_online_info_21b, part_pol_online_post_21b, part_pol_online_com_21b, part_pol_online_seg_21b)
+part_pol_21b= data_wide %>% dplyr::select(part_pol_firma_21b, part_pol_marc_pac_21b, part_pol_marc_dis_21b, part_pol_bloq_21b, part_pol_rayar_21b, part_pol_toma_21b,  part_pol_online_info_21b, part_pol_online_post_21b, part_pol_online_com_21b, part_pol_online_seg_21b)
 summary(part_pol_21.1)
 ```
 
 ### Análisis correlacional
 ```{r}
-corMat_21.2  <- cor(part_pol_21.2, use="na.or.complete", method = "kendall")  # estimar matriz pearson
+corMat_21b  <- cor(part_pol_21b, use="na.or.complete", method = "kendall")  # estimar matriz pearson
 options(digits=3) # decimales
 #print(corMat)
 
@@ -430,13 +433,13 @@ options(digits=3) # decimales
 
 
 ```{r }
-M_21.2=cor(part_pol_21.2, use="na.or.complete")
-corrplot::corrplot(M_21.2, type="lower",
+M_21b=cor(part_pol_21b, use="na.or.complete")
+corrplot::corrplot(M_21b, type="lower",
       order="AOE", cl.pos="b", tl.pos="d") #agrega nombres en diag.
 ```
 
 ```{r }
-sjp.corr(part_pol_21.2, na.deletion = c("listwise"))
+sjp.corr(part_pol_21b, na.deletion = c("listwise"))
 ```
 
 ### __AFC__
@@ -444,26 +447,26 @@ sjp.corr(part_pol_21.2, na.deletion = c("listwise"))
 ##### __KMO: factorizabilidad__
 
 ```{r }
-psych::KMO(corMat_21.2) 
+psych::KMO(corMat_21b) 
 ```
 
 ##### __Esfericidad__
 ```{r }
-psych::cortest.bartlett(corMat_21.2, n = 1101)
+psych::cortest.bartlett(corMat_21b, n = 1101)
 ```
 
 ##### __Normalidad (univariada)__
 ```{r }
-shapiro.test(part_pol_21.2$part_pol_firma_21b)
-shapiro.test(part_pol_21.2$part_pol_marc_pac_21b)
-shapiro.test(part_pol_21.2$part_pol_marc_dis_21b)
-shapiro.test(part_pol_21.2$part_pol_bloq_21b)
-shapiro.test(part_pol_21.2$part_pol_rayar_21b)
-shapiro.test(part_pol_21.2$part_pol_toma_21b)
-shapiro.test(part_pol_21.2$part_pol_online_info_21b)
-shapiro.test(part_pol_21.2$part_pol_online_post_21b)
-shapiro.test(part_pol_21.2$part_pol_online_com_21b)
-shapiro.test(part_pol_21.2$part_pol_online_seg_21b)
+shapiro.test(part_pol_21b$part_pol_firma_21b)
+shapiro.test(part_pol_21b$part_pol_marc_pac_21b)
+shapiro.test(part_pol_21b$part_pol_marc_dis_21b)
+shapiro.test(part_pol_21b$part_pol_bloq_21b)
+shapiro.test(part_pol_21b$part_pol_rayar_21b)
+shapiro.test(part_pol_21b$part_pol_toma_21b)
+shapiro.test(part_pol_21b$part_pol_online_info_21b)
+shapiro.test(part_pol_21b$part_pol_online_post_21b)
+shapiro.test(part_pol_21b$part_pol_online_com_21b)
+shapiro.test(part_pol_21b$part_pol_online_seg_21b)
 ```
 
 #### __Especificación y estimación del modelo__
@@ -476,7 +479,7 @@ act_online =~ part_pol_online_info_21b + part_pol_online_post_21b + part_pol_onl
 
 ```{r }
  # Estimación del modelo
-fit_4 <- lavaan::cfa(afc4, data=part_pol_21.2, ordered=T)
+fit_4 <- lavaan::cfa(afc4, data=part_pol_21b, ordered=T)
 ```
 
 #### __Interpretación de resultados__
@@ -494,3 +497,5 @@ lavaan::fitMeasures(fit_4, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "sr
 ```
 
 ### Reporte segundo semestre 2021
+
+En los análisis se puede ver una dirección positiva y gran magnitud en la correlación entre las variables que miden un mismo constructo latente, solo con la excepción que hay una mayor correlación entre participación en marchas pacíficas con participación en marchas con disturbios que con firmar; además de ser casi todas las correlaciones significativas. Se revisó supuestos de factorizabilidad, el cual arrojó resultados más que meritorios para casi todas las variables; y de esfericidad, el que arrojó un chi cuadrado de 4448 (p<.01). Además se revisó la normalidad de las distribuciones, el cual arrojó que ninguna de las variables cumple con el supuesto de normalidad (p<.01). El modelo de análisis factorial confirmatorio arrojó un chi cuadrado de 130.416 con 32 grados de libertad (p<.01), la división de estos valores es igual a 4 (4.01). Por último, cfi > .95 (.997), tli > .95 (.996); y rmsea < .06 (.054) y srmr < .08 (.064).
