@@ -476,28 +476,32 @@ data_wide$part_pol_3y4 = as.numeric(data_wide$part_pol_marcha_pas_rec + data_wid
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_madre==1 | nse_madre==2 | nse_madre==3 | nse_madre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_madre==4 | nse_madre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_pol_3y4, na.rm=T),
                psych::describe(data_ed_med$part_pol_3y4, na.rm=T),
-               psych::describe(data_ed_tec$part_pol_3y4, na.rm=T),
-               psych::describe(data_ed_uni$part_pol_3y4, na.rm=T))
+               psych::describe(data_ed_ter$part_pol_3y4, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_pol_3y4, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_pol_3y4,y=data_mun$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_pol_3y4,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_pol_3y4,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_3y4,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_pol_3y4,y=data_ed_tec$weight_w01,na.rm=TRUE)
+#pond3 <- stats::weighted.mean(x=data_ed_tec$part_pol_3y4,y=data_ed_tec$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_3y4,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_pol_3y4_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -553,28 +557,32 @@ data_wide$part_pol_es = as.numeric(data_wide$part_pol_firma_21_rec + data_wide$p
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_madre==1 | nse_madre==2 | nse_madre==3 | nse_madre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_madre==4 | nse_madre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_pol_es, na.rm=T),
                psych::describe(data_ed_med$part_pol_es, na.rm=T),
-               psych::describe(data_ed_tec$part_pol_es, na.rm=T),
-               psych::describe(data_ed_uni$part_pol_es, na.rm=T))
+               psych::describe(data_ed_ter$part_pol_es, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_pol_es, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_pol_es,y=data_mun$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_pol_es,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_pol_es,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_es,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_pol_es,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond3 <- stats::weighted.mean(x=data_ed_tec$part_pol_es,y=data_ed_tec$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_es,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_pol_es_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -629,28 +637,32 @@ data_wide$part_pol_20 = as.numeric(data_wide$part_pol_firma_20_rec + data_wide$p
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_madre==1 | nse_madre==2 | nse_madre==3 | nse_madre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_madre==4 | nse_madre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_pol_20, na.rm=T),
                psych::describe(data_ed_med$part_pol_20, na.rm=T),
-               psych::describe(data_ed_tec$part_pol_20, na.rm=T),
-               psych::describe(data_ed_uni$part_pol_20, na.rm=T))
+               psych::describe(data_ed_ter$part_pol_20, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_pol_20, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_pol_20,y=data_mun$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_pol_20,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_pol_20,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_20,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_pol_20,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond3 <- stats::weighted.mean(x=data_ed_tec$part_pol_20,y=data_ed_tec$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_20,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_pol_20_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -705,28 +717,31 @@ data_wide$part_pol_21_1s = as.numeric(data_wide$part_pol_firma.x_rec + data_wide
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_madre==1 | nse_madre==2 | nse_madre==3 | nse_madre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_madre==4 | nse_madre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_pol_21_1s, na.rm=T),
                psych::describe(data_ed_med$part_pol_21_1s, na.rm=T),
-               psych::describe(data_ed_tec$part_pol_21_1s, na.rm=T),
-               psych::describe(data_ed_uni$part_pol_21_1s, na.rm=T))
+               psych::describe(data_ed_ter$part_pol_21_1s, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_pol_21_1s, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_pol_21_1s,y=data_mun$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_pol_21_1s,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_pol_21_1s,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_21_1s,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_pol_21_1s,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_21_1s,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_pol_21_1s_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -781,28 +796,31 @@ data_wide$part_pol_21_2s = as.numeric(data_wide$part_pol_firma_21b_rec + data_wi
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_madre==1 | nse_madre==2 | nse_madre==3 | nse_madre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_madre==4 | nse_madre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_pol_21_2s, na.rm=T),
                psych::describe(data_ed_med$part_pol_21_2s, na.rm=T),
-               psych::describe(data_ed_tec$part_pol_21_2s, na.rm=T),
-               psych::describe(data_ed_uni$part_pol_21_2s, na.rm=T))
+               psych::describe(data_ed_ter$part_pol_21_2s, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_pol_21_2s, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_pol_21_2s,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_pol_21_2s,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_pol_21_2s,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_21_2s,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_pol_21_2s,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_21_2s,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_pol_21_2s_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -858,28 +876,31 @@ data_wide$part_pol_3y4 = as.numeric(data_wide$part_pol_marcha_pas_rec + data_wid
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_padre==1 | nse_padre==2 | nse_padre==3 | nse_padre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_padre==4 | nse_padre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_pol_3y4, na.rm=T),
                psych::describe(data_ed_med$part_pol_3y4, na.rm=T),
-               psych::describe(data_ed_tec$part_pol_3y4, na.rm=T),
-               psych::describe(data_ed_uni$part_pol_3y4, na.rm=T))
+               psych::describe(data_ed_ter$part_pol_3y4, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_pol_3y4, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_pol_3y4,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_pol_3y4,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_pol_3y4,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_3y4,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_pol_3y4,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_3y4,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_pol_3y4_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -935,28 +956,32 @@ data_wide$part_pol_es = as.numeric(data_wide$part_pol_firma_21_rec + data_wide$p
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_padre==1 | nse_padre==2 | nse_padre==3 | nse_padre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_padre==4 | nse_padre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_pol_es, na.rm=T),
                psych::describe(data_ed_med$part_pol_es, na.rm=T),
-               psych::describe(data_ed_tec$part_pol_es, na.rm=T),
-               psych::describe(data_ed_uni$part_pol_es, na.rm=T))
+               psych::describe(data_ed_ter$part_pol_es, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_pol_es, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_pol_es,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_pol_es,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_pol_es,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_es,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_pol_es,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_es,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_pol_es_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -1011,28 +1036,32 @@ data_wide$part_pol_20 = as.numeric(data_wide$part_pol_firma_20_rec + data_wide$p
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_padre==1 | nse_padre==2 | nse_padre==3 | nse_padre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_padre==4 | nse_padre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_pol_20, na.rm=T),
                psych::describe(data_ed_med$part_pol_20, na.rm=T),
-               psych::describe(data_ed_tec$part_pol_20, na.rm=T),
-               psych::describe(data_ed_uni$part_pol_20, na.rm=T))
+               psych::describe(data_ed_ter$part_pol_20, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_pol_20, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_pol_20,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_pol_20,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_pol_20,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_20,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_pol_20,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_20,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_pol_20_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -1087,28 +1116,32 @@ data_wide$part_pol_21_1s = as.numeric(data_wide$part_pol_firma.x_rec + data_wide
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_padre==1 | nse_padre==2 | nse_padre==3 | nse_padre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_padre==4 | nse_padre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_pol_21_1s, na.rm=T),
                psych::describe(data_ed_med$part_pol_21_1s, na.rm=T),
-               psych::describe(data_ed_tec$part_pol_21_1s, na.rm=T),
-               psych::describe(data_ed_uni$part_pol_21_1s, na.rm=T))
+               psych::describe(data_ed_ter$part_pol_21_1s, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_pol_21_1s, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_pol_21_1s,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_pol_21_1s,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_pol_21_1s,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_21_1s,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_pol_21_1s,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_21_1s,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_pol_21_1s_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -1163,28 +1196,32 @@ data_wide$part_pol_21_2s = as.numeric(data_wide$part_pol_firma_21b_rec + data_wi
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_padre==1 | nse_padre==2 | nse_padre==3 | nse_padre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_padre==4 | nse_padre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_pol_21_2s, na.rm=T),
                psych::describe(data_ed_med$part_pol_21_2s, na.rm=T),
-               psych::describe(data_ed_tec$part_pol_21_2s, na.rm=T),
-               psych::describe(data_ed_uni$part_pol_21_2s, na.rm=T))
+               psych::describe(data_ed_ter$part_pol_21_2s, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_pol_21_2s, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_pol_21_2s,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_pol_21_2s,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_pol_21_2s,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_21_2s,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_pol_21_2s,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_21_2s,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_pol_21_2s_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -1595,7 +1632,8 @@ ggsave(part_pol_21_2s_colegio, file = "../output/graphs/part_pol_21_2s_colegio_c
 ### Participación política durante 3ro y 4to medio
 ```{r}
 ### Crear variable
-data_wide$part_act_no_dis_3y4 <- as.numeric(data_wide$part_pol_firma.y + data_wide$part_pol_marcha_pas)/2
+#data_wide$part_act_no_dis_3y4 <- as.numeric(data_wide$part_pol_firma.y + data_wide$part_pol_marcha_pas)/2
+data_wide$part_act_no_dis_3y4 <- as.numeric(data_wide$part_pol_marcha_pas)
 ```
 
 ```{r}
@@ -1648,7 +1686,8 @@ ggsave(part_act_no_dis_3y4_colegio, file = "../output/graphs/part_act_no_dis_3y4
 
 ```{r}
 ### Crear variable
-data_wide$part_act_no_dis_es <- as.numeric(data_wide$part_pol_firma_21 + data_wide$part_pol_marc_pac_21)/2
+#data_wide$part_act_no_dis_es <- as.numeric(data_wide$part_pol_firma_21 + data_wide$part_pol_marc_pac_21)/2
+data_wide$part_act_no_dis_es <- as.numeric(data_wide$part_pol_marc_pac_21)
 ```
 
 ```{r}
@@ -1701,7 +1740,8 @@ ggsave(part_act_no_dis_es_colegio, file = "../output/graphs/part_act_no_dis_es_c
 
 ```{r}
 ### Crear variable
-data_wide$part_act_no_dis_20 = as.numeric(data_wide$part_pol_firma_20 + data_wide$part_pol_marc_pac_20)/2
+#data_wide$part_act_no_dis_20 = as.numeric(data_wide$part_pol_firma_20 + data_wide$part_pol_marc_pac_20)/2
+data_wide$part_act_no_dis_20 = as.numeric(data_wide$part_pol_marc_pac_20)
 ```
 
 ```{r}
@@ -1754,7 +1794,8 @@ ggsave(part_act_no_dis_20_colegio, file = "../output/graphs/part_act_no_dis_20_c
 
 ```{r}
 #### Crear variable
-data_wide$part_act_no_dis_21_1s = as.numeric(data_wide$part_pol_firma.x + data_wide$part_pol_marc_pac)/2
+#data_wide$part_act_no_dis_21_1s = as.numeric(data_wide$part_pol_firma.x + data_wide$part_pol_marc_pac)/2
+data_wide$part_act_no_dis_21_1s = as.numeric(data_wide$part_pol_marc_pac)
 ```
 
 ```{r}
@@ -1807,7 +1848,8 @@ ggsave(part_act_no_dis_21_1s_colegio, file = "../output/graphs/part_act_no_dis_2
 
 ```{r}
 #### Crear variable
-data_wide$part_act_no_dis_21_2s = as.numeric(data_wide$part_pol_firma_21b + data_wide$part_pol_marc_pac_21b)/2
+#data_wide$part_act_no_dis_21_2s = as.numeric(data_wide$part_pol_firma_21b + data_wide$part_pol_marc_pac_21b)/2
+data_wide$part_act_no_dis_21_2s = as.numeric(data_wide$part_pol_marc_pac_21b)
 ```
 
 ```{r}
@@ -1868,28 +1910,31 @@ data_wide$part_act_no_dis_3y4 <- as.numeric(data_wide$part_pol_firma.y + data_wi
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_madre==1 | nse_madre==2 | nse_madre==3 | nse_madre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_madre==4 | nse_madre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_no_dis_3y4, na.rm=T),
                psych::describe(data_ed_med$part_act_no_dis_3y4, na.rm=T),
-               psych::describe(data_ed_tec$part_act_no_dis_3y4, na.rm=T),
-               psych::describe(data_ed_uni$part_act_no_dis_3y4, na.rm=T))
+               psych::describe(data_ed_ter$part_act_no_dis_3y4, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_no_dis_3y4, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_no_dis_3y4,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_act_no_dis_3y4,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_act_no_dis_3y4,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_no_dis_3y4,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_no_dis_3y4,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_no_dis_3y4,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_act_no_dis_3y4_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -1927,28 +1972,31 @@ data_wide$part_act_no_dis_es <- as.numeric(data_wide$part_pol_firma_21 + data_wi
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_madre==1 | nse_madre==2 | nse_madre==3 | nse_madre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_madre==4 | nse_madre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_no_dis_es, na.rm=T),
                psych::describe(data_ed_med$part_act_no_dis_es, na.rm=T),
-               psych::describe(data_ed_tec$part_act_no_dis_es, na.rm=T),
-               psych::describe(data_ed_uni$part_act_no_dis_es, na.rm=T))
+               psych::describe(data_ed_ter$part_act_no_dis_es, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_no_dis_es, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_no_dis_es,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_act_no_dis_es,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_act_no_dis_es,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_no_dis_es,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_no_dis_es,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_no_dis_es,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_act_no_dis_es_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -1985,28 +2033,31 @@ data_wide$part_act_no_dis_20 = as.numeric(data_wide$part_pol_firma_20 + data_wid
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_madre==1 | nse_madre==2 | nse_madre==3 | nse_madre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_madre==4 | nse_madre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_no_dis_20, na.rm=T),
                psych::describe(data_ed_med$part_act_no_dis_20, na.rm=T),
-               psych::describe(data_ed_tec$part_act_no_dis_20, na.rm=T),
-               psych::describe(data_ed_uni$part_act_no_dis_20, na.rm=T))
+               psych::describe(data_ed_ter$part_act_no_dis_20, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_no_dis_20, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_no_dis_20,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_act_no_dis_20,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_act_no_dis_20,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_no_dis_20,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_no_dis_20,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_no_dis_20,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_act_no_dis_20_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -2043,28 +2094,31 @@ data_wide$part_act_no_dis_21_1s = as.numeric(data_wide$part_pol_firma.x + data_w
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_madre==1 | nse_madre==2 | nse_madre==3 | nse_madre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_madre==4 | nse_madre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_no_dis_21_1s, na.rm=T),
                psych::describe(data_ed_med$part_act_no_dis_21_1s, na.rm=T),
-               psych::describe(data_ed_tec$part_act_no_dis_21_1s, na.rm=T),
-               psych::describe(data_ed_uni$part_act_no_dis_21_1s, na.rm=T))
+               psych::describe(data_ed_ter$part_act_no_dis_21_1s, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_no_dis_21_1s, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_no_dis_21_1s,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_act_no_dis_21_1s,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_act_no_dis_21_1s,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_no_dis_21_1s,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_no_dis_21_1s,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_no_dis_21_1s,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_act_no_dis_21_1s_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -2101,28 +2155,31 @@ data_wide$part_act_no_dis_21_2s = as.numeric(data_wide$part_pol_firma_21b + data
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_madre==1 | nse_madre==2 | nse_madre==3 | nse_madre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_madre==4 | nse_madre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_no_dis_21_2s, na.rm=T),
                psych::describe(data_ed_med$part_act_no_dis_21_2s, na.rm=T),
-               psych::describe(data_ed_tec$part_act_no_dis_21_2s, na.rm=T),
-               psych::describe(data_ed_uni$part_act_no_dis_21_2s, na.rm=T))
+               psych::describe(data_ed_ter$part_act_no_dis_21_2s, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_no_dis_21_2s, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_no_dis_21_2s,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_act_no_dis_21_2s,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_act_no_dis_21_2s,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_no_dis_21_2s,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_no_dis_21_2s,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_no_dis_21_2s,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_act_no_dis_21_2s_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -2160,28 +2217,32 @@ data_wide$part_act_no_dis_3y4 <- as.numeric(data_wide$part_pol_firma.y + data_wi
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_padre==1 | nse_padre==2 | nse_padre==3 | nse_padre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_padre==4 | nse_padre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_no_dis_3y4, na.rm=T),
                psych::describe(data_ed_med$part_act_no_dis_3y4, na.rm=T),
-               psych::describe(data_ed_tec$part_act_no_dis_3y4, na.rm=T),
-               psych::describe(data_ed_uni$part_act_no_dis_3y4, na.rm=T))
+               psych::describe(data_ed_ter$part_act_no_dis_3y4, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_no_dis_3y4, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_no_dis_3y4,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_act_no_dis_3y4,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_act_no_dis_3y4,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_no_dis_3y4,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_no_dis_3y4,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_no_dis_3y4,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_act_no_dis_3y4_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -2219,28 +2280,32 @@ data_wide$part_act_no_dis_es <- as.numeric(data_wide$part_pol_firma_21 + data_wi
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_padre==1 | nse_padre==2 | nse_padre==3 | nse_padre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_padre==4 | nse_padre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_no_dis_es, na.rm=T),
                psych::describe(data_ed_med$part_act_no_dis_es, na.rm=T),
-               psych::describe(data_ed_tec$part_act_no_dis_es, na.rm=T),
-               psych::describe(data_ed_uni$part_act_no_dis_es, na.rm=T))
+               psych::describe(data_ed_ter$part_act_no_dis_es, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_no_dis_es, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_no_dis_es,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_act_no_dis_es,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_act_no_dis_es,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_no_dis_es,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_no_dis_es,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_no_dis_es,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_act_no_dis_es_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -2277,28 +2342,32 @@ data_wide$part_act_no_dis_20 = as.numeric(data_wide$part_pol_firma_20 + data_wid
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_padre==1 | nse_padre==2 | nse_padre==3 | nse_padre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_padre==4 | nse_padre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_no_dis_20, na.rm=T),
                psych::describe(data_ed_med$part_act_no_dis_20, na.rm=T),
-               psych::describe(data_ed_tec$part_act_no_dis_20, na.rm=T),
-               psych::describe(data_ed_uni$part_act_no_dis_20, na.rm=T))
+               psych::describe(data_ed_ter$part_act_no_dis_20, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_no_dis_20, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_no_dis_20,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_act_no_dis_20,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_act_no_dis_20,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_no_dis_20,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_no_dis_20,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_no_dis_20,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_act_no_dis_20_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -2335,28 +2404,32 @@ data_wide$part_act_no_dis_21_1s = as.numeric(data_wide$part_pol_firma.x + data_w
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_padre==1 | nse_padre==2 | nse_padre==3 | nse_padre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_padre==4 | nse_padre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_no_dis_21_1s, na.rm=T),
                psych::describe(data_ed_med$part_act_no_dis_21_1s, na.rm=T),
-               psych::describe(data_ed_tec$part_act_no_dis_21_1s, na.rm=T),
-               psych::describe(data_ed_uni$part_act_no_dis_21_1s, na.rm=T))
+               psych::describe(data_ed_ter$part_act_no_dis_21_1s, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_no_dis_21_1s, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_no_dis_21_1s,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_act_no_dis_21_1s,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_act_no_dis_21_1s,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_no_dis_21_1s,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_no_dis_21_1s,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_no_dis_21_1s,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_act_no_dis_21_1s_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -2393,28 +2466,32 @@ data_wide$part_act_no_dis_21_2s = as.numeric(data_wide$part_pol_firma_21b + data
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_padre==1 | nse_padre==2 | nse_padre==3 | nse_padre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_padre==4 | nse_padre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_no_dis_21_2s, na.rm=T),
                psych::describe(data_ed_med$part_act_no_dis_21_2s, na.rm=T),
-               psych::describe(data_ed_tec$part_act_no_dis_21_2s, na.rm=T),
-               psych::describe(data_ed_uni$part_act_no_dis_21_2s, na.rm=T))
+               psych::describe(data_ed_ter$part_act_no_dis_21_2s, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_no_dis_21_2s, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_no_dis_21_2s,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_act_no_dis_21_2s,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_act_no_dis_21_2s,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_no_dis_21_2s,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_no_dis_21_2s,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_no_dis_21_2s,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_act_no_dis_21_2s_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -3011,28 +3088,31 @@ data_wide$part_act_dis_3y4 <- as.numeric(data_wide$part_pol_marcha_dis + data_wi
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_madre==1 | nse_madre==2 | nse_madre==3 | nse_madre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_madre==4 | nse_madre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_dis_3y4, na.rm=T),
                psych::describe(data_ed_med$part_act_dis_3y4, na.rm=T),
-               psych::describe(data_ed_tec$part_act_dis_3y4, na.rm=T),
-               psych::describe(data_ed_uni$part_act_dis_3y4, na.rm=T))
+               psych::describe(data_ed_ter$part_act_dis_3y4, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_dis_3y4, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_dis_3y4,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_act_dis_3y4,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_act_dis_3y4,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_dis_3y4,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_dis_3y4,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_dis_3y4,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_act_dis_3y4_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -3070,28 +3150,31 @@ data_wide$part_act_dis_es <- as.numeric(data_wide$part_pol_marc_dis_21 + data_wi
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_madre==1 | nse_madre==2 | nse_madre==3 | nse_madre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_madre==4 | nse_madre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_dis_es, na.rm=T),
                psych::describe(data_ed_med$part_act_dis_es, na.rm=T),
-               psych::describe(data_ed_tec$part_act_dis_es, na.rm=T),
-               psych::describe(data_ed_uni$part_act_dis_es, na.rm=T))
+               psych::describe(data_ed_ter$part_act_dis_es, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_dis_es, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_dis_es,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_act_dis_es,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_act_dis_es,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_dis_es,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_dis_es,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_dis_es,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_act_dis_es_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -3128,28 +3211,31 @@ data_wide$part_act_dis_20 = as.numeric(data_wide$part_pol_marc_dis_20 + data_wid
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_madre==1 | nse_madre==2 | nse_madre==3 | nse_madre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_madre==4 | nse_madre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_dis_20, na.rm=T),
                psych::describe(data_ed_med$part_act_dis_20, na.rm=T),
-               psych::describe(data_ed_tec$part_act_dis_20, na.rm=T),
-               psych::describe(data_ed_uni$part_act_dis_20, na.rm=T))
+               psych::describe(data_ed_ter$part_act_dis_20, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_dis_20, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_dis_20,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_act_dis_20,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_act_dis_20,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_dis_20,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_dis_20,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_dis_20,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_act_dis_20_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -3186,28 +3272,31 @@ data_wide$part_act_dis_21_1s = as.numeric(data_wide$part_pol_marcha_dis + data_w
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_madre==1 | nse_madre==2 | nse_madre==3 | nse_madre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_madre==4 | nse_madre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_dis_21_1s, na.rm=T),
                psych::describe(data_ed_med$part_act_dis_21_1s, na.rm=T),
-               psych::describe(data_ed_tec$part_act_dis_21_1s, na.rm=T),
-               psych::describe(data_ed_uni$part_act_dis_21_1s, na.rm=T))
+               psych::describe(data_ed_ter$part_act_dis_21_1s, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_dis_21_1s, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_dis_21_1s,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_act_dis_21_1s,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_act_dis_21_1s,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_dis_21_1s,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_dis_21_1s,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_dis_21_1s,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_act_dis_21_1s_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -3244,28 +3333,31 @@ data_wide$part_act_dis_21_2s = as.numeric(data_wide$part_pol_marc_dis_21b + data
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_madre==1 | nse_madre==2 | nse_madre==3 | nse_madre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_madre==4 | nse_madre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_dis_21_2s, na.rm=T),
                psych::describe(data_ed_med$part_act_dis_21_2s, na.rm=T),
-               psych::describe(data_ed_tec$part_act_dis_21_2s, na.rm=T),
-               psych::describe(data_ed_uni$part_act_dis_21_2s, na.rm=T))
+               psych::describe(data_ed_ter$part_act_dis_21_2s, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_dis_21_2s, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_dis_21_2s,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_act_dis_21_2s,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_act_dis_21_2s,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_dis_21_2s,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_dis_21_2s,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_dis_21_2s,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_act_dis_21_2s_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -3303,28 +3395,32 @@ data_wide$part_act_dis_3y4 <- as.numeric(data_wide$part_pol_marcha_dis + data_wi
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_padre==1 | nse_padre==2 | nse_padre==3 | nse_padre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_padre==4 | nse_padre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_dis_3y4, na.rm=T),
                psych::describe(data_ed_med$part_act_dis_3y4, na.rm=T),
-               psych::describe(data_ed_tec$part_act_dis_3y4, na.rm=T),
-               psych::describe(data_ed_uni$part_act_dis_3y4, na.rm=T))
+               psych::describe(data_ed_ter$part_act_dis_3y4, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_dis_3y4, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_dis_3y4,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_act_dis_3y4,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_act_dis_3y4,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_dis_3y4,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_dis_3y4,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_dis_3y4,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_act_dis_3y4_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -3362,28 +3458,32 @@ data_wide$part_act_dis_es <- as.numeric(data_wide$part_pol_marc_dis_21 + data_wi
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_padre==1 | nse_padre==2 | nse_padre==3 | nse_padre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_padre==4 | nse_padre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_dis_es, na.rm=T),
                psych::describe(data_ed_med$part_act_dis_es, na.rm=T),
-               psych::describe(data_ed_tec$part_act_dis_es, na.rm=T),
-               psych::describe(data_ed_uni$part_act_dis_es, na.rm=T))
+               psych::describe(data_ed_ter$part_act_dis_es, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_dis_es, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_dis_es,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_act_dis_es,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_act_dis_es,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_dis_es,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_dis_es,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_dis_es,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_act_dis_es_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -3420,28 +3520,32 @@ data_wide$part_act_dis_20 = as.numeric(data_wide$part_pol_marc_dis_20 + data_wid
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_padre==1 | nse_padre==2 | nse_padre==3 | nse_padre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_padre==4 | nse_padre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_dis_20, na.rm=T),
                psych::describe(data_ed_med$part_act_dis_20, na.rm=T),
-               psych::describe(data_ed_tec$part_act_dis_20, na.rm=T),
-               psych::describe(data_ed_uni$part_act_dis_20, na.rm=T))
+               psych::describe(data_ed_ter$part_act_dis_20, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_dis_20, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_dis_20,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_act_dis_20,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_act_dis_20,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_dis_20,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_dis_20,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_dis_20,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_act_dis_20_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -3478,28 +3582,32 @@ data_wide$part_act_dis_21_1s = as.numeric(data_wide$part_pol_marcha_dis + data_w
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_padre==1 | nse_padre==2 | nse_padre==3 | nse_padre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_padre==4 | nse_padre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_dis_21_1s, na.rm=T),
                psych::describe(data_ed_med$part_act_dis_21_1s, na.rm=T),
-               psych::describe(data_ed_tec$part_act_dis_21_1s, na.rm=T),
-               psych::describe(data_ed_uni$part_act_dis_21_1s, na.rm=T))
+               psych::describe(data_ed_ter$part_act_dis_21_1s, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_dis_21_1s, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_dis_21_1s,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_act_dis_21_1s,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_act_dis_21_1s,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_dis_21_1s,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_dis_21_1s,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_dis_21_1s,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_act_dis_21_1s_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -3536,28 +3644,32 @@ data_wide$part_act_dis_21_2s = as.numeric(data_wide$part_pol_marc_dis_21b + data
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_padre==1 | nse_padre==2 | nse_padre==3 | nse_padre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_padre==4 | nse_padre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_dis_21_2s, na.rm=T),
                psych::describe(data_ed_med$part_act_dis_21_2s, na.rm=T),
-               psych::describe(data_ed_tec$part_act_dis_21_2s, na.rm=T),
-               psych::describe(data_ed_uni$part_act_dis_21_2s, na.rm=T))
+               psych::describe(data_ed_ter$part_act_dis_21_2s, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_dis_21_2s, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_dis_21_2s,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_act_dis_21_2s,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_act_dis_21_2s,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_dis_21_2s,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_dis_21_2s,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_dis_21_2s,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_act_dis_21_2s_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -4153,28 +4265,31 @@ data_wide$part_act_online_3y4 <- as.numeric(data_wide$part_pol_online + data_wid
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_madre==1 | nse_madre==2 | nse_madre==3 | nse_madre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_madre==4 | nse_madre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_online_3y4, na.rm=T),
                psych::describe(data_ed_med$part_act_online_3y4, na.rm=T),
-               psych::describe(data_ed_tec$part_act_online_3y4, na.rm=T),
-               psych::describe(data_ed_uni$part_act_online_3y4, na.rm=T))
+               psych::describe(data_ed_ter$part_act_online_3y4, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_online_3y4, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_online_3y4,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_act_online_3y4,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_act_online_3y4,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_online_3y4,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_online_3y4,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_online_3y4,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_act_online_3y4_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -4212,28 +4327,31 @@ data_wide$part_act_online_es <- as.numeric(data_wide$part_pol_online_info_21 + d
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_madre==1 | nse_madre==2 | nse_madre==3 | nse_madre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_madre==4 | nse_madre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_online_es, na.rm=T),
                psych::describe(data_ed_med$part_act_online_es, na.rm=T),
-               psych::describe(data_ed_tec$part_act_online_es, na.rm=T),
-               psych::describe(data_ed_uni$part_act_online_es, na.rm=T))
+               psych::describe(data_ed_ter$part_act_online_es, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_online_es, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_online_es,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_act_online_es,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_act_online_es,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_online_es,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_online_es,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_online_es,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_act_online_es_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -4270,28 +4388,32 @@ data_wide$part_act_online_20 = as.numeric(data_wide$part_pol_online_info_20 + da
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_madre==1 | nse_madre==2 | nse_madre==3 | nse_madre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_madre==4 | nse_madre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)```
+
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_online_20, na.rm=T),
                psych::describe(data_ed_med$part_act_online_20, na.rm=T),
-               psych::describe(data_ed_tec$part_act_online_20, na.rm=T),
-               psych::describe(data_ed_uni$part_act_online_20, na.rm=T))
+               psych::describe(data_ed_ter$part_act_online_20, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_online_20, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_online_20,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_act_online_20,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_act_online_20,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_online_20,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_online_20,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_online_20,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_act_online_20_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -4328,28 +4450,31 @@ data_wide$part_act_online_21_1s = as.numeric(data_wide$part_pol_online_info + da
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_madre==1 | nse_madre==2 | nse_madre==3 | nse_madre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_madre==4 | nse_madre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_online_21_1s, na.rm=T),
                psych::describe(data_ed_med$part_act_online_21_1s, na.rm=T),
-               psych::describe(data_ed_tec$part_act_online_21_1s, na.rm=T),
-               psych::describe(data_ed_uni$part_act_online_21_1s, na.rm=T))
+               psych::describe(data_ed_ter$part_act_online_21_1s, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_online_21_1s, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_online_21_1s,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_act_online_21_1s,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_act_online_21_1s,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_online_21_1s,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_online_21_1s,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_online_21_1s,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_act_online_21_1s_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -4386,28 +4511,31 @@ data_wide$part_act_online_21_2s = as.numeric(data_wide$part_pol_online_info_21b 
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_madre==1 | nse_madre==2 | nse_madre==3 | nse_madre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_madre==4 | nse_madre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_online_21_2s, na.rm=T),
                psych::describe(data_ed_med$part_act_online_21_2s, na.rm=T),
-               psych::describe(data_ed_tec$part_act_online_21_2s, na.rm=T),
-               psych::describe(data_ed_uni$part_act_online_21_2s, na.rm=T))
+               psych::describe(data_ed_ter$part_act_online_21_2s, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_online_21_2s, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_online_21_2s,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_act_online_21_2s,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_act_online_21_2s,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_online_21_2s,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_online_21_2s,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_online_21_2s,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_act_online_21_2s_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -4445,28 +4573,32 @@ data_wide$part_act_online_3y4 <- as.numeric(data_wide$part_pol_online + data_wid
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_padre==1 | nse_padre==2 | nse_padre==3 | nse_padre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_padre==4 | nse_padre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_online_3y4, na.rm=T),
                psych::describe(data_ed_med$part_act_online_3y4, na.rm=T),
-               psych::describe(data_ed_tec$part_act_online_3y4, na.rm=T),
-               psych::describe(data_ed_uni$part_act_online_3y4, na.rm=T))
+               psych::describe(data_ed_ter$part_act_online_3y4, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_online_3y4, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_online_3y4,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_act_online_3y4,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_act_online_3y4,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_online_3y4,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_online_3y4,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_online_3y4,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_act_online_3y4_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -4504,28 +4636,32 @@ data_wide$part_act_online_es <- as.numeric(data_wide$part_pol_online_info_21 + d
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_padre==1 | nse_padre==2 | nse_padre==3 | nse_padre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_padre==4 | nse_padre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_online_es, na.rm=T),
                psych::describe(data_ed_med$part_act_online_es, na.rm=T),
-               psych::describe(data_ed_tec$part_act_online_es, na.rm=T),
-               psych::describe(data_ed_uni$part_act_online_es, na.rm=T))
+               psych::describe(data_ed_ter$part_act_online_es, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_online_es, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_online_es,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_act_online_es,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_act_online_es,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_online_es,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_online_es,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_online_es,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_act_online_es_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -4562,28 +4698,32 @@ data_wide$part_act_online_20 = as.numeric(data_wide$part_pol_online_info_20 + da
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_padre==1 | nse_padre==2 | nse_padre==3 | nse_padre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_padre==4 | nse_padre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_online_20, na.rm=T),
                psych::describe(data_ed_med$part_act_online_20, na.rm=T),
-               psych::describe(data_ed_tec$part_act_online_20, na.rm=T),
-               psych::describe(data_ed_uni$part_act_online_20, na.rm=T))
+               psych::describe(data_ed_ter$part_act_online_20, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_online_20, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_online_20,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_act_online_20,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_act_online_20,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_online_20,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_online_20,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_online_20,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_act_online_20_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -4620,28 +4760,32 @@ data_wide$part_act_online_21_1s = as.numeric(data_wide$part_pol_online_info + da
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_padre==1 | nse_padre==2 | nse_padre==3 | nse_padre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_padre==4 | nse_padre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_online_21_1s, na.rm=T),
                psych::describe(data_ed_med$part_act_online_21_1s, na.rm=T),
-               psych::describe(data_ed_tec$part_act_online_21_1s, na.rm=T),
-               psych::describe(data_ed_uni$part_act_online_21_1s, na.rm=T))
+               psych::describe(data_ed_ter$part_act_online_21_1s, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_online_21_1s, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_online_21_1s,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_act_online_21_1s,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_act_online_21_1s,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_online_21_1s,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_online_21_1s,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_online_21_1s,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_act_online_21_1s_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -4678,28 +4822,32 @@ data_wide$part_act_online_21_2s = as.numeric(data_wide$part_pol_online_info_21b 
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_padre==1 | nse_padre==2 | nse_padre==3 | nse_padre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_padre==4 | nse_padre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_online_21_2s, na.rm=T),
                psych::describe(data_ed_med$part_act_online_21_2s, na.rm=T),
-               psych::describe(data_ed_tec$part_act_online_21_2s, na.rm=T),
-               psych::describe(data_ed_uni$part_act_online_21_2s, na.rm=T))
+               psych::describe(data_ed_ter$part_act_online_21_2s, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_online_21_2s, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_online_21_2s,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_act_online_21_2s,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_act_online_21_2s,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_online_21_2s,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_online_21_2s,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_online_21_2s,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_act_online_21_2s_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -5289,28 +5437,31 @@ ggsave(part_pol_com_21b_colegio, file = "../output/graphs/part_pol_com_21b_coleg
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_madre==1 | nse_madre==2 | nse_madre==3 | nse_madre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_madre==4 | nse_madre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_pol_volunt, na.rm=T),
                psych::describe(data_ed_med$part_pol_volunt, na.rm=T),
-               psych::describe(data_ed_tec$part_pol_volunt, na.rm=T),
-               psych::describe(data_ed_uni$part_pol_volunt, na.rm=T))
+               psych::describe(data_ed_ter$part_pol_volunt, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_pol_volunt, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_pol_volunt,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_pol_volunt,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_pol_volunt,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_volunt,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_pol_volunt,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_volunt,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_pol_volunt_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -5347,28 +5498,31 @@ ggsave(part_pol_volunt_colegio, file = "../output/graphs/part_pol_volunt_colegio
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_madre==1 | nse_madre==2 | nse_madre==3 | nse_madre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_madre==4 | nse_madre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_pol_com_21, na.rm=T),
                psych::describe(data_ed_med$part_pol_com_21, na.rm=T),
-               psych::describe(data_ed_tec$part_pol_com_21, na.rm=T),
-               psych::describe(data_ed_uni$part_pol_com_21, na.rm=T))
+               psych::describe(data_ed_ter$part_pol_com_21, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_pol_com_21, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_pol_com_21,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_pol_com_21,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_pol_com_21,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_com_21,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_pol_com_21,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_com_21,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_pol_com_21_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -5404,28 +5558,31 @@ ggsave(part_pol_com_21_colegio, file = "../output/graphs/part_pol_com_21_colegio
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_madre==1 | nse_madre==2 | nse_madre==3 | nse_madre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_madre==4 | nse_madre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_pol_com_20, na.rm=T),
                psych::describe(data_ed_med$part_pol_com_20, na.rm=T),
-               psych::describe(data_ed_tec$part_pol_com_20, na.rm=T),
-               psych::describe(data_ed_uni$part_pol_com_20, na.rm=T))
+               psych::describe(data_ed_ter$part_pol_com_20, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_pol_com_20, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_pol_com_20,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_pol_com_20,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_pol_com_20,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_com_20,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_pol_com_20,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_com_20,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_pol_com_20_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -5462,28 +5619,31 @@ data_wide$part_pol_com_21_1s = as.numeric(data_wide$part_pol_firma.x + data_wide
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_madre==1 | nse_madre==2 | nse_madre==3 | nse_madre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_madre==4 | nse_madre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_pol_com_21_1s, na.rm=T),
                psych::describe(data_ed_med$part_pol_com_21_1s, na.rm=T),
-               psych::describe(data_ed_tec$part_pol_com_21_1s, na.rm=T),
-               psych::describe(data_ed_uni$part_pol_com_21_1s, na.rm=T))
+               psych::describe(data_ed_ter$part_pol_com_21_1s, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_pol_com_21_1s, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_pol_com_21_1s,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_pol_com_21_1s,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_pol_com_21_1s,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_com_21_1s,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_pol_com_21_1s,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_com_21_1s,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_pol_com_21_1s_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -5519,28 +5679,31 @@ ggsave(part_pol_com_21_1s_colegio, file = "../output/graphs/part_pol_com_21_1s_c
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_madre==1 | nse_madre==2 | nse_madre==3 | nse_madre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_madre==4 | nse_madre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_pol_com_21b, na.rm=T),
                psych::describe(data_ed_med$part_pol_com_21b, na.rm=T),
-               psych::describe(data_ed_tec$part_pol_com_21b, na.rm=T),
-               psych::describe(data_ed_uni$part_pol_com_21b, na.rm=T))
+               psych::describe(data_ed_ter$part_pol_com_21b, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_pol_com_21b, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_pol_com_21b,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_pol_com_21b,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_pol_com_21b,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_com_21b,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_pol_com_21b,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_com_21b,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_pol_com_21b_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -5577,28 +5740,32 @@ ggsave(part_pol_com_21b_colegio, file = "../output/graphs/part_pol_com_21b_coleg
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_padre==1 | nse_padre==2 | nse_padre==3 | nse_padre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_padre==4 | nse_padre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_pol_volunt, na.rm=T),
                psych::describe(data_ed_med$part_pol_volunt, na.rm=T),
-               psych::describe(data_ed_tec$part_pol_volunt, na.rm=T),
-               psych::describe(data_ed_uni$part_pol_volunt, na.rm=T))
+               psych::describe(data_ed_ter$part_pol_volunt, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_pol_volunt, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_pol_volunt,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_pol_volunt,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_pol_volunt,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_volunt,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_pol_volunt,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_volunt,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_pol_volunt_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -5635,28 +5802,32 @@ ggsave(part_pol_volunt_colegio, file = "../output/graphs/part_pol_volunt_colegio
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_padre==1 | nse_padre==2 | nse_padre==3 | nse_padre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_padre==4 | nse_padre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_pol_com_21, na.rm=T),
                psych::describe(data_ed_med$part_pol_com_21, na.rm=T),
-               psych::describe(data_ed_tec$part_pol_com_21, na.rm=T),
-               psych::describe(data_ed_uni$part_pol_com_21, na.rm=T))
+               psych::describe(data_ed_ter$part_pol_com_21, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_pol_com_21, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_pol_com_21,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_pol_com_21,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_pol_com_21,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_com_21,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_pol_com_21,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_com_21,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_pol_com_21_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -5692,28 +5863,32 @@ ggsave(part_pol_com_21_colegio, file = "../output/graphs/part_pol_com_21_colegio
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_padre==1 | nse_padre==2 | nse_padre==3 | nse_padre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_padre==4 | nse_padre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_pol_com_20, na.rm=T),
                psych::describe(data_ed_med$part_pol_com_20, na.rm=T),
-               psych::describe(data_ed_tec$part_pol_com_20, na.rm=T),
-               psych::describe(data_ed_uni$part_pol_com_20, na.rm=T))
+               psych::describe(data_ed_ter$part_pol_com_20, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_pol_com_20, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_pol_com_20,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_pol_com_20,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_pol_com_20,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_com_20,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_pol_com_20,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_com_20,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_pol_com_20_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -5749,28 +5924,32 @@ ggsave(part_pol_com_20_colegio, file = "../output/graphs/part_pol_com_20_colegio
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_padre==1 | nse_padre==2 | nse_padre==3 | nse_padre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_padre==4 | nse_padre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_pol_com, na.rm=T),
                psych::describe(data_ed_med$part_pol_com, na.rm=T),
-               psych::describe(data_ed_tec$part_pol_com, na.rm=T),
-               psych::describe(data_ed_uni$part_pol_com, na.rm=T))
+               psych::describe(data_ed_ter$part_pol_com, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_pol_com, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_pol_com,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_pol_com,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_pol_com,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_com,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_pol_com,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_com,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_pol_com_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
@@ -5806,28 +5985,32 @@ ggsave(part_pol_com_colegio, file = "../output/graphs/part_pol_com_colegio_ed_pa
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_padre==1 | nse_padre==2 | nse_padre==3 | nse_padre==4) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
 data_ed_med = data_wide %>%  filter(nse_padre==4 | nse_padre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
-data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
-data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+data_ed_ter = data_wide %>%  filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
 ```
 
 ```{r}
 table_preposh1<- rbind(psych::describe(data_ed_bas$part_pol_com_21b, na.rm=T),
                psych::describe(data_ed_med$part_pol_com_21b, na.rm=T),
-               psych::describe(data_ed_tec$part_pol_com_21b, na.rm=T),
-               psych::describe(data_ed_uni$part_pol_com_21b, na.rm=T))
+               psych::describe(data_ed_ter$part_pol_com_21b, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_pol_com_21b, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
 pond1 <- stats::weighted.mean(x=data_ed_bas$part_pol_com_21b,y=data_ed_bas$weight_w01,na.rm=TRUE)
 pond2 <- stats::weighted.mean(x=data_ed_med$part_pol_com_21b,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_tec$part_pol_com_21b,y=data_ed_tec$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_com_21b,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_pol_com_21b,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_pol_com_21b,y=data_ed_uni$weight_w01,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
 table_preposh1[3,2]<-pond3
-table_preposh1[4,2]<-pond4
+#table_preposh1[4,2]<-pond4
 
-table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
 
 part_pol_com_21b_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
      geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
