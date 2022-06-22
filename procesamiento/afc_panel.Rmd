@@ -9,27 +9,22 @@ output:
       smooth_scroll: false
       number_sections: false
     #css: "https://jciturras.github.io/ayudantia-sol3051/style.css"    
-
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+knitr::opts_chunk$set(message = FALSE, 
+                      warning = FALSE, 
+                      cache = T)
 ```
 
 ```{r}
 pacman::p_load(sjPlot, sjlabelled,readr, summarytools, haven, dplyr,kableExtra,
           readxl, ggplot2,ggtext,lavaan,sjmisc)
-```
-
-# Cargar bbdd
-```{r}
 ola1<-read_dta("../input/data/proc/data_01.dta")
 ola2<-read_dta("../input/data/proc/data_02.dta")
 ola3<-read_dta("../input/data/proc/data_03.dta")
-```
-
-# Juntar bbdd
-```{r}
 data_wide <- full_join(
   x = ola1,
   #datos ola 1
@@ -47,7 +42,7 @@ data_wide <- full_join(
 
 # Tipos de participación y frases a utilizar
 
-_Activismo no disruptivo
+_Activismo no disruptivo_
 + Firmar una petición, presencialmente o por internet
 + Participar en una marcha o manifestación pacífica 
 
@@ -86,7 +81,27 @@ part_pol_3y4 = data_wide %>% dplyr::select(
   part_online_seg
 )
 
-sjPlot::plot_likert(part_pol_3y4)
+# get variable labels
+varlabels<- part_pol_3y4 %>% get_label()
+# set part of the label for replacement
+a <- "Durante el periodo en que cursaba 3° y 4° Medio realizó algunas de las siguientes actividades dentro o fuera del liceo "
+b <- "Durante el periodo en que cursaba 3° y 4° Medio con que frecuencia realizaba las siguientes actividades  "   
+#replace string in labels
+varlabels<- 
+varlabels %>% 
+stringr::str_replace_all(.,"[[:punct:]]", "") %>% 
+  stringr::str_replace_all(.,a,"") %>% 
+    stringr::str_replace_all(.,b,"") 
+#set new labels
+part_pol_3y4 <- set_label(part_pol_3y4,varlabels)
+# Plot
+sjPlot::plot_likert(part_pol_3y4,
+                    title = "Participación política 3°y 4°Medio",
+                    reverse.scale = T,
+                    values = "sum.outside",
+                    sort.frq = "pos.asc"
+                    ) +
+  theme(legend.position="bottom")
 ```
 
 ### Análisis correlacional
@@ -149,7 +164,7 @@ corrplot::corrplot(
 ```
 
 ### Modelo de medición
-```{r }
+```{r,results='asis'}
 # Especificación del modelo
 afc0 <- '
 act_no_disrup =~ part_pol_firma_w01 + part_pol_marcha_pas
@@ -157,11 +172,18 @@ act_disrup =~ part_pol_marcha_dis + part_pol_bloqueo + part_pol_rayar_w01 + part
 act_online =~ part_pol_online + part_online_post + part_online_com + part_online_seg
 '
 # Estimación del modelo
-fit_0 <- lavaan::cfa(afc0, data = part_pol_3y4, ordered = T)
+fit_0 <- lavaan::cfa(afc0, data = part_pol_3y4, ordered = T,
+                     std.lv = TRUE , #factor loadings standarized
+                     )
+# lavaan::summary(fit_0, fit.measures = T, standardized = T)
+# lavaan::fitMeasures(fit_0, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea"))
 
-lavaan::summary(fit_0, fit.measures = T, standardized = T)
-
-lavaan::fitMeasures(fit_0, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea"))
+# create table report
+semTable::semTable(
+  fit_0 ,columns =c("estse" , "z" , "p"),
+  paramSets = c("loadings") ,
+fits = c("chisq", "df", "pvalue", "cfi", "tli", "rmsea") ,
+type = "html")
 ```
 
 ### Reporte 3ero y 4to
@@ -183,7 +205,8 @@ part_pol_est = data_wide %>% dplyr::select(
   part_pol_online_com_21,
   part_pol_online_seg_21
 )
-sjPlot::plot_likert(part_pol_est)
+sjPlot::plot_likert(part_pol_est) +
+  theme(legend.position="bottom")
 ```
 
 ### Análisis correlacional
@@ -255,9 +278,7 @@ act_online =~ part_pol_online_info_21 + part_pol_online_post_21 + part_pol_onlin
 '
 # Estimación del modelo
 fit_1 <- lavaan::cfa(afc1, data = part_pol_est, ordered = T)
-
 lavaan::summary(fit_1, fit.measures = T, standardized = T)
-
 lavaan::fitMeasures(fit_1, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea"))
 ```
 ### Reporte estallido
@@ -280,7 +301,8 @@ part_pol_20 = data_wide %>% dplyr::select(
   part_pol_online_seg_20
 )
 
-sjPlot::plot_likert(part_pol_20)
+sjPlot::plot_likert(part_pol_20) +
+  theme(legend.position="bottom")
 ```
 
 ### Análisis correlacional
@@ -376,7 +398,8 @@ part_pol_21.1 = data_wide %>% dplyr::select(
   part_pol_online_seg
 )
 
-sjPlot::plot_likert(part_pol_21.1)
+sjPlot::plot_likert(part_pol_21.1) +
+  theme(legend.position="bottom")
 ```
 
 ### Análisis correlacional
@@ -471,7 +494,8 @@ part_pol_21.2 = data_wide %>% dplyr::select(
   part_pol_online_seg_21b
 )
 
-sjPlot::plot_likert(part_pol_21.2)
+sjPlot::plot_likert(part_pol_21.2) +
+  theme(legend.position="bottom")
 ```
 
 ### Análisis correlacional
