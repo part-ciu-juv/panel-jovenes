@@ -17,7 +17,8 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 ```
 
 ```{r}
-pacman::p_load(sjPlot, sjlabelled,readr, summarytools, haven, dplyr,kableExtra,readxl, ggplot2,ggtext,lavaan)
+pacman::p_load(sjPlot, sjlabelled,readr, summarytools, haven, dplyr,kableExtra,
+          readxl, ggplot2,ggtext,lavaan,sjmisc)
 ```
 
 # Cargar bbdd
@@ -29,14 +30,19 @@ ola3<-read_dta("../input/data/proc/data_03.dta")
 
 # Juntar bbdd
 ```{r}
-data_wide <- full_join(x = ola1, #datos ola 1
-y = ola2, #datos ola 2
-by = "folio_encuestado", #identificador
-#aplica sufijo a variables que se repiten entre olas
-suffix = c("_w01",
-"_w02")) %>%
-left_join(ola3,
-by = "folio_encuestado")
+data_wide <- full_join(
+  x = ola1,
+  #datos ola 1
+  y = ola2,
+  #datos ola 2
+  by = "folio_encuestado",
+  #identificador
+  #aplica sufijo a variables que se repiten entre olas
+  suffix = c("_w01",
+             "_w02")
+) %>%
+  left_join(ola3,
+            by = "folio_encuestado")
 ```
 
 # Tipos de participación y frases a utilizar
@@ -57,7 +63,7 @@ _Activismo online_
 + Usar internet para buscar información sobre temas sociales y/o políticos 
 + Postear imágenes o mensajes acerca de temas sociales y/o políticos en internet 
 + Compartir o comentar en el posteo de otra persona acerca de temas sociales y políticos
-+ Seguir a personas en redes sociales por su contenido sobre temas sociales y políticos
++ Seguir a personas en redes sociales por su contenido sobre temas sociales ypolíticos
 
 __Activismo social o comunitario__
 
@@ -66,60 +72,83 @@ __Activismo social o comunitario__
 # Análisis Factorial Confirmatorio (AFC)
 ## Variable: Participación política durante 3ro y 4to medio
 ### Descriptivos
-```{r}
-part_pol_3y4= data_wide %>% dplyr::select(part_pol_firma_w01, part_pol_marcha_pas, part_pol_marcha_dis, part_pol_bloqueo, part_pol_rayar_w01, part_pol_toma_w01, part_pol_online, part_online_post, part_online_com, part_online_seg)
-summary(part_pol_3y4)
+```{r, fig.dim=c(10,10)}
+part_pol_3y4 = data_wide %>% dplyr::select(
+  part_pol_firma_w01,
+  part_pol_marcha_pas,
+  part_pol_marcha_dis,
+  part_pol_bloqueo,
+  part_pol_rayar_w01,
+  part_pol_toma_w01,
+  part_pol_online,
+  part_online_post,
+  part_online_com,
+  part_online_seg
+)
+
+sjPlot::plot_likert(part_pol_3y4)
 ```
 
 ### Análisis correlacional
-```{r}
-corMat_3y4  <- cor(part_pol_3y4, use="na.or.complete", method = "kendall")  # estimar matriz pearson
-options(digits=3) # decimales
-#print(corMat)
+```{r, fig.dim=c(10,10)}
+#Matriz de correlación
+corMat_3y4 <-
+  part_pol_3y4 %>%
+  dplyr::select(
+  part_pol_firma_w01,
+  part_pol_marcha_pas,
+  part_pol_marcha_dis,
+  part_pol_bloqueo,
+  part_pol_rayar_w01,
+  part_pol_toma_w01,
+  part_pol_online,
+  part_online_post,
+  part_online_com,
+  part_online_seg
+  ) %>%
+  lavaan::lavCor(., ordered = names(.))
+diag(corMat_3y4) = NA #set diagonal values to NA
+# Set Row names of the matrix
+rownames(corMat_3y4) <- c(
+  "A. Firma",
+  "B. Marcha pacífica",
+  "C. Marcha disrruptiva",
+  "D. Bloqueo",
+  "E. Rayar",
+  "F. Tomas",
+  "G. Informarse online",
+  "H. Posteo online",
+  "I. Comentar online",
+  "J. Seguir online"
+  )
+#set Column names of the matrix
+colnames(corMat_3y4) <- c("(A)",
+                        "(B)",
+                        "(C)",
+                        "(D)",
+                        "(E)",
+                        "(F)",
+                        "(G)",
+                        "(H)",
+                        "(I)",
+                        "(J)"
+                        )
+#Plot the matrix using corrplot
+corrplot::corrplot(
+  corMat_3y4,
+  method = "color",
+  addCoef.col = "#000390",
+  type = "upper",
+  tl.col = "black",
+  col = colorRampPalette(c("white", "#0068DC"))(12),
+  bg = "white",
+  na.label = "-"
+)
+# dev.off()
 
-#stargazer::stargazer(corMat, title="correlaciones", type = "text") #Latex table
 ```
 
-
-```{r }
-M_3y4=cor(part_pol_3y4, use="na.or.complete")
-corrplot::corrplot(M_3y4, type="lower",
-      order="AOE", cl.pos="b", tl.pos="d") #agrega nombres en diag.
-```
-
-```{r }
-sjp.corr(part_pol_3y4, na.deletion = c("listwise"))
-```
-
-### __AFC__
-#### __Análisis de supuestos__
-##### __KMO: factorizabilidad__
-
-```{r }
-psych::KMO(corMat_3y4) 
-```
-
-##### __Esfericidad__
-```{r }
-psych::cortest.bartlett(corMat_3y4, n = 3432) #el n que se debe indicar es el número de casos de la base de datos que estamos utilizando para el análisis
-```
-
-
-##### __Normalidad (univariada)__
-```{r }
-shapiro.test(part_pol_3y4$part_pol_firma_w01)
-shapiro.test(part_pol_3y4$part_pol_marcha_pas)
-shapiro.test(part_pol_3y4$part_pol_marcha_dis)
-shapiro.test(part_pol_3y4$part_pol_bloqueo)
-shapiro.test(part_pol_3y4$part_pol_rayar_w01)
-shapiro.test(part_pol_3y4$part_pol_toma_w01)
-shapiro.test(part_pol_3y4$part_pol_online)
-shapiro.test(part_pol_3y4$part_online_post)
-shapiro.test(part_pol_3y4$part_online_com)
-shapiro.test(part_pol_3y4$part_online_seg)
-```
-
-#### __Especificación y estimación del modelo__
+### Modelo de medición
 ```{r }
 # Especificación del modelo
 afc0 <- '
@@ -127,377 +156,411 @@ act_no_disrup =~ part_pol_firma_w01 + part_pol_marcha_pas
 act_disrup =~ part_pol_marcha_dis + part_pol_bloqueo + part_pol_rayar_w01 + part_pol_toma_w01
 act_online =~ part_pol_online + part_online_post + part_online_com + part_online_seg
 '
-```
-
-```{r }
 # Estimación del modelo
-fit_0 <- lavaan::cfa(afc0, data=part_pol_3y4, ordered=T)
-```
+fit_0 <- lavaan::cfa(afc0, data = part_pol_3y4, ordered = T)
 
-#### __Interpretación de resultados__
+lavaan::summary(fit_0, fit.measures = T, standardized = T)
 
-```{r}
-lavaan::summary(fit_0, fit.measures=T, standardized=T)
-```
-
-
-```{r }
-show(fit_0) # Resumen ajuste general
-```
-
-
-```{r}
-lavaan::fitMeasures(fit_0, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr"))
+lavaan::fitMeasures(fit_0, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea"))
 ```
 
 ### Reporte 3ero y 4to
 
-En los análisis se puede ver una dirección positiva y gran magnitud en la correlación entre las variables que miden un mismo constructo latente, solo con la excepción que hay una mayor correlación entre participación en marchas pacíficas con participación en marchas con disturbios que con firmar; además de ser casi todas las correlaciones significativas. Se revisó supuestos de factorizabilidad, el cual arrojó resultados más que meritorios para todas las variables; y de esfericidad, el que arrojó un chi cuadrado de 13738 (p<.01). Además se revisó la normalidad de las distribuciones, el cual arrojó que ninguna de las variables cumple con el supuesto de normalidad (p<.01). El modelo de análisis factorial confirmatorio arrojó un chi cuadrado de 372.145 con 32 grados de libertad (p<.01), la división de estos valores es mayor a 4 (11.6). Por último, cfi > .95 (.996), tli > .95 (.994); y rmsea = .06 (.061) y srmr < .08 (.049).
+En los análisis se puede ver una dirección positiva y gran magnitud en la correlación entre las variables que miden un mismo constructo latente, solo con la excepción que hay una mayor correlación entre participación en marchas pacíficas con participación en marchas con disturbios que con firmar; además de ser casi todas las correlaciones significativas. El modelo de análisis factorial confirmatorio arrojó un chi cuadrado de 372.145 con 32 grados de libertad (p<.01), la división de estos valores es mayor a 4 (11.6). Por último, cfi > .95 (.996), tli > .95 (.994); y rmsea = .06 (.061).
 
 ## Variable: Participación política durante estallido social
 ### Descriptivos
-```{r}
-part_pol_est= data_wide %>% dplyr::select(part_pol_firma_21, part_pol_marc_pac_21, part_pol_marc_dis_21, part_pol_bloq_21, part_pol_rayar_21, part_pol_toma_21, part_pol_online_info_21, part_pol_online_post_21, part_pol_online_com_21, part_pol_online_seg_21)
-summary(part_pol_est)
+```{r, fig.dim=c(10,10)}
+part_pol_est = data_wide %>% dplyr::select(
+  part_pol_firma_21,
+  part_pol_marc_pac_21,
+  part_pol_marc_dis_21,
+  part_pol_bloq_21,
+  part_pol_rayar_21,
+  part_pol_toma_21,
+  part_pol_online_info_21,
+  part_pol_online_post_21,
+  part_pol_online_com_21,
+  part_pol_online_seg_21
+)
+sjPlot::plot_likert(part_pol_est)
 ```
 
 ### Análisis correlacional
-```{r}
-corMat_est  <- cor(part_pol_est, use="na.or.complete", method = "kendall")  # estimar matriz pearson
-options(digits=3) # decimales
-#print(corMat)
+```{r, fig.dim=c(10,10)}
+#Matriz de correlación
+corMat_est <-
+  part_pol_est %>%
+  dplyr::select(
+    part_pol_firma_21,
+    part_pol_marc_pac_21,
+    part_pol_marc_dis_21,
+    part_pol_bloq_21,
+    part_pol_rayar_21,
+    part_pol_toma_21,
+    part_pol_online_info_21,
+    part_pol_online_post_21,
+    part_pol_online_com_21,
+    part_pol_online_seg_21
+  ) %>%
+  lavaan::lavCor(., ordered = names(.))
+diag(corMat_est) = NA #set diagonal values to NA
+# Set Row names of the matrix
+rownames(corMat_est) <- c(
+  "A. Firma",
+  "B. Marcha pacífica",
+  "C. Marcha disrruptiva",
+  "D. Bloqueo",
+  "E. Rayar",
+  "F. Tomas",
+  "G. Informarse online",
+  "H. Posteo online",
+  "I. Comentar online",
+  "J. Seguir online"
+)
+#set Column names of the matrix
+colnames(corMat_est) <- c("(A)",
+                          "(B)",
+                          "(C)",
+                          "(D)",
+                          "(E)",
+                          "(F)",
+                          "(G)",
+                          "(H)",
+                          "(I)",
+                          "(J)")
+#Plot the matrix using corrplot
+corrplot::corrplot(
+  corMat_est,
+  method = "color",
+  addCoef.col = "#000390",
+  type = "upper",
+  tl.col = "black",
+  col = colorRampPalette(c("white", "#0068DC"))(12),
+  bg = "white",
+  na.label = "-"
+)
+# dev.off()
 
-#stargazer::stargazer(corMat, title="correlaciones", type = "text") #Latex table
 ```
 
 
-```{r }
-M_est=cor(part_pol_est, use="na.or.complete")
-corrplot::corrplot(M_est, type="lower",
-      order="AOE", cl.pos="b", tl.pos="d") #agrega nombres en diag.
-```
-
-```{r }
-sjp.corr(part_pol_est, na.deletion = c("listwise"))
-```
-
-### __AFC__
-
-##### __KMO: factorizabilidad__
-
-```{r }
-psych::KMO(corMat_est) 
-```
-
-##### __Esfericidad__
-```{r }
-psych::cortest.bartlett(corMat_est, n = 3432)
-```
-
-##### __Normalidad (univariada)__
-```{r }
-shapiro.test(part_pol_est$part_pol_firma_21)
-shapiro.test(part_pol_est$part_pol_marc_pac_21)
-shapiro.test(part_pol_est$part_pol_marc_dis_21)
-shapiro.test(part_pol_est$part_pol_bloq_21)
-shapiro.test(part_pol_est$part_pol_rayar_21)
-shapiro.test(part_pol_est$part_pol_toma_21)
-shapiro.test(part_pol_est$part_pol_online_info_21)
-shapiro.test(part_pol_est$part_pol_online_post_21)
-shapiro.test(part_pol_est$part_pol_online_com_21)
-shapiro.test(part_pol_est$part_pol_online_seg_21)
-```
-
-#### __Especificación y estimación del modelo__
+### Modelo de medición
 ```{r }
 # Especificación del modelo
 afc1 <- '
 act_no_disrup =~ part_pol_firma_21 + part_pol_marc_pac_21
 act_disrup =~ part_pol_marc_dis_21 + part_pol_bloq_21 + part_pol_rayar_21 + part_pol_toma_21
-act_online =~ part_pol_online_info_21 + part_pol_online_post_21 + part_pol_online_com_21+ part_pol_online_seg_21
+act_online =~ part_pol_online_info_21 + part_pol_online_post_21 + part_pol_online_com_21 + part_pol_online_seg_21
 '
-```
-
-```{r }
 # Estimación del modelo
-fit_1 <- lavaan::cfa(afc1, data=part_pol_est, ordered=T)
+fit_1 <- lavaan::cfa(afc1, data = part_pol_est, ordered = T)
+
+lavaan::summary(fit_1, fit.measures = T, standardized = T)
+
+lavaan::fitMeasures(fit_1, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea"))
 ```
-
-#### __Interpretación de resultados__
-
-```{r}
-lavaan::summary(fit_1, fit.measures=T, standardized=T)
-```
-
-
-La función *show* nos muestra el principio de la tabla anterior, donde se presenta el tipo de estimador usado, la medida de ajuste de $\chi^2$ del modelo y los grados de libertad
-
-```{r }
-show(fit_1) # Resumen ajuste general
-```
-
-```{r}
-lavaan::fitMeasures(fit_1, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr"))
-```
-
 ### Reporte estallido
 
-En los análisis se puede ver una dirección positiva y gran magnitud en la correlación entre las variables que miden un mismo constructo latente, solo con la excepción que hay una mayor correlación entre participación en marchas pacíficas con participación en marchas con disturbios que con firmar; además de ser casi todas las correlaciones significativas. Se revisó supuestos de factorizabilidad, el cual arrojó resultados en su mayoría meritorios; y de esfericidad, el que arrojó un chi cuadrado de 15120 (p<.01). Además se revisó la normalidad de las distribuciones, el cual arrojó que ninguna de las variables cumple con el supuesto de normalidad (p<.01). El modelo de análisis factorial confirmatorio arrojó un chi cuadrado de 952.014 con 32 grados de libertad (p<.01), la división de estos valores es mayor a 4 (29.8). Por último, cfi > .95 (.991), tli > .95 (.987); y rmsea > .06 (.102) y srmr > .08 (.102).
+En los análisis se puede ver una dirección positiva y gran magnitud en la correlación entre las variables que miden un mismo constructo latente, solo con la excepción que hay una mayor correlación entre participación en marchas pacíficas con participación en marchas con disturbios que con firmar; además de ser casi todas las correlaciones significativas.El modelo de análisis factorial confirmatorio arrojó un chi cuadrado de 952.014 con 32 grados de libertad (p<.01), la división de estos valores es mayor a 4 (29.8). Por último, cfi > .95 (.991), tli > .95 (.987); y rmsea > .06 (.102). 
 
 ## Variable: Participación política durante 2020
 ### Descriptivos
-```{r}
-part_pol_20= data_wide %>% dplyr::select(part_pol_firma_20, part_pol_marc_pac_20, part_pol_marc_dis_20, part_pol_bloq_20, part_pol_rayar_20, part_pol_toma_20,  part_pol_online_info_20, part_pol_online_post_20, part_pol_online_com_20, part_pol_online_seg_20)
-summary(part_pol_20)
+```{r, fig.dim=c(10,10)}
+part_pol_20 = data_wide %>% dplyr::select(
+  part_pol_firma_20,
+  part_pol_marc_pac_20,
+  part_pol_marc_dis_20,
+  part_pol_bloq_20,
+  part_pol_rayar_20,
+  part_pol_toma_20,
+  part_pol_online_info_20,
+  part_pol_online_post_20,
+  part_pol_online_com_20,
+  part_pol_online_seg_20
+)
+
+sjPlot::plot_likert(part_pol_20)
 ```
 
 ### Análisis correlacional
-```{r}
-corMat_20  <- cor(part_pol_20, use="na.or.complete", method = "kendall")  # estimar matriz pearson
-options(digits=3) # decimales
-#print(corMat)
+```{r, fig.dim=c(10,10)}
+#Matriz de correlación
+corMat_20 <-
+  part_pol_20 %>%
+  dplyr::select(
+    part_pol_firma_20,
+    part_pol_marc_pac_20,
+    part_pol_marc_dis_20,
+    part_pol_bloq_20,
+    part_pol_rayar_20,
+    part_pol_toma_20,
+    part_pol_online_info_20,
+    part_pol_online_post_20,
+    part_pol_online_com_20,
+    part_pol_online_seg_20
+  ) %>%
+  lavaan::lavCor(., ordered = names(.))
+diag(corMat_20) = NA #set diagonal values to NA
+# Set Row names of the matrix
+rownames(corMat_20) <- c(
+  "A. Firma",
+  "B. Marcha pacífica",
+  "C. Marcha disrruptiva",
+  "D. Bloqueo",
+  "E. Rayar",
+  "F. Tomas",
+  "G. Informarse online",
+  "H. Posteo online",
+  "I. Comentar online",
+  "J. Seguir online"
+)
+#set Column names of the matrix
+colnames(corMat_20) <- c("(A)",
+                         "(B)",
+                         "(C)",
+                         "(D)",
+                         "(E)",
+                         "(F)",
+                         "(G)",
+                         "(H)",
+                         "(I)",
+                         "(J)")
+#Plot the matrix using corrplot
+corrplot::corrplot(
+  corMat_20,
+  method = "color",
+  addCoef.col = "#000390",
+  type = "upper",
+  tl.col = "black",
+  col = colorRampPalette(c("white", "#0068DC"))(12),
+  bg = "white",
+  na.label = "-"
+)
+# dev.off()
 
-#stargazer::stargazer(corMat, title="correlaciones", type = "text") #Latex table
 ```
 
-
+### Modelo de medición 
 ```{r }
-M_20=cor(part_pol_20, use="na.or.complete")
-corrplot::corrplot(M_20, type="lower",
-      order="AOE", cl.pos="b", tl.pos="d") #agrega nombres en diag.
-```
-
-```{r }
-sjp.corr(part_pol_20, na.deletion = c("listwise"))
-```
-
-### __AFC__
-#### __Análisis de supuestos__
-##### __KMO: factorizabilidad__
-
-```{r }
-psych::KMO(corMat_20) 
-```
-
-##### __Esfericidad__
-```{r }
-psych::cortest.bartlett(corMat_20, n = 3432)
-```
-
-##### __Normalidad (univariada)__
-```{r }
-shapiro.test(part_pol_20$part_pol_firma_20)
-shapiro.test(part_pol_20$part_pol_marc_pac_20)
-shapiro.test(part_pol_20$part_pol_marc_dis_20)
-shapiro.test(part_pol_20$part_pol_bloq_20)
-shapiro.test(part_pol_20$part_pol_rayar_20)
-shapiro.test(part_pol_20$part_pol_toma_20)
-shapiro.test(part_pol_20$part_pol_online_info_20)
-shapiro.test(part_pol_20$part_pol_online_post_20)
-shapiro.test(part_pol_20$part_pol_online_com_20)
-shapiro.test(part_pol_20$part_pol_online_seg_20)
-```
-
-#### __Especificación y estimación del modelo__
-```{r }
+# Especificación del modelo
 afc2 <- '
 act_no_disrup =~ part_pol_firma_20 + part_pol_marc_pac_20
 act_disrup =~ part_pol_marc_dis_20 + part_pol_bloq_20 + part_pol_rayar_20 + part_pol_toma_20
-act_online =~ part_pol_online_info_20 + part_pol_online_post_20 + part_pol_online_com_20+ part_pol_online_seg_20'
+act_online =~ part_pol_online_info_20 + part_pol_online_post_20 + part_pol_online_com_20 + part_pol_online_seg_20
+'
+# Estimación del modelo
+fit_2 <- lavaan::cfa(afc2, data = part_pol_20, ordered = T)
+
+lavaan::summary(fit_2, fit.measures = T, standardized = T)
+
+lavaan::fitMeasures(fit_2, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea"))
 ```
-
-```{r }
- # Estimación del modelo
-fit_2 <- lavaan::cfa(afc2, data=part_pol_20, ordered=T)
-```
-
-#### __Interpretación de resultados__
-
-```{r}
-lavaan::summary(fit_2, fit.measures=T, standardized=T)
-```
-
-```{r }
-show(fit_2) # Resumen ajuste general
-```
-
-```{r}
-lavaan::fitMeasures(fit_2, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr"))
-```
-
 ### Reporte 2020
 
-En los análisis se puede ver una dirección positiva y gran magnitud en la correlación entre las variables que miden un mismo constructo latente, excepto por marchas pacíficas con marchas con disturbios , además de ser casi todas las correlaciones significativas. Se revisó supuestos de factorabilidad, el cual arrojó resultados meritorios para casi todas las variables; y de esfericidad, el que arrojó un chi cuadrado de 18604 (p<0.05). Además se revisó la normalidad de las distribuciones, el cual arrojó que ninguna de las variables cumple con el supuesto de normalidad (p<0.05). El modelo de análisis factorial confirmatorio arrojó un chi cuadrado de 920.7 con 32 grados de libertad, la división de estos valores es mayor a 4 (28.8). Por último, cfi > .95 (.995), tli > .95 (.992); y rmsea > .06 (.101) y srmr > .08 (.09); por lo que se sugiere revisar estos dos últimos indicadores.
+En los análisis se puede ver una dirección positiva y gran magnitud en la correlación entre las variables que miden un mismo constructo latente, excepto por marchas pacíficas con marchas con disturbios , además de ser casi todas las correlaciones significativas. El modelo de análisis factorial confirmatorio arrojó un chi cuadrado de 920.7 con 32 grados de libertad, la división de estos valores es mayor a 4 (28.8). Por último, cfi > .95 (.995), tli > .95 (.992); y rmsea > .06 (.101) 
 
 ## Variable: Participación política primer semestre 2021
 ### Descriptivos
-```{r}
-part_pol_21.1= data_wide %>% dplyr::select(part_pol_firma_w02, part_pol_marc_pac, part_pol_marc_dis, part_pol_bloq, part_pol_rayar_w02, part_pol_toma_w02,  part_pol_online_info, part_pol_online_post, part_pol_online_com, part_pol_online_seg)
-summary(part_pol_21.1)
+```{r, fig.dim=c(10,10)}
+part_pol_21.1 = data_wide %>% dplyr::select(
+  part_pol_firma_w02,
+  part_pol_marc_pac,
+  part_pol_marc_dis,
+  part_pol_bloq,
+  part_pol_rayar_w02,
+  part_pol_toma_w02,
+  part_pol_online_info,
+  part_pol_online_post,
+  part_pol_online_com,
+  part_pol_online_seg
+)
+
+sjPlot::plot_likert(part_pol_21.1)
 ```
 
 ### Análisis correlacional
-```{r}
-corMat_21.1  <- cor(part_pol_21.1, use="na.or.complete", method = "kendall")  # estimar matriz pearson
-options(digits=3) # decimales
-#print(corMat)
+```{r, fig.dim=c(10,10)}
+#Matriz de correlación
+corMat_21.1 <-
+  part_pol_21.1 %>%
+  dplyr::select(
+    part_pol_firma_w02,
+    part_pol_marc_pac,
+    part_pol_marc_dis,
+    part_pol_bloq,
+    part_pol_rayar_w02,
+    part_pol_toma_w02,
+    part_pol_online_info,
+    part_pol_online_post,
+    part_pol_online_com,
+    part_pol_online_seg
+  ) %>%
+  lavaan::lavCor(., ordered = names(.))
+diag(corMat_21.1) = NA #set diagonal values to NA
+# Set Row names of the matrix
+rownames(corMat_21.1) <- c(
+  "A. Firma",
+  "B. Marcha pacífica",
+  "C. Marcha disrruptiva",
+  "D. Bloqueo",
+  "E. Rayar",
+  "F. Tomas",
+  "G. Informarse online",
+  "H. Posteo online",
+  "I. Comentar online",
+  "J. Seguir online"
+)
+#set Column names of the matrix
+colnames(corMat_21.1) <- c("(A)",
+                           "(B)",
+                           "(C)",
+                           "(D)",
+                           "(E)",
+                           "(F)",
+                           "(G)",
+                           "(H)",
+                           "(I)",
+                           "(J)")
+#Plot the matrix using corrplot
+corrplot::corrplot(
+  corMat_21.1,
+  method = "color",
+  addCoef.col = "#000390",
+  type = "upper",
+  tl.col = "black",
+  col = colorRampPalette(c("white", "#0068DC"))(12),
+  bg = "white",
+  na.label = "-"
+)
+# dev.off()
 
-#stargazer::stargazer(corMat, title="correlaciones", type = "text") #Latex table
 ```
 
-
+### Modelo de medición
 ```{r }
-M_21.1=cor(part_pol_21.1, use="na.or.complete")
-corrplot::corrplot(M_21.1, type="lower",
-      order="AOE", cl.pos="b", tl.pos="d") #agrega nombres en diag.
-```
-
-```{r }
-sjp.corr(part_pol_21.1, na.deletion = c("listwise"))
-```
-
-### __AFC__
-#### __Análisis de supuestos__
-##### __KMO: factorizabilidad__
-
-```{r }
-psych::KMO(corMat_21.1) 
-```
-
-##### __Esfericidad__
-```{r }
-psych::cortest.bartlett(corMat_21.1, n = 3432)
-```
-
-
-##### __Normalidad (univariada)__
-```{r }
-shapiro.test(part_pol_21.1$part_pol_firma_w02)
-shapiro.test(part_pol_21.1$part_pol_marc_pac)
-shapiro.test(part_pol_21.1$part_pol_marc_dis)
-shapiro.test(part_pol_21.1$part_pol_bloq)
-shapiro.test(part_pol_21.1$part_pol_rayar_w02)
-shapiro.test(part_pol_21.1$part_pol_toma_w02)
-shapiro.test(part_pol_21.1$part_pol_online_info)
-shapiro.test(part_pol_21.1$part_pol_online_post)
-shapiro.test(part_pol_21.1$part_pol_online_com)
-shapiro.test(part_pol_21.1$part_pol_online_seg)
-```
-
-#### __Especificación y estimación del modelo__
-```{r }
+# Especificación del modelo
 afc3 <- '
 act_no_disrup =~ part_pol_firma_w02 + part_pol_marc_pac
 act_disrup =~ part_pol_marc_dis + part_pol_bloq + part_pol_rayar_w02 + part_pol_toma_w02
-act_online =~ part_pol_online_info + part_pol_online_post + part_pol_online_com + part_pol_online_seg'
+act_online =~ part_pol_online_info + part_pol_online_post + part_pol_online_com + part_pol_online_seg
+'
+# Estimación del modelo
+fit_3 <- lavaan::cfa(afc3, data = part_pol_21.1, ordered = T)
+
+lavaan::summary(fit_3, fit.measures = T, standardized = T)
+
+lavaan::fitMeasures(fit_3, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea"))
 ```
-
-```{r }
- # Estimación del modelo
-fit_3 <- lavaan::cfa(afc3, data=part_pol_21.1, ordered=T)
-```
-
-#### __Interpretación de resultados__
-
-```{r}
-lavaan::summary(fit_3, fit.measures=T, standardized=T)
-```
-
-```{r }
-show(fit_3) # Resumen ajuste general
-```
-
-```{r}
-lavaan::fitMeasures(fit_3, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr"))
-```
-
-### Reporte primer seemestre 2021
-En los análisis se puede ver una dirección positiva y gran magnitud en la correlación entre las variables que miden un mismo constructo latente, solo con la excepción que hay una mayor correlación entre participación en marchas pacíficas con participación en marchas con disturbios que con firmar; además de ser casi todas las correlaciones significativas. Se revisó supuestos de factorizabilidad, el cual arrojó resultados más que meritorios para casi todas las variables; y de esfericidad, el que arrojó un chi cuadrado de 17366 (p<.01). Además se revisó la normalidad de las distribuciones, el cual arrojó que ninguna de las variables cumple con el supuesto de normalidad (p<.01). El modelo de análisis factorial confirmatorio arrojó un chi cuadrado de 359.766 con 32 grados de libertad (p<.01), la división de estos valores es mayor a 4 (11.2). Por último, cfi > .95 (.995), tli > .95 (.993); y rmsea > .06 (.082) y srmr < .08 (.073).
-
-
-
+### Reporte primer semestre 2021
+En los análisis se puede ver una dirección positiva y gran magnitud en la correlación entre las variables que miden un mismo constructo latente, solo con la excepción que hay una mayor correlación entre participación en marchas pacíficas con participación en marchas con disturbios que con firmar; además de ser casi todas las correlaciones significativas. El modelo de análisis factorial confirmatorio arrojó un chi cuadrado de 359.766 con 32 grados de libertad (p<.01), la división de estos valores es mayor a 4 (11.2). Por último, cfi > .95 (.995), tli > .95 (.993); y rmsea > .06 (.082).
 
 ## Variable: Participación política segundo semestre 2021
 ### Descriptivos
-```{r}
-part_pol_21.2= data_wide %>% dplyr::select(part_pol_firma_21b, part_pol_marc_pac_21b, part_pol_marc_dis_21b, part_pol_bloq_21b, part_pol_rayar_21b, part_pol_toma_21b,  part_pol_online_info_21b, part_pol_online_post_21b, part_pol_online_com_21b, part_pol_online_seg_21b)
-summary(part_pol_21.1)
+```{r, fig.dim=c(10,10)}
+part_pol_21.2 = data_wide %>% dplyr::select(
+  part_pol_firma_21b,
+  part_pol_marc_pac_21b,
+  part_pol_marc_dis_21b,
+  part_pol_bloq_21b,
+  part_pol_rayar_21b,
+  part_pol_toma_21b,
+  part_pol_online_info_21b,
+  part_pol_online_post_21b,
+  part_pol_online_com_21b,
+  part_pol_online_seg_21b
+)
+
+sjPlot::plot_likert(part_pol_21.2)
 ```
 
 ### Análisis correlacional
+```{r, fig.dim=c(10,10)}
+#Matriz de correlación
+corMat_21.2 <-
+  part_pol_21.2 %>%
+  dplyr::select(
+    part_pol_firma_21b,
+    part_pol_marc_pac_21b,
+    part_pol_marc_dis_21b,
+    part_pol_bloq_21b,
+    part_pol_rayar_21b,
+    part_pol_toma_21b,
+    part_pol_online_info_21b,
+    part_pol_online_post_21b,
+    part_pol_online_com_21b,
+    part_pol_online_seg_21b
+  ) %>%
+  lavaan::lavCor(., ordered = names(.))
+diag(corMat_21.2) = NA #set diagonal values to NA
+# Set Row names of the matrix
+rownames(corMat_21.2) <- c(
+  "A. Firma",
+  "B. Marcha pacífica",
+  "C. Marcha disrruptiva",
+  "D. Bloqueo",
+  "E. Rayar",
+  "F. Tomas",
+  "G. Informarse online",
+  "H. Posteo online",
+  "I. Comentar online",
+  "J. Seguir online"
+)
+#set Column names of the matrix
+colnames(corMat_21.2) <- c("(A)",
+                           "(B)",
+                           "(C)",
+                           "(D)",
+                           "(E)",
+                           "(F)",
+                           "(G)",
+                           "(H)",
+                           "(I)",
+                           "(J)")
+#Plot the matrix using corrplot
+corrplot::corrplot(
+  corMat_21.2,
+  method = "color",
+  addCoef.col = "#000390",
+  type = "upper",
+  tl.col = "black",
+  col = colorRampPalette(c("white", "#0068DC"))(12),
+  bg = "white",
+  na.label = "-"
+)
+# dev.off()
+
+```
+
+### Modelo de medición
 ```{r}
-corMat_21.2  <- cor(part_pol_21.2, use="na.or.complete", method = "kendall")  # estimar matriz pearson
-options(digits=3) # decimales
-#print(corMat)
-
-#stargazer::stargazer(corMat, title="correlaciones", type = "text") #Latex table
-```
-
-
-```{r }
-M_21.2=cor(part_pol_21.2, use="na.or.complete")
-corrplot::corrplot(M_21.2, type="lower",
-      order="AOE", cl.pos="b", tl.pos="d") #agrega nombres en diag.
-```
-
-```{r }
-sjp.corr(part_pol_21.2, na.deletion = c("listwise"))
-```
-
-### __AFC__
-#### __Análisis de supuestos__
-##### __KMO: factorizabilidad__
-
-```{r }
-psych::KMO(corMat_21.2) 
-```
-
-##### __Esfericidad__
-```{r }
-psych::cortest.bartlett(corMat_21.2, n = 3432)
-```
-
-##### __Normalidad (univariada)__
-```{r }
-shapiro.test(part_pol_21.2$part_pol_firma_21b)
-shapiro.test(part_pol_21.2$part_pol_marc_pac_21b)
-shapiro.test(part_pol_21.2$part_pol_marc_dis_21b)
-shapiro.test(part_pol_21.2$part_pol_bloq_21b)
-shapiro.test(part_pol_21.2$part_pol_rayar_21b)
-shapiro.test(part_pol_21.2$part_pol_toma_21b)
-shapiro.test(part_pol_21.2$part_pol_online_info_21b)
-shapiro.test(part_pol_21.2$part_pol_online_post_21b)
-shapiro.test(part_pol_21.2$part_pol_online_com_21b)
-shapiro.test(part_pol_21.2$part_pol_online_seg_21b)
-```
-
-#### __Especificación y estimación del modelo__
-```{r }
-afc4 <- '
+afc4<- '
 act_no_disrup =~ part_pol_firma_21b + part_pol_marc_pac_21b
 act_disrup =~ part_pol_marc_dis_21b + part_pol_bloq_21b + part_pol_rayar_21b + part_pol_toma_21b
-act_online =~ part_pol_online_info_21b + part_pol_online_post_21b + part_pol_online_com_21b + part_pol_online_seg_21b'
-```
+act_online =~ part_pol_online_info_21b + part_pol_online_post_21b + part_pol_online_com_21b + part_pol_online_seg_21b
+'
+# Estimación del modelo
+fit_4 <- lavaan::cfa(afc4, data = part_pol_21.2, ordered = T)
 
-```{r }
- # Estimación del modelo
-fit_4 <- lavaan::cfa(afc4, data=part_pol_21.2, ordered=T)
-```
+lavaan::summary(fit_4, fit.measures = T, standardized = T)
 
-#### __Interpretación de resultados__
-
-```{r}
-lavaan::summary(fit_4, fit.measures=T, standardized=T)
-```
-
-```{r }
-show(fit_4) # Resumen ajuste general
-```
-
-```{r}
-lavaan::fitMeasures(fit_4, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr"))
+lavaan::fitMeasures(fit_4, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea"))
 ```
 
 ### Reporte segundo semestre 2021
 
-En los análisis se puede ver una dirección positiva y gran magnitud en la correlación entre las variables que miden un mismo constructo latente, solo con la excepción que hay una mayor correlación entre participación en marchas pacíficas con participación en marchas con disturbios que con firmar; además de ser casi todas las correlaciones significativas. Se revisó supuestos de factorizabilidad, el cual arrojó resultados más que meritorios para casi todas las variables; y de esfericidad, el que arrojó un chi cuadrado de 13904 (p<.01). Además se revisó la normalidad de las distribuciones, el cual arrojó que ninguna de las variables cumple con el supuesto de normalidad (p<.01). El modelo de análisis factorial confirmatorio arrojó un chi cuadrado de 131.342 con 32 grados de libertad (p<.01), la división de estos valores es ligeramente mayor a 4 (4.1). Por último, cfi > .95 (.997), tli > .95 (.996); y rmsea < .06 (.054) y srmr < .08 (.065).
+En los análisis se puede ver una dirección positiva y gran magnitud en la correlación entre las variables que miden un mismo constructo latente, solo con la excepción que hay una mayor correlación entre participación en marchas pacíficas con participación en marchas con disturbios que con firmar; además de ser casi todas las correlaciones significativas. El modelo de análisis factorial confirmatorio arrojó un chi cuadrado de 131.342 con 32 grados de libertad (p<.01), la división de estos valores es ligeramente mayor a 4 (4.1). Por último, cfi > .95 (.997), tli > .95 (.996); y rmsea < .06 (.054).
+
+## Resumen ajuste 5 tiempos
+
+```{r}
+rbind(
+lavaan::fitMeasures(fit_0, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea")),
+lavaan::fitMeasures(fit_1, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea")),
+lavaan::fitMeasures(fit_2, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea")),
+lavaan::fitMeasures(fit_3, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea")),
+lavaan::fitMeasures(fit_4, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea")))
+
+#tabla ajuste general
+```
+
