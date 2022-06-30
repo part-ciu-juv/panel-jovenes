@@ -21,7 +21,7 @@ knitr::opts_chunk$set(message = FALSE,
 
 ```{r}
 pacman::p_load(sjPlot, sjlabelled,readr, summarytools, haven, dplyr,kableExtra,
-          readxl, ggplot2,ggtext,lavaan,sjmisc)
+          readxl, ggplot2,ggtext,lavaan,sjmisc, stringr)
 ola1<-read_dta("../input/data/proc/data_01.dta")
 ola2<-read_dta("../input/data/proc/data_02.dta")
 ola3<-read_dta("../input/data/proc/data_03.dta")
@@ -82,18 +82,18 @@ part_pol_3y4 = data_wide %>% dplyr::select(
 )
 
 # get variable labels
-varlabels<- part_pol_3y4 %>% get_label()
+varlabels_3y4<- part_pol_3y4 %>% get_label()
 # set part of the label for replacement
 a <- "Durante el periodo en que cursaba 3° y 4° Medio realizó algunas de las siguientes actividades dentro o fuera del liceo "
 b <- "Durante el periodo en que cursaba 3° y 4° Medio con que frecuencia realizaba las siguientes actividades  "   
 #replace string in labels
-varlabels<- 
-varlabels %>% 
+varlabels_3y4<- 
+varlabels_3y4 %>% 
 stringr::str_replace_all(.,"[[:punct:]]", "") %>% 
   stringr::str_replace_all(.,a,"") %>% 
     stringr::str_replace_all(.,b,"") 
 #set new labels
-part_pol_3y4 <- set_label(part_pol_3y4,varlabels)
+part_pol_3y4 <- set_label(part_pol_3y4,varlabels_3y4)
 # Plot
 sjPlot::plot_likert(part_pol_3y4,
                     title = "Participación política 3°y 4°Medio",
@@ -205,7 +205,27 @@ part_pol_est = data_wide %>% dplyr::select(
   part_pol_online_com_21,
   part_pol_online_seg_21
 )
-sjPlot::plot_likert(part_pol_est) +
+
+# get variable labels
+varlabels_est<- part_pol_est %>% get_label()
+# set part of the label for replacement
+c <- "Pensando en el periodo del estallido social entre octubre de 2019 y enero de 2020 realizó alguna de las siguientes actividades "
+d <- "Pensando en el periodo del estallido social entre octubre de 2019 y enero de 2020 con que frecuencia realizó las siguientes actividades  "   
+#replace string in labels
+varlabels_est<- 
+varlabels_est %>% 
+stringr::str_replace_all(.,"[[:punct:]]", "") %>% 
+  stringr::str_replace_all(.,c,"") %>% 
+    stringr::str_replace_all(.,d,"") 
+#set new labels
+part_pol_est <- set_label(part_pol_est,varlabels_est)
+# Plot
+sjPlot::plot_likert(part_pol_est,
+                    title = "Participación política estallido social",
+                    reverse.scale = T,
+                    values = "sum.outside",
+                    sort.frq = "pos.asc"
+                    ) +
   theme(legend.position="bottom")
 ```
 
@@ -278,8 +298,15 @@ act_online =~ part_pol_online_info_21 + part_pol_online_post_21 + part_pol_onlin
 '
 # Estimación del modelo
 fit_1 <- lavaan::cfa(afc1, data = part_pol_est, ordered = T)
-lavaan::summary(fit_1, fit.measures = T, standardized = T)
-lavaan::fitMeasures(fit_1, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea"))
+#lavaan::summary(fit_1, fit.measures = T, standardized = T)
+#lavaan::fitMeasures(fit_1, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea"))
+
+# create table report
+semTable::semTable(
+  fit_1 ,columns =c("estse" , "z" , "p"),
+  paramSets = c("loadings") ,
+fits = c("chisq", "df", "pvalue", "cfi", "tli", "rmsea") ,
+type = "html")
 ```
 ### Reporte estallido
 
@@ -301,7 +328,26 @@ part_pol_20 = data_wide %>% dplyr::select(
   part_pol_online_seg_20
 )
 
-sjPlot::plot_likert(part_pol_20) +
+# get variable labels
+varlabels_20<- part_pol_20 %>% get_label()
+# set part of the label for replacement
+e <- "Ahora pensando en el año 2020 entre marzo y diciembre de 2020 realizó alguna de las siguientes actividades "
+f <- "Ahora pensando en el año 2020 entre marzo y diciembre de 2020 con que frecuencia realizó las siguientes actividades  "   
+#replace string in labels
+varlabels_20<- 
+varlabels_20 %>% 
+stringr::str_replace_all(.,"[[:punct:]]", "") %>% 
+  stringr::str_replace_all(.,e,"") %>% 
+    stringr::str_replace_all(.,f,"") 
+#set new labels
+part_pol_20 <- set_label(part_pol_20,varlabels_20)
+# Plot
+sjPlot::plot_likert(part_pol_20,
+                    title = "Participación política durante 2020",
+                    reverse.scale = T,
+                    values = "sum.outside",
+                    sort.frq = "pos.asc"
+                    ) +
   theme(legend.position="bottom")
 ```
 
@@ -373,10 +419,15 @@ act_online =~ part_pol_online_info_20 + part_pol_online_post_20 + part_pol_onlin
 '
 # Estimación del modelo
 fit_2 <- lavaan::cfa(afc2, data = part_pol_20, ordered = T)
+#lavaan::summary(fit_2, fit.measures = T, standardized = T)
+#lavaan::fitMeasures(fit_2, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea"))
 
-lavaan::summary(fit_2, fit.measures = T, standardized = T)
-
-lavaan::fitMeasures(fit_2, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea"))
+# create table report
+semTable::semTable(
+  fit_2 ,columns =c("estse" , "z" , "p"),
+  paramSets = c("loadings") ,
+fits = c("chisq", "df", "pvalue", "cfi", "tli", "rmsea") ,
+type = "html")
 ```
 ### Reporte 2020
 
@@ -398,7 +449,25 @@ part_pol_21.1 = data_wide %>% dplyr::select(
   part_pol_online_seg
 )
 
-sjPlot::plot_likert(part_pol_21.1) +
+# get variable labels
+varlabels_21.1<- part_pol_21.1 %>% get_label()
+# set part of the label for replacement
+g <- "Considerando los últimos meses el primer semestre de 2021 con qué frecuencia realizó las siguientes actividades "
+  
+#replace string in labels
+varlabels_21.1<- 
+varlabels_21.1 %>% 
+stringr::str_replace_all(.,"[[:punct:]]", "") %>% 
+  stringr::str_replace_all(.,g,"")
+#set new labels
+part_pol_21.1 <- set_label(part_pol_21.1,varlabels_21.1)
+# Plot
+sjPlot::plot_likert(part_pol_21.1,
+                    title = "Participación política 2021 primer semestre",
+                    reverse.scale = T,
+                    values = "sum.outside",
+                    sort.frq = "pos.asc"
+                    ) +
   theme(legend.position="bottom")
 ```
 
@@ -469,11 +538,17 @@ act_disrup =~ part_pol_marc_dis + part_pol_bloq + part_pol_rayar_w02 + part_pol_
 act_online =~ part_pol_online_info + part_pol_online_post + part_pol_online_com + part_pol_online_seg
 '
 # Estimación del modelo
+
 fit_3 <- lavaan::cfa(afc3, data = part_pol_21.1, ordered = T)
+#lavaan::summary(fit_2, fit.measures = T, standardized = T)
+#lavaan::fitMeasures(fit_2, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea"))
 
-lavaan::summary(fit_3, fit.measures = T, standardized = T)
-
-lavaan::fitMeasures(fit_3, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea"))
+# create table report
+semTable::semTable(
+  fit_3 ,columns =c("estse" , "z" , "p"),
+  paramSets = c("loadings") ,
+fits = c("chisq", "df", "pvalue", "cfi", "tli", "rmsea") ,
+type = "html")
 ```
 ### Reporte primer semestre 2021
 En los análisis se puede ver una dirección positiva y gran magnitud en la correlación entre las variables que miden un mismo constructo latente, solo con la excepción que hay una mayor correlación entre participación en marchas pacíficas con participación en marchas con disturbios que con firmar; además de ser casi todas las correlaciones significativas. El modelo de análisis factorial confirmatorio arrojó un chi cuadrado de 359.766 con 32 grados de libertad (p<.01), la división de estos valores es mayor a 4 (11.2). Por último, cfi > .95 (.995), tli > .95 (.993); y rmsea > .06 (.082).
@@ -494,7 +569,25 @@ part_pol_21.2 = data_wide %>% dplyr::select(
   part_pol_online_seg_21b
 )
 
-sjPlot::plot_likert(part_pol_21.2) +
+# get variable labels
+varlabels_21.2<- part_pol_21.2 %>% get_label()
+# set part of the label for replacement
+h <- "Considerando los últimos meses el segundo semestre de 2021 entre agosto y diciembre con qué frecuencia realizó las siguientes actividades "
+ 
+#replace string in labels
+varlabels_21.2<- 
+varlabels_21.2 %>% 
+stringr::str_replace_all(.,"[[:punct:]]", "") %>% 
+  stringr::str_replace_all(.,h,"")
+#set new labels
+part_pol_21.2 <- set_label(part_pol_21.2,varlabels_21.2)
+# Plot
+sjPlot::plot_likert(part_pol_21.2,
+                    title = "Participación política 2021 segundo semestre",
+                    reverse.scale = T,
+                    values = "sum.outside",
+                    sort.frq = "pos.asc"
+                    ) +
   theme(legend.position="bottom")
 ```
 
@@ -566,9 +659,15 @@ act_online =~ part_pol_online_info_21b + part_pol_online_post_21b + part_pol_onl
 # Estimación del modelo
 fit_4 <- lavaan::cfa(afc4, data = part_pol_21.2, ordered = T)
 
-lavaan::summary(fit_4, fit.measures = T, standardized = T)
+#lavaan::summary(fit_4, fit.measures = T, standardized = T)
+#lavaan::fitMeasures(fit_4, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea"))
 
-lavaan::fitMeasures(fit_4, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea"))
+# create table report
+semTable::semTable(
+  fit_4 ,columns =c("estse" , "z" , "p"),
+  paramSets = c("loadings") ,
+fits = c("chisq", "df", "pvalue", "cfi", "tli", "rmsea") ,
+type = "html")
 ```
 
 ### Reporte segundo semestre 2021
