@@ -297,7 +297,9 @@ act_disrup =~ part_pol_marc_dis_21 + part_pol_bloq_21 + part_pol_rayar_21 + part
 act_online =~ part_pol_online_info_21 + part_pol_online_post_21 + part_pol_online_com_21 + part_pol_online_seg_21
 '
 # Estimación del modelo
-fit_1 <- lavaan::cfa(afc1, data = part_pol_est, ordered = T)
+fit_1 <- lavaan::cfa(afc1, data = part_pol_est, ordered = T,
+                     std.lv = TRUE , #factor loadings standarized
+                     )
 #lavaan::summary(fit_1, fit.measures = T, standardized = T)
 #lavaan::fitMeasures(fit_1, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea"))
 
@@ -418,7 +420,9 @@ act_disrup =~ part_pol_marc_dis_20 + part_pol_bloq_20 + part_pol_rayar_20 + part
 act_online =~ part_pol_online_info_20 + part_pol_online_post_20 + part_pol_online_com_20 + part_pol_online_seg_20
 '
 # Estimación del modelo
-fit_2 <- lavaan::cfa(afc2, data = part_pol_20, ordered = T)
+fit_2 <- lavaan::cfa(afc2, data = part_pol_20, ordered = T,
+                     std.lv = TRUE , #factor loadings standarized
+                     )
 #lavaan::summary(fit_2, fit.measures = T, standardized = T)
 #lavaan::fitMeasures(fit_2, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea"))
 
@@ -539,7 +543,9 @@ act_online =~ part_pol_online_info + part_pol_online_post + part_pol_online_com 
 '
 # Estimación del modelo
 
-fit_3 <- lavaan::cfa(afc3, data = part_pol_21.1, ordered = T)
+fit_3 <- lavaan::cfa(afc3, data = part_pol_21.1, ordered = T,
+                     std.lv = TRUE , #factor loadings standarized
+                     )
 #lavaan::summary(fit_2, fit.measures = T, standardized = T)
 #lavaan::fitMeasures(fit_2, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea"))
 
@@ -657,7 +663,9 @@ act_disrup =~ part_pol_marc_dis_21b + part_pol_bloq_21b + part_pol_rayar_21b + p
 act_online =~ part_pol_online_info_21b + part_pol_online_post_21b + part_pol_online_com_21b + part_pol_online_seg_21b
 '
 # Estimación del modelo
-fit_4 <- lavaan::cfa(afc4, data = part_pol_21.2, ordered = T)
+fit_4 <- lavaan::cfa(afc4, data = part_pol_21.2, ordered = T,
+                     std.lv = TRUE , #factor loadings standarized
+                     )
 
 #lavaan::summary(fit_4, fit.measures = T, standardized = T)
 #lavaan::fitMeasures(fit_4, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea"))
