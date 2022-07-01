@@ -623,15 +623,13 @@ Sí
 
 Dado el diseño longitudinal del estudio, disponemos a continuación de una breve descripción de cómo unificar la base de datos a través del identificador único de cada participante de la encuesta. Para ello, debemos seguir las siguientes indicaciones:
 
-
 * la variable identificadora en las tres bases de datos es `folio_encuestado`
-* si deseamos vincular una base de datos, por ejemplo, la ola 1 y ola 2, podemos emplear el siguiente código:
+* si deseamos vincular las bases de datos podemos emplear el siguiente código:
 
 ```{r echo=TRUE}
 load(here::here("output/data_01.RData"))
 load(here::here("output/data_02.RData"))
 load(here::here("output/data_03.RData"))
-
 
 library(dplyr)
 
@@ -654,8 +652,8 @@ data_w03b <- data_w03 %>% dplyr::rename_all(funs(paste0(.,"_w03"))) %>%
 set_label(data_w03b) <- paste0(get_label(data_w02b)," (w03) ") 
 
 data_wide <- 
-  full_join(data_w01b,data_w02b, by = "folio_encuestado") %>% 
-  full_join(data_w03b, by = "folio_encuestado")
+  left_join(data_w01b,data_w02b, by = "folio_encuestado") %>% 
+  left_join(data_w03b, by = "folio_encuestado")
 
 # Revisar consistencia en variable sexo
 data_wide[data_wide==-999] <- NA # declarar NA

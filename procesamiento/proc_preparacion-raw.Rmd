@@ -1156,7 +1156,6 @@ data_wide <- data_wide %>%
             UserLanguage_w01
             ))
 
-
 sjPlot::view_df(data_wide,
                 show.na = T,
                 show.frq = T,
