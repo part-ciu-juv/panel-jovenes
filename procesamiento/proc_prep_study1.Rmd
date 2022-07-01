@@ -1,0 +1,110 @@
+---
+title: "Data preparation - Study 1"
+author: "Julio Iturra"
+date: "`r format(Sys.time(), '%A %d %B %Y %X')`"
+output:
+  bookdown::html_document2:
+    number_sections: true
+    toc: true
+    toc_float:
+        collapsed: false
+    toc_depth: 2
+    code_folding: "hide"
+editor_options:
+  chunk_output_type: console
+---
+
+# Setup
+
+```{r include=FALSE}
+knitr::opts_chunk$set(warning = FALSE,
+                      message = FALSE, 
+                      cache = FALSE,
+                      results = "hold")
+options(scipen=999)
+rm(list=ls())
+options(knitr.kable.NA = '')
+# .rs.restartR()
+```
+
+```{css, echo=FALSE}
+# /* expandir el espacio del documento*/
+body .main-container {
+      max-width: 1600px !important;
+      width: 1600px !important;
+    }
+#/* expandir width de la TOC*/
+div.tocify {
+    width: 22% !important;
+    max-width: 331px !important;
+    max-height: 102% !important;
+}
+```
+
+**load packages**
+```{r}
+if (!require("pacman")) install.packages("pacman") # instalar pacman
+pacman::p_load(dplyr,       # Manipulacion de datos 
+               haven,       # importar datos en .dta o .sav
+               sjmisc,      # descriptivos y frecuencias
+               sjPlot,      # tablas, plots y descriptivos
+               sjlabelled,
+               summarytools,# resumen de dataframe
+               knitr,       # tablas kable
+               kableExtra,  # tablas kable personalizadas
+               ggplot2,     # plots
+               corrplot,    # plot correlacion
+               survey,
+               tibble
+               )
+
+```
+
+# Datos
+
+```{r}
+load(here::here("output/data_01.RData"))
+load(here::here("output/data_02.RData"))
+load(here::here("output/data_03.RData"))
+load(here::here("output/data_wide.RData"))
+```
+
+
+```{r}
+id_filtro <- data_w03$folio_encuestado
+
+df_wide <- 
+data_wide %>% 
+  filter(folio_encuestado %in% id_filtro,
+         consentimiento_w01==1)
+
+#check participación
+table(df_wide$consentimiento_w01)
+table(df_wide$Progress_w03) #ver si hay 0% progreso
+
+
+df <- data.frame(a=c(1,2,3,4,5,6,7,7,7,7,7,8,8,8,8,9,9,9))
+filtro <- c(1,5,7,9)
+df$a %in% filtro
+df %>% filter(a %in% filtro)
+```
+
+
+
+Tareas
+
+1. Filtrar base de datos wide y fijarla para el N de la ola 3
+  - obtener los IDS de la ola 3
+  - con los IDS filtrar la ola 1 y la ola 2
+  
+2. Generar base de datos para análisis
+  -
+  
+
+
+
+
+
+
+
+
