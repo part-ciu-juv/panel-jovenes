@@ -10321,7 +10321,6 @@ ggsave(elec_org_const_21_conv_pad_3y4, file = "../output/graphs/elec_org_const_2
 ```{r}
 ### variable voto_conv2
 
-
 bbdd_general0 <- data_wide  %>% dplyr::select(voto_conv2)
 bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
@@ -10461,7 +10460,6 @@ ggsave(elec_org_const_21_conv_pad_3y4, file = "../output/graphs/elec_org_const_2
 ```{r}
 ### variable voto_conv2
 
-
 bbdd_general0 <- data_wide  %>% dplyr::select(voto_conv2)
 bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
@@ -10527,27 +10525,38 @@ ggsave(elec_org_const_21_conv_pad_3y4, file = "../output/graphs/elec_org_const_2
 ![](../output/graphs/elec_org_const_21_conv_pad_21b.jpg)
 
 
-## aqui Elecciones alcaldes y concejales 2021
+## Elecciones alcaldes y concejales 2021
 ### Dependencia administrativa establecimiento
 ```{r}
 ### variable voto_muni
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_muni)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_muni) %>%
+  bbdd_general0 %>% group_by(voto_muni) %>%
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_mun0 <- data_wide  %>% dplyr::select(voto_muni,edm_admi) %>% filter(edm_admi==1)
+bbdd_mun0 <- na.omit(bbdd_mun0)
 bbdd_mun =
-  data_wide %>% filter(edm_admi==1) %>%
+  bbdd_mun0 %>% 
               group_by(voto_muni) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>Municipal") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_sub0 <- data_wide  %>% dplyr::select(voto_muni,edm_admi) %>% filter(edm_admi==2)
+bbdd_sub0 <- na.omit(bbdd_sub0)
 bbdd_sub =
-  data_wide %>% filter(edm_admi==2) %>%
+  bbdd_sub0 %>% 
               group_by(voto_muni) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>Part. Subvencionado") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_priv0 <- data_wide  %>% dplyr::select(voto_muni,edm_admi) %>% filter(edm_admi==3)
+bbdd_priv0 <- na.omit(bbdd_priv0)
 bbdd_priv =
-  data_wide %>% filter(edm_admi==3) %>%
+  bbdd_priv0 %>% 
               group_by(voto_muni) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>Part. Pagado") %>%
              mutate(prop=round(n*100/sum(n),1))
@@ -10582,22 +10591,33 @@ ggsave(elec_muni_21_dep, file = "../output/graphs/elec_muni_21_dep.jpg",device =
 ```{r}
 ### variable voto_muni
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_muni)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_muni) %>%
+  bbdd_general0 %>% group_by(voto_muni) %>%
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_ed_bas0 <- data_wide  %>% dplyr::select(voto_muni,nse_madre) %>% filter(nse_madre==1 | nse_madre==2 | nse_madre==3)
+bbdd_ed_bas0 <- na.omit(bbdd_ed_bas0)
 bbdd_ed_bas =
-  data_wide %>% filter(nse_madre==1 | nse_madre==2 | nse_madre==3) %>%
+  bbdd_ed_bas0 %>%
               group_by(voto_muni) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>Ed. básica <br>o menos") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_ed_med0 <- data_wide  %>% dplyr::select(voto_muni,nse_madre) %>% filter(nse_madre==4 | nse_madre==5)
+bbdd_ed_med0 <- na.omit(bbdd_ed_med0)
 bbdd_ed_med =
-  data_wide %>% filter(nse_madre==4 | nse_madre==5) %>%
+  bbdd_ed_med0 %>%
               group_by(voto_muni) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>Ed. media") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_ed_ter0 <- data_wide  %>% dplyr::select(voto_muni,nse_madre) %>% filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10)
+bbdd_ed_ter0 <- na.omit(bbdd_ed_ter0)
 bbdd_ed_ter =
-  data_wide %>% filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>%
+  bbdd_ed_ter0 %>% 
               group_by(voto_muni) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>Ed. terciaria") %>%
              mutate(prop=round(n*100/sum(n),1))
@@ -10631,22 +10651,33 @@ ggsave(elec_muni_21_edmad, file = "../output/graphs/elec_muni_21_edmad.jpg",devi
 ```{r}
 ### variable voto_muni
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_muni)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_muni) %>%
+  bbdd_general0 %>% group_by(voto_muni) %>%
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_ed_bas0 <- data_wide  %>% dplyr::select(voto_muni,nse_padre) %>% filter(nse_padre==1 | nse_padre==2 | nse_padre==3)
+bbdd_ed_bas0 <- na.omit(bbdd_ed_bas0)
 bbdd_ed_bas =
-  data_wide %>% filter(nse_padre==1 | nse_padre==2 | nse_padre==3) %>%
+  bbdd_ed_bas0 %>%
               group_by(voto_muni) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>Ed. básica <br>o menos") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_ed_med0 <- data_wide  %>% dplyr::select(voto_muni,nse_padre) %>% filter(nse_padre==4 | nse_padre==5)
+bbdd_ed_med0 <- na.omit(bbdd_ed_med0)
 bbdd_ed_med =
-  data_wide %>% filter(nse_padre==4 | nse_padre==5) %>%
+  bbdd_ed_med0 %>%
               group_by(voto_muni) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>Ed. media") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_ed_ter0 <- data_wide  %>% dplyr::select(voto_muni,nse_padre) %>% filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10)
+bbdd_ed_ter0 <- na.omit(bbdd_ed_ter0)
 bbdd_ed_ter =
-  data_wide %>% filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>%
+  bbdd_ed_ter0 %>% 
               group_by(voto_muni) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>Ed. terciaria") %>%
              mutate(prop=round(n*100/sum(n),1))
@@ -10680,27 +10711,41 @@ ggsave(elec_muni_21_edpad, file = "../output/graphs/elec_muni_21_edpad.jpg",devi
 ```{r}
 ### variable voto_muni
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_muni)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_muni) %>%
-             summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
+  bbdd_general0 %>% group_by(voto_muni) %>%
+  summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_nunca0 <- data_wide  %>% dplyr::select(voto_muni,conv_padr_poli) %>% filter(conv_padr_poli==1)
+bbdd_nunca0 <- na.omit(bbdd_nunca0)
 bbdd_nunca =
-  data_wide %>% filter(conv_padr_poli==1) %>%
+  bbdd_nunca0 %>% 
               group_by(voto_muni) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>d</span>4. Nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_casi_nunca0 <- data_wide  %>% dplyr::select(voto_muni,conv_padr_poli) %>% filter(conv_padr_poli==2)
+bbdd_casi_nunca0 <- na.omit(bbdd_casi_nunca0)
 bbdd_casi_nunca =
-  data_wide %>% filter(conv_padr_poli==2) %>%
+  bbdd_casi_nunca0 %>%
               group_by(voto_muni) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>3. Casi nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_a_veces0 <- data_wide  %>% dplyr::select(voto_muni,conv_padr_poli) %>% filter(conv_padr_poli==3)
+bbdd_a_veces0 <- na.omit(bbdd_a_veces0)
 bbdd_a_veces =
-  data_wide %>% filter(conv_padr_poli==3) %>%
+  bbdd_a_veces0 %>% 
               group_by(voto_muni) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>2. A veces") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_frecuent0 <- data_wide  %>% dplyr::select(voto_muni,conv_padr_poli) %>% filter(conv_padr_poli==4)
+bbdd_frecuent0 <- na.omit(bbdd_frecuent0)
 bbdd_frecuent =
-  data_wide %>% filter(conv_padr_poli==4) %>%
+  bbdd_frecuent0 %>%
               group_by(voto_muni) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>1. Frecuentemente") %>%
              mutate(prop=round(n*100/sum(n),1))
@@ -10735,27 +10780,41 @@ ggsave(elec_muni_21_conv_pad_3y4, file = "../output/graphs/elec_muni_21_conv_pad
 ```{r}
 ### variable voto_muni
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_muni)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_muni) %>%
-             summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
+  bbdd_general0 %>% group_by(voto_muni) %>%
+  summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_nunca0 <- data_wide  %>% dplyr::select(voto_muni,conv_padres_21) %>% filter(conv_padres_21==1)
+bbdd_nunca0 <- na.omit(bbdd_nunca0)
 bbdd_nunca =
-  data_wide %>% filter(conv_padres_21==1) %>%
+  bbdd_nunca0 %>% 
               group_by(voto_muni) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>d</span>4. Nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_casi_nunca0 <- data_wide  %>% dplyr::select(voto_muni,conv_padres_21) %>% filter(conv_padres_21==2)
+bbdd_casi_nunca0 <- na.omit(bbdd_casi_nunca0)
 bbdd_casi_nunca =
-  data_wide %>% filter(conv_padres_21==2) %>%
+  bbdd_casi_nunca0 %>%
               group_by(voto_muni) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>3. Casi nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_a_veces0 <- data_wide  %>% dplyr::select(voto_muni,conv_padres_21) %>% filter(conv_padres_21==3)
+bbdd_a_veces0 <- na.omit(bbdd_a_veces0)
 bbdd_a_veces =
-  data_wide %>% filter(conv_padres_21==3) %>%
+  bbdd_a_veces0 %>% 
               group_by(voto_muni) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>2. A veces") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_frecuent0 <- data_wide  %>% dplyr::select(voto_muni,conv_padres_21) %>% filter(conv_padres_21==4)
+bbdd_frecuent0 <- na.omit(bbdd_frecuent0)
 bbdd_frecuent =
-  data_wide %>% filter(conv_padres_21==4) %>%
+  bbdd_frecuent0 %>%
               group_by(voto_muni) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>1. Frecuentemente") %>%
              mutate(prop=round(n*100/sum(n),1))
@@ -10790,27 +10849,41 @@ ggsave(elec_muni_21_conv_pad_3y4, file = "../output/graphs/elec_muni_21_conv_pad
 ```{r}
 ### variable voto_muni
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_muni)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_muni) %>%
-             summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
+  bbdd_general0 %>% group_by(voto_muni) %>%
+  summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_nunca0 <- data_wide  %>% dplyr::select(voto_muni,conv_padres_20) %>% filter(conv_padres_20==1)
+bbdd_nunca0 <- na.omit(bbdd_nunca0)
 bbdd_nunca =
-  data_wide %>% filter(conv_padres_20==1) %>%
+  bbdd_nunca0 %>% 
               group_by(voto_muni) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>d</span>4. Nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_casi_nunca0 <- data_wide  %>% dplyr::select(voto_muni,conv_padres_20) %>% filter(conv_padres_20==2)
+bbdd_casi_nunca0 <- na.omit(bbdd_casi_nunca0)
 bbdd_casi_nunca =
-  data_wide %>% filter(conv_padres_20==2) %>%
+  bbdd_casi_nunca0 %>%
               group_by(voto_muni) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>3. Casi nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_a_veces0 <- data_wide  %>% dplyr::select(voto_muni,conv_padres_20) %>% filter(conv_padres_20==3)
+bbdd_a_veces0 <- na.omit(bbdd_a_veces0)
 bbdd_a_veces =
-  data_wide %>% filter(conv_padres_20==3) %>%
+  bbdd_a_veces0 %>% 
               group_by(voto_muni) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>2. A veces") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_frecuent0 <- data_wide  %>% dplyr::select(voto_muni,conv_padres_20) %>% filter(conv_padres_20==4)
+bbdd_frecuent0 <- na.omit(bbdd_frecuent0)
 bbdd_frecuent =
-  data_wide %>% filter(conv_padres_20==4) %>%
+  bbdd_frecuent0 %>%
               group_by(voto_muni) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>1. Frecuentemente") %>%
              mutate(prop=round(n*100/sum(n),1))
@@ -10845,27 +10918,41 @@ ggsave(elec_muni_21_conv_pad_3y4, file = "../output/graphs/elec_muni_21_conv_pad
 ```{r}
 ### variable voto_muni
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_muni)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_muni) %>%
-             summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
+  bbdd_general0 %>% group_by(voto_muni) %>%
+  summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_nunca0 <- data_wide  %>% dplyr::select(voto_muni,conv_padres) %>% filter(conv_padres==1)
+bbdd_nunca0 <- na.omit(bbdd_nunca0)
 bbdd_nunca =
-  data_wide %>% filter(conv_padres==1) %>%
+  bbdd_nunca0 %>% 
               group_by(voto_muni) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>d</span>4. Nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_casi_nunca0 <- data_wide  %>% dplyr::select(voto_muni,conv_padres) %>% filter(conv_padres==2)
+bbdd_casi_nunca0 <- na.omit(bbdd_casi_nunca0)
 bbdd_casi_nunca =
-  data_wide %>% filter(conv_padres==2) %>%
+  bbdd_casi_nunca0 %>%
               group_by(voto_muni) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>3. Casi nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_a_veces0 <- data_wide  %>% dplyr::select(voto_muni,conv_padres) %>% filter(conv_padres==3)
+bbdd_a_veces0 <- na.omit(bbdd_a_veces0)
 bbdd_a_veces =
-  data_wide %>% filter(conv_padres==3) %>%
+  bbdd_a_veces0 %>% 
               group_by(voto_muni) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>2. A veces") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_frecuent0 <- data_wide  %>% dplyr::select(voto_muni,conv_padres) %>% filter(conv_padres==4)
+bbdd_frecuent0 <- na.omit(bbdd_frecuent0)
 bbdd_frecuent =
-  data_wide %>% filter(conv_padres==4) %>%
+  bbdd_frecuent0 %>%
               group_by(voto_muni) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>1. Frecuentemente") %>%
              mutate(prop=round(n*100/sum(n),1))
@@ -10900,27 +10987,41 @@ ggsave(elec_muni_21_conv_pad_3y4, file = "../output/graphs/elec_muni_21_conv_pad
 ```{r}
 ### variable voto_muni
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_muni)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_muni) %>%
-             summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
+  bbdd_general0 %>% group_by(voto_muni) %>%
+  summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_nunca0 <- data_wide  %>% dplyr::select(voto_muni,conv_padres_21b) %>% filter(conv_padres_21b==1)
+bbdd_nunca0 <- na.omit(bbdd_nunca0)
 bbdd_nunca =
-  data_wide %>% filter(conv_padres_21b==1) %>%
+  bbdd_nunca0 %>% 
               group_by(voto_muni) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>d</span>4. Nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_casi_nunca0 <- data_wide  %>% dplyr::select(voto_muni,conv_padres_21b) %>% filter(conv_padres_21b==2)
+bbdd_casi_nunca0 <- na.omit(bbdd_casi_nunca0)
 bbdd_casi_nunca =
-  data_wide %>% filter(conv_padres_21b==2) %>%
+  bbdd_casi_nunca0 %>%
               group_by(voto_muni) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>3. Casi nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_a_veces0 <- data_wide  %>% dplyr::select(voto_muni,conv_padres_21b) %>% filter(conv_padres_21b==3)
+bbdd_a_veces0 <- na.omit(bbdd_a_veces0)
 bbdd_a_veces =
-  data_wide %>% filter(conv_padres_21b==3) %>%
+  bbdd_a_veces0 %>% 
               group_by(voto_muni) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>2. A veces") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_frecuent0 <- data_wide  %>% dplyr::select(voto_muni,conv_padres_21b) %>% filter(conv_padres_21b==4)
+bbdd_frecuent0 <- na.omit(bbdd_frecuent0)
 bbdd_frecuent =
-  data_wide %>% filter(conv_padres_21b==4) %>%
+  bbdd_frecuent0 %>%
               group_by(voto_muni) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>1. Frecuentemente") %>%
              mutate(prop=round(n*100/sum(n),1))
@@ -10957,22 +11058,33 @@ ggsave(elec_muni_21_conv_pad_3y4, file = "../output/graphs/elec_muni_21_conv_pad
 ```{r}
 ### variable voto_gob
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_gob)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_gob) %>%
+  bbdd_general0 %>% group_by(voto_gob) %>%
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_mun0 <- data_wide  %>% dplyr::select(voto_gob,edm_admi) %>% filter(edm_admi==1)
+bbdd_mun0 <- na.omit(bbdd_mun0)
 bbdd_mun =
-  data_wide %>% filter(edm_admi==1) %>%
+  bbdd_mun0 %>% 
               group_by(voto_gob) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>Municipal") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_sub0 <- data_wide  %>% dplyr::select(voto_gob,edm_admi) %>% filter(edm_admi==2)
+bbdd_sub0 <- na.omit(bbdd_sub0)
 bbdd_sub =
-  data_wide %>% filter(edm_admi==2) %>%
+  bbdd_sub0 %>% 
               group_by(voto_gob) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>Part. Subvencionado") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_priv0 <- data_wide  %>% dplyr::select(voto_gob,edm_admi) %>% filter(edm_admi==3)
+bbdd_priv0 <- na.omit(bbdd_priv0)
 bbdd_priv =
-  data_wide %>% filter(edm_admi==3) %>%
+  bbdd_priv0 %>% 
               group_by(voto_gob) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>Part. Pagado") %>%
              mutate(prop=round(n*100/sum(n),1))
@@ -11007,22 +11119,33 @@ ggsave(elec_gob_21_dep, file = "../output/graphs/elec_gob_21_dep.jpg",device = "
 ```{r}
 ### variable voto_gob
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_gob)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_gob) %>%
+  bbdd_general0 %>% group_by(voto_gob) %>%
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_ed_bas0 <- data_wide  %>% dplyr::select(voto_gob,nse_madre) %>% filter(nse_madre==1 | nse_madre==2 | nse_madre==3)
+bbdd_ed_bas0 <- na.omit(bbdd_ed_bas0)
 bbdd_ed_bas =
-  data_wide %>% filter(nse_madre==1 | nse_madre==2 | nse_madre==3) %>%
+  bbdd_ed_bas0 %>%
               group_by(voto_gob) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>Ed. básica <br>o menos") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_ed_med0 <- data_wide  %>% dplyr::select(voto_gob,nse_madre) %>% filter(nse_madre==4 | nse_madre==5)
+bbdd_ed_med0 <- na.omit(bbdd_ed_med0)
 bbdd_ed_med =
-  data_wide %>% filter(nse_madre==4 | nse_madre==5) %>%
+  bbdd_ed_med0 %>%
               group_by(voto_gob) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>Ed. media") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_ed_ter0 <- data_wide  %>% dplyr::select(voto_gob,nse_madre) %>% filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10)
+bbdd_ed_ter0 <- na.omit(bbdd_ed_ter0)
 bbdd_ed_ter =
-  data_wide %>% filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>%
+  bbdd_ed_ter0 %>% 
               group_by(voto_gob) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>Ed. terciaria") %>%
              mutate(prop=round(n*100/sum(n),1))
@@ -11056,22 +11179,33 @@ ggsave(elec_gob_21_edmad, file = "../output/graphs/elec_gob_21_edmad.jpg",device
 ```{r}
 ### variable voto_gob
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_gob)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_gob) %>%
+  bbdd_general0 %>% group_by(voto_gob) %>%
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_ed_bas0 <- data_wide  %>% dplyr::select(voto_gob,nse_padre) %>% filter(nse_padre==1 | nse_padre==2 | nse_padre==3)
+bbdd_ed_bas0 <- na.omit(bbdd_ed_bas0)
 bbdd_ed_bas =
-  data_wide %>% filter(nse_padre==1 | nse_padre==2 | nse_padre==3) %>%
+  bbdd_ed_bas0 %>%
               group_by(voto_gob) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>Ed. básica <br>o menos") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_ed_med0 <- data_wide  %>% dplyr::select(voto_gob,nse_padre) %>% filter(nse_padre==4 | nse_padre==5)
+bbdd_ed_med0 <- na.omit(bbdd_ed_med0)
 bbdd_ed_med =
-  data_wide %>% filter(nse_padre==4 | nse_padre==5) %>%
+  bbdd_ed_med0 %>%
               group_by(voto_gob) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>Ed. media") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_ed_ter0 <- data_wide  %>% dplyr::select(voto_gob,nse_padre) %>% filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10)
+bbdd_ed_ter0 <- na.omit(bbdd_ed_ter0)
 bbdd_ed_ter =
-  data_wide %>% filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>%
+  bbdd_ed_ter0 %>% 
               group_by(voto_gob) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>Ed. terciaria") %>%
              mutate(prop=round(n*100/sum(n),1))
@@ -11105,27 +11239,41 @@ ggsave(elec_gob_21_edpad, file = "../output/graphs/elec_gob_21_edpad.jpg",device
 ```{r}
 ### variable voto_gob
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_gob)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_gob) %>%
-             summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
+  bbdd_general0 %>% group_by(voto_gob) %>%
+  summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_nunca0 <- data_wide  %>% dplyr::select(voto_gob,conv_padr_poli) %>% filter(conv_padr_poli==1)
+bbdd_nunca0 <- na.omit(bbdd_nunca0)
 bbdd_nunca =
-  data_wide %>% filter(conv_padr_poli==1) %>%
+  bbdd_nunca0 %>% 
               group_by(voto_gob) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>d</span>4. Nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_casi_nunca0 <- data_wide  %>% dplyr::select(voto_gob,conv_padr_poli) %>% filter(conv_padr_poli==2)
+bbdd_casi_nunca0 <- na.omit(bbdd_casi_nunca0)
 bbdd_casi_nunca =
-  data_wide %>% filter(conv_padr_poli==2) %>%
+  bbdd_casi_nunca0 %>%
               group_by(voto_gob) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>3. Casi nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_a_veces0 <- data_wide  %>% dplyr::select(voto_gob,conv_padr_poli) %>% filter(conv_padr_poli==3)
+bbdd_a_veces0 <- na.omit(bbdd_a_veces0)
 bbdd_a_veces =
-  data_wide %>% filter(conv_padr_poli==3) %>%
+  bbdd_a_veces0 %>% 
               group_by(voto_gob) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>2. A veces") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_frecuent0 <- data_wide  %>% dplyr::select(voto_gob,conv_padr_poli) %>% filter(conv_padr_poli==4)
+bbdd_frecuent0 <- na.omit(bbdd_frecuent0)
 bbdd_frecuent =
-  data_wide %>% filter(conv_padr_poli==4) %>%
+  bbdd_frecuent0 %>%
               group_by(voto_gob) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>1. Frecuentemente") %>%
              mutate(prop=round(n*100/sum(n),1))
@@ -11160,27 +11308,41 @@ ggsave(elec_gob_21_conv_pad_3y4, file = "../output/graphs/elec_gob_21_conv_pad_3
 ```{r}
 ### variable voto_gob
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_gob)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_gob) %>%
-             summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
+  bbdd_general0 %>% group_by(voto_gob) %>%
+  summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_nunca0 <- data_wide  %>% dplyr::select(voto_gob,conv_padres_21) %>% filter(conv_padres_21==1)
+bbdd_nunca0 <- na.omit(bbdd_nunca0)
 bbdd_nunca =
-  data_wide %>% filter(conv_padres_21==1) %>%
+  bbdd_nunca0 %>% 
               group_by(voto_gob) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>d</span>4. Nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_casi_nunca0 <- data_wide  %>% dplyr::select(voto_gob,conv_padres_21) %>% filter(conv_padres_21==2)
+bbdd_casi_nunca0 <- na.omit(bbdd_casi_nunca0)
 bbdd_casi_nunca =
-  data_wide %>% filter(conv_padres_21==2) %>%
+  bbdd_casi_nunca0 %>%
               group_by(voto_gob) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>3. Casi nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_a_veces0 <- data_wide  %>% dplyr::select(voto_gob,conv_padres_21) %>% filter(conv_padres_21==3)
+bbdd_a_veces0 <- na.omit(bbdd_a_veces0)
 bbdd_a_veces =
-  data_wide %>% filter(conv_padres_21==3) %>%
+  bbdd_a_veces0 %>% 
               group_by(voto_gob) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>2. A veces") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_frecuent0 <- data_wide  %>% dplyr::select(voto_gob,conv_padres_21) %>% filter(conv_padres_21==4)
+bbdd_frecuent0 <- na.omit(bbdd_frecuent0)
 bbdd_frecuent =
-  data_wide %>% filter(conv_padres_21==4) %>%
+  bbdd_frecuent0 %>%
               group_by(voto_gob) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>1. Frecuentemente") %>%
              mutate(prop=round(n*100/sum(n),1))
@@ -11215,27 +11377,41 @@ ggsave(elec_gob_21_conv_pad_3y4, file = "../output/graphs/elec_gob_21_conv_pad_e
 ```{r}
 ### variable voto_gob
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_gob)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_gob) %>%
-             summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
+  bbdd_general0 %>% group_by(voto_gob) %>%
+  summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_nunca0 <- data_wide  %>% dplyr::select(voto_gob,conv_padres_20) %>% filter(conv_padres_20==1)
+bbdd_nunca0 <- na.omit(bbdd_nunca0)
 bbdd_nunca =
-  data_wide %>% filter(conv_padres_20==1) %>%
+  bbdd_nunca0 %>% 
               group_by(voto_gob) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>d</span>4. Nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_casi_nunca0 <- data_wide  %>% dplyr::select(voto_gob,conv_padres_20) %>% filter(conv_padres_20==2)
+bbdd_casi_nunca0 <- na.omit(bbdd_casi_nunca0)
 bbdd_casi_nunca =
-  data_wide %>% filter(conv_padres_20==2) %>%
+  bbdd_casi_nunca0 %>%
               group_by(voto_gob) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>3. Casi nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_a_veces0 <- data_wide  %>% dplyr::select(voto_gob,conv_padres_20) %>% filter(conv_padres_20==3)
+bbdd_a_veces0 <- na.omit(bbdd_a_veces0)
 bbdd_a_veces =
-  data_wide %>% filter(conv_padres_20==3) %>%
+  bbdd_a_veces0 %>% 
               group_by(voto_gob) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>2. A veces") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_frecuent0 <- data_wide  %>% dplyr::select(voto_gob,conv_padres_20) %>% filter(conv_padres_20==4)
+bbdd_frecuent0 <- na.omit(bbdd_frecuent0)
 bbdd_frecuent =
-  data_wide %>% filter(conv_padres_20==4) %>%
+  bbdd_frecuent0 %>%
               group_by(voto_gob) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>1. Frecuentemente") %>%
              mutate(prop=round(n*100/sum(n),1))
@@ -11270,27 +11446,41 @@ ggsave(elec_gob_21_conv_pad_3y4, file = "../output/graphs/elec_gob_21_conv_pad_2
 ```{r}
 ### variable voto_gob
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_gob)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_gob) %>%
-             summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
+  bbdd_general0 %>% group_by(voto_gob) %>%
+  summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_nunca0 <- data_wide  %>% dplyr::select(voto_gob,conv_padres) %>% filter(conv_padres==1)
+bbdd_nunca0 <- na.omit(bbdd_nunca0)
 bbdd_nunca =
-  data_wide %>% filter(conv_padres==1) %>%
+  bbdd_nunca0 %>% 
               group_by(voto_gob) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>d</span>4. Nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_casi_nunca0 <- data_wide  %>% dplyr::select(voto_gob,conv_padres) %>% filter(conv_padres==2)
+bbdd_casi_nunca0 <- na.omit(bbdd_casi_nunca0)
 bbdd_casi_nunca =
-  data_wide %>% filter(conv_padres==2) %>%
+  bbdd_casi_nunca0 %>%
               group_by(voto_gob) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>3. Casi nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_a_veces0 <- data_wide  %>% dplyr::select(voto_gob,conv_padres) %>% filter(conv_padres==3)
+bbdd_a_veces0 <- na.omit(bbdd_a_veces0)
 bbdd_a_veces =
-  data_wide %>% filter(conv_padres==3) %>%
+  bbdd_a_veces0 %>% 
               group_by(voto_gob) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>2. A veces") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_frecuent0 <- data_wide  %>% dplyr::select(voto_gob,conv_padres) %>% filter(conv_padres==4)
+bbdd_frecuent0 <- na.omit(bbdd_frecuent0)
 bbdd_frecuent =
-  data_wide %>% filter(conv_padres==4) %>%
+  bbdd_frecuent0 %>%
               group_by(voto_gob) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>1. Frecuentemente") %>%
              mutate(prop=round(n*100/sum(n),1))
@@ -11325,27 +11515,41 @@ ggsave(elec_gob_21_conv_pad_3y4, file = "../output/graphs/elec_gob_21_conv_pad_2
 ```{r}
 ### variable voto_gob
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_gob)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_gob) %>%
-             summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
+  bbdd_general0 %>% group_by(voto_gob) %>%
+  summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_nunca0 <- data_wide  %>% dplyr::select(voto_gob,conv_padres_21b) %>% filter(conv_padres_21b==1)
+bbdd_nunca0 <- na.omit(bbdd_nunca0)
 bbdd_nunca =
-  data_wide %>% filter(conv_padres_21b==1) %>%
+  bbdd_nunca0 %>% 
               group_by(voto_gob) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>d</span>4. Nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_casi_nunca0 <- data_wide  %>% dplyr::select(voto_gob,conv_padres_21b) %>% filter(conv_padres_21b==2)
+bbdd_casi_nunca0 <- na.omit(bbdd_casi_nunca0)
 bbdd_casi_nunca =
-  data_wide %>% filter(conv_padres_21b==2) %>%
+  bbdd_casi_nunca0 %>%
               group_by(voto_gob) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>3. Casi nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_a_veces0 <- data_wide  %>% dplyr::select(voto_gob,conv_padres_21b) %>% filter(conv_padres_21b==3)
+bbdd_a_veces0 <- na.omit(bbdd_a_veces0)
 bbdd_a_veces =
-  data_wide %>% filter(conv_padres_21b==3) %>%
+  bbdd_a_veces0 %>% 
               group_by(voto_gob) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>2. A veces") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_frecuent0 <- data_wide  %>% dplyr::select(voto_gob,conv_padres_21b) %>% filter(conv_padres_21b==4)
+bbdd_frecuent0 <- na.omit(bbdd_frecuent0)
 bbdd_frecuent =
-  data_wide %>% filter(conv_padres_21b==4) %>%
+  bbdd_frecuent0 %>%
               group_by(voto_gob) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>1. Frecuentemente") %>%
              mutate(prop=round(n*100/sum(n),1))
@@ -11381,23 +11585,34 @@ ggsave(elec_gob_21_conv_pad_3y4, file = "../output/graphs/elec_gob_21_conv_pad_2
 ```{r}
 ### variable voto_fut.y
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_fut.y)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_fut.y	) %>%
+  bbdd_general0 %>% group_by(voto_fut.y) %>%
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_mun0 <- data_wide  %>% dplyr::select(voto_fut.y,edm_admi) %>% filter(edm_admi==1)
+bbdd_mun0 <- na.omit(bbdd_mun0)
 bbdd_mun =
-  data_wide %>% filter(edm_admi==1) %>%
-              group_by(voto_fut.y	) %>% #pregunta a graficar
+  bbdd_mun0 %>% 
+              group_by(voto_fut.y) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>Municipal") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_sub0 <- data_wide  %>% dplyr::select(voto_fut.y,edm_admi) %>% filter(edm_admi==2)
+bbdd_sub0 <- na.omit(bbdd_sub0)
 bbdd_sub =
-  data_wide %>% filter(edm_admi==2) %>%
-              group_by(voto_fut.y	) %>% #pregunta a graficar
+  bbdd_sub0 %>% 
+              group_by(voto_fut.y) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>Part. Subvencionado") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_priv0 <- data_wide  %>% dplyr::select(voto_fut.y,edm_admi) %>% filter(edm_admi==3)
+bbdd_priv0 <- na.omit(bbdd_priv0)
 bbdd_priv =
-  data_wide %>% filter(edm_admi==3) %>%
-              group_by(voto_fut.y	) %>% #pregunta a graficar
+  bbdd_priv0 %>% 
+              group_by(voto_fut.y) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>Part. Pagado") %>%
              mutate(prop=round(n*100/sum(n),1))
 
@@ -11431,23 +11646,34 @@ ggsave(elec_int1_pres21_dep, file = "../output/graphs/elec_int1_pres21_dep.jpg",
 ```{r}
 ### variable voto_fut.y	
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_fut.y)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_fut.y	) %>%
+  bbdd_general0 %>% group_by(voto_fut.y) %>%
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_ed_bas0 <- data_wide  %>% dplyr::select(voto_fut.y,nse_madre) %>% filter(nse_madre==1 | nse_madre==2 | nse_madre==3)
+bbdd_ed_bas0 <- na.omit(bbdd_ed_bas0)
 bbdd_ed_bas =
-  data_wide %>% filter(nse_madre==1 | nse_madre==2 | nse_madre==3) %>%
-              group_by(voto_fut.y	) %>% #pregunta a graficar
+  bbdd_ed_bas0 %>%
+              group_by(voto_fut.y) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>Ed. básica <br>o menos") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_ed_med0 <- data_wide  %>% dplyr::select(voto_fut.y,nse_madre) %>% filter(nse_madre==4 | nse_madre==5)
+bbdd_ed_med0 <- na.omit(bbdd_ed_med0)
 bbdd_ed_med =
-  data_wide %>% filter(nse_madre==4 | nse_madre==5) %>%
-              group_by(voto_fut.y	) %>% #pregunta a graficar
+  bbdd_ed_med0 %>%
+              group_by(voto_fut.y) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>Ed. media") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_ed_ter0 <- data_wide  %>% dplyr::select(voto_fut.y,nse_madre) %>% filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10)
+bbdd_ed_ter0 <- na.omit(bbdd_ed_ter0)
 bbdd_ed_ter =
-  data_wide %>% filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>%
-              group_by(voto_fut.y	) %>% #pregunta a graficar
+  bbdd_ed_ter0 %>% 
+              group_by(voto_fut.y) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>Ed. terciaria") %>%
              mutate(prop=round(n*100/sum(n),1))
 
@@ -11480,23 +11706,34 @@ ggsave(elec_int1_pres21_edmad, file = "../output/graphs/elec_int1_pres21_edmad.j
 ```{r}
 ### variable voto_fut.y	
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_fut.y)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_fut.y	) %>%
+  bbdd_general0 %>% group_by(voto_fut.y) %>%
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_ed_bas0 <- data_wide  %>% dplyr::select(voto_fut.y,nse_padre) %>% filter(nse_padre==1 | nse_padre==2 | nse_padre==3)
+bbdd_ed_bas0 <- na.omit(bbdd_ed_bas0)
 bbdd_ed_bas =
-  data_wide %>% filter(nse_padre==1 | nse_padre==2 | nse_padre==3) %>%
-              group_by(voto_fut.y	) %>% #pregunta a graficar
+  bbdd_ed_bas0 %>%
+              group_by(voto_fut.y) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>Ed. básica <br>o menos") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_ed_med0 <- data_wide  %>% dplyr::select(voto_fut.y,nse_padre) %>% filter(nse_padre==4 | nse_padre==5)
+bbdd_ed_med0 <- na.omit(bbdd_ed_med0)
 bbdd_ed_med =
-  data_wide %>% filter(nse_padre==4 | nse_padre==5) %>%
-              group_by(voto_fut.y	) %>% #pregunta a graficar
+  bbdd_ed_med0 %>%
+              group_by(voto_fut.y) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>Ed. media") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_ed_ter0 <- data_wide  %>% dplyr::select(voto_fut.y,nse_padre) %>% filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10)
+bbdd_ed_ter0 <- na.omit(bbdd_ed_ter0)
 bbdd_ed_ter =
-  data_wide %>% filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>%
-              group_by(voto_fut.y	) %>% #pregunta a graficar
+  bbdd_ed_ter0 %>% 
+              group_by(voto_fut.y) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>Ed. terciaria") %>%
              mutate(prop=round(n*100/sum(n),1))
 
@@ -11529,27 +11766,41 @@ ggsave(elec_int1_pres21_edpad, file = "../output/graphs/elec_int1_pres21_edpad.j
 ```{r}
 ### variable voto_fut.y
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_fut.y)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_fut.y) %>%
-             summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
+  bbdd_general0 %>% group_by(voto_fut.y) %>%
+  summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_nunca0 <- data_wide  %>% dplyr::select(voto_fut.y,conv_padr_poli) %>% filter(conv_padr_poli==1)
+bbdd_nunca0 <- na.omit(bbdd_nunca0)
 bbdd_nunca =
-  data_wide %>% filter(conv_padr_poli==1) %>%
+  bbdd_nunca0 %>% 
               group_by(voto_fut.y) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>d</span>4. Nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_casi_nunca0 <- data_wide  %>% dplyr::select(voto_fut.y,conv_padr_poli) %>% filter(conv_padr_poli==2)
+bbdd_casi_nunca0 <- na.omit(bbdd_casi_nunca0)
 bbdd_casi_nunca =
-  data_wide %>% filter(conv_padr_poli==2) %>%
+  bbdd_casi_nunca0 %>%
               group_by(voto_fut.y) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>3. Casi nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_a_veces0 <- data_wide  %>% dplyr::select(voto_fut.y,conv_padr_poli) %>% filter(conv_padr_poli==3)
+bbdd_a_veces0 <- na.omit(bbdd_a_veces0)
 bbdd_a_veces =
-  data_wide %>% filter(conv_padr_poli==3) %>%
+  bbdd_a_veces0 %>% 
               group_by(voto_fut.y) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>2. A veces") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_frecuent0 <- data_wide  %>% dplyr::select(voto_fut.y,conv_padr_poli) %>% filter(conv_padr_poli==4)
+bbdd_frecuent0 <- na.omit(bbdd_frecuent0)
 bbdd_frecuent =
-  data_wide %>% filter(conv_padr_poli==4) %>%
+  bbdd_frecuent0 %>%
               group_by(voto_fut.y) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>1. Frecuentemente") %>%
              mutate(prop=round(n*100/sum(n),1))
@@ -11584,27 +11835,41 @@ ggsave(elec_int1_pres21_pad_3y4, file = "../output/graphs/elec_int1_pres21_pad_3
 ```{r}
 ### variable voto_fut.y
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_fut.y)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_fut.y) %>%
-             summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
+  bbdd_general0 %>% group_by(voto_fut.y) %>%
+  summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_nunca0 <- data_wide  %>% dplyr::select(voto_fut.y,conv_padres_21) %>% filter(conv_padres_21==1)
+bbdd_nunca0 <- na.omit(bbdd_nunca0)
 bbdd_nunca =
-  data_wide %>% filter(conv_padres_21==1) %>%
+  bbdd_nunca0 %>% 
               group_by(voto_fut.y) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>d</span>4. Nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_casi_nunca0 <- data_wide  %>% dplyr::select(voto_fut.y,conv_padres_21) %>% filter(conv_padres_21==2)
+bbdd_casi_nunca0 <- na.omit(bbdd_casi_nunca0)
 bbdd_casi_nunca =
-  data_wide %>% filter(conv_padres_21==2) %>%
+  bbdd_casi_nunca0 %>%
               group_by(voto_fut.y) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>3. Casi nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_a_veces0 <- data_wide  %>% dplyr::select(voto_fut.y,conv_padres_21) %>% filter(conv_padres_21==3)
+bbdd_a_veces0 <- na.omit(bbdd_a_veces0)
 bbdd_a_veces =
-  data_wide %>% filter(conv_padres_21==3) %>%
+  bbdd_a_veces0 %>% 
               group_by(voto_fut.y) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>2. A veces") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_frecuent0 <- data_wide  %>% dplyr::select(voto_fut.y,conv_padres_21) %>% filter(conv_padres_21==4)
+bbdd_frecuent0 <- na.omit(bbdd_frecuent0)
 bbdd_frecuent =
-  data_wide %>% filter(conv_padres_21==4) %>%
+  bbdd_frecuent0 %>%
               group_by(voto_fut.y) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>1. Frecuentemente") %>%
              mutate(prop=round(n*100/sum(n),1))
@@ -11639,27 +11904,41 @@ ggsave(elec_int1_pres21_pad_3y4, file = "../output/graphs/elec_int1_pres21_pad_e
 ```{r}
 ### variable voto_fut.y
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_fut.y)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_fut.y) %>%
-             summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
+  bbdd_general0 %>% group_by(voto_fut.y) %>%
+  summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_nunca0 <- data_wide  %>% dplyr::select(voto_fut.y,conv_padres_20) %>% filter(conv_padres_20==1)
+bbdd_nunca0 <- na.omit(bbdd_nunca0)
 bbdd_nunca =
-  data_wide %>% filter(conv_padres_20==1) %>%
+  bbdd_nunca0 %>% 
               group_by(voto_fut.y) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>d</span>4. Nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_casi_nunca0 <- data_wide  %>% dplyr::select(voto_fut.y,conv_padres_20) %>% filter(conv_padres_20==2)
+bbdd_casi_nunca0 <- na.omit(bbdd_casi_nunca0)
 bbdd_casi_nunca =
-  data_wide %>% filter(conv_padres_20==2) %>%
+  bbdd_casi_nunca0 %>%
               group_by(voto_fut.y) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>3. Casi nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_a_veces0 <- data_wide  %>% dplyr::select(voto_fut.y,conv_padres_20) %>% filter(conv_padres_20==3)
+bbdd_a_veces0 <- na.omit(bbdd_a_veces0)
 bbdd_a_veces =
-  data_wide %>% filter(conv_padres_20==3) %>%
+  bbdd_a_veces0 %>% 
               group_by(voto_fut.y) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>2. A veces") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_frecuent0 <- data_wide  %>% dplyr::select(voto_fut.y,conv_padres_20) %>% filter(conv_padres_20==4)
+bbdd_frecuent0 <- na.omit(bbdd_frecuent0)
 bbdd_frecuent =
-  data_wide %>% filter(conv_padres_20==4) %>%
+  bbdd_frecuent0 %>%
               group_by(voto_fut.y) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>1. Frecuentemente") %>%
              mutate(prop=round(n*100/sum(n),1))
@@ -11694,30 +11973,45 @@ ggsave(elec_int1_pres21_pad_3y4, file = "../output/graphs/elec_int1_pres21_pad_2
 ```{r}
 ### variable voto_fut.y
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_fut.y)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_fut.y) %>%
-             summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
+  bbdd_general0 %>% group_by(voto_fut.y) %>%
+  summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_nunca0 <- data_wide  %>% dplyr::select(voto_fut.y,conv_padres) %>% filter(conv_padres==1)
+bbdd_nunca0 <- na.omit(bbdd_nunca0)
 bbdd_nunca =
-  data_wide %>% filter(conv_padres==1) %>%
+  bbdd_nunca0 %>% 
               group_by(voto_fut.y) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>d</span>4. Nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_casi_nunca0 <- data_wide  %>% dplyr::select(voto_fut.y,conv_padres) %>% filter(conv_padres==2)
+bbdd_casi_nunca0 <- na.omit(bbdd_casi_nunca0)
 bbdd_casi_nunca =
-  data_wide %>% filter(conv_padres==2) %>%
+  bbdd_casi_nunca0 %>%
               group_by(voto_fut.y) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>3. Casi nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_a_veces0 <- data_wide  %>% dplyr::select(voto_fut.y,conv_padres) %>% filter(conv_padres==3)
+bbdd_a_veces0 <- na.omit(bbdd_a_veces0)
 bbdd_a_veces =
-  data_wide %>% filter(conv_padres==3) %>%
+  bbdd_a_veces0 %>% 
               group_by(voto_fut.y) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>2. A veces") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_frecuent0 <- data_wide  %>% dplyr::select(voto_fut.y,conv_padres) %>% filter(conv_padres==4)
+bbdd_frecuent0 <- na.omit(bbdd_frecuent0)
 bbdd_frecuent =
-  data_wide %>% filter(conv_padres==4) %>%
+  bbdd_frecuent0 %>%
               group_by(voto_fut.y) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>1. Frecuentemente") %>%
              mutate(prop=round(n*100/sum(n),1))
+
 
 bbdd_grafico = rbind(bbdd_general,bbdd_nunca,bbdd_casi_nunca,bbdd_a_veces,bbdd_frecuent)
 bbdd_grafico<-na.omit(bbdd_grafico)
@@ -11749,27 +12043,41 @@ ggsave(elec_int1_pres21_pad_3y4, file = "../output/graphs/elec_int1_pres21_pad_2
 ```{r}
 ### variable voto_fut.y
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_fut.y)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_fut.y) %>%
-             summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
+  bbdd_general0 %>% group_by(voto_fut.y) %>%
+  summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_nunca0 <- data_wide  %>% dplyr::select(voto_fut.y,conv_padres_21b) %>% filter(conv_padres_21b==1)
+bbdd_nunca0 <- na.omit(bbdd_nunca0)
 bbdd_nunca =
-  data_wide %>% filter(conv_padres_21b==1) %>%
+  bbdd_nunca0 %>% 
               group_by(voto_fut.y) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>d</span>4. Nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_casi_nunca0 <- data_wide  %>% dplyr::select(voto_fut.y,conv_padres_21b) %>% filter(conv_padres_21b==2)
+bbdd_casi_nunca0 <- na.omit(bbdd_casi_nunca0)
 bbdd_casi_nunca =
-  data_wide %>% filter(conv_padres_21b==2) %>%
+  bbdd_casi_nunca0 %>%
               group_by(voto_fut.y) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>3. Casi nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_a_veces0 <- data_wide  %>% dplyr::select(voto_fut.y,conv_padres_21b) %>% filter(conv_padres_21b==3)
+bbdd_a_veces0 <- na.omit(bbdd_a_veces0)
 bbdd_a_veces =
-  data_wide %>% filter(conv_padres_21b==3) %>%
+  bbdd_a_veces0 %>% 
               group_by(voto_fut.y) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>2. A veces") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_frecuent0 <- data_wide  %>% dplyr::select(voto_fut.y,conv_padres_21b) %>% filter(conv_padres_21b==4)
+bbdd_frecuent0 <- na.omit(bbdd_frecuent0)
 bbdd_frecuent =
-  data_wide %>% filter(conv_padres_21b==4) %>%
+  bbdd_frecuent0 %>%
               group_by(voto_fut.y) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>1. Frecuentemente") %>%
              mutate(prop=round(n*100/sum(n),1))
@@ -11805,23 +12113,34 @@ ggsave(elec_int1_pres21_pad_3y4, file = "../output/graphs/elec_int1_pres21_pad_2
 ```{r}
 ### variable voto_fut.x
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_fut.x)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_fut.x	) %>%
+  bbdd_general0 %>% group_by(voto_fut.x) %>%
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_mun0 <- data_wide  %>% dplyr::select(voto_fut.x,edm_admi) %>% filter(edm_admi==1)
+bbdd_mun0 <- na.omit(bbdd_mun0)
 bbdd_mun =
-  data_wide %>% filter(edm_admi==1) %>%
-              group_by(voto_fut.x	) %>% #pregunta a graficar
+  bbdd_mun0 %>% 
+              group_by(voto_fut.x) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>Municipal") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_sub0 <- data_wide  %>% dplyr::select(voto_fut.x,edm_admi) %>% filter(edm_admi==2)
+bbdd_sub0 <- na.omit(bbdd_sub0)
 bbdd_sub =
-  data_wide %>% filter(edm_admi==2) %>%
-              group_by(voto_fut.x	) %>% #pregunta a graficar
+  bbdd_sub0 %>% 
+              group_by(voto_fut.x) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>Part. Subvencionado") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_priv0 <- data_wide  %>% dplyr::select(voto_fut.x,edm_admi) %>% filter(edm_admi==3)
+bbdd_priv0 <- na.omit(bbdd_priv0)
 bbdd_priv =
-  data_wide %>% filter(edm_admi==3) %>%
-              group_by(voto_fut.x	) %>% #pregunta a graficar
+  bbdd_priv0 %>% 
+              group_by(voto_fut.x) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>Part. Pagado") %>%
              mutate(prop=round(n*100/sum(n),1))
 
@@ -11855,23 +12174,34 @@ ggsave(elec_int2_pres21_dep, file = "../output/graphs/elec_int2_pres21_dep.jpg",
 ```{r}
 ### variable voto_fut.x	
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_fut.x)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_fut.x	) %>%
+  bbdd_general0 %>% group_by(voto_fut.x) %>%
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_ed_bas0 <- data_wide  %>% dplyr::select(voto_fut.x,nse_madre) %>% filter(nse_madre==1 | nse_madre==2 | nse_madre==3)
+bbdd_ed_bas0 <- na.omit(bbdd_ed_bas0)
 bbdd_ed_bas =
-  data_wide %>% filter(nse_madre==1 | nse_madre==2 | nse_madre==3) %>%
-              group_by(voto_fut.x	) %>% #pregunta a graficar
+  bbdd_ed_bas0 %>%
+              group_by(voto_fut.x) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>Ed. básica <br>o menos") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_ed_med0 <- data_wide  %>% dplyr::select(voto_fut.x,nse_madre) %>% filter(nse_madre==4 | nse_madre==5)
+bbdd_ed_med0 <- na.omit(bbdd_ed_med0)
 bbdd_ed_med =
-  data_wide %>% filter(nse_madre==4 | nse_madre==5) %>%
-              group_by(voto_fut.x	) %>% #pregunta a graficar
+  bbdd_ed_med0 %>%
+              group_by(voto_fut.x) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>Ed. media") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_ed_ter0 <- data_wide  %>% dplyr::select(voto_fut.x,nse_madre) %>% filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10)
+bbdd_ed_ter0 <- na.omit(bbdd_ed_ter0)
 bbdd_ed_ter =
-  data_wide %>% filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>%
-              group_by(voto_fut.x	) %>% #pregunta a graficar
+  bbdd_ed_ter0 %>% 
+              group_by(voto_fut.x) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>Ed. terciaria") %>%
              mutate(prop=round(n*100/sum(n),1))
 
@@ -11904,23 +12234,35 @@ ggsave(elec_int2_pres21_edmad, file = "../output/graphs/elec_int2_pres21_edmad.j
 ```{r}
 ### variable voto_fut.x	
 
+
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_fut.x)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_fut.x	) %>%
+  bbdd_general0 %>% group_by(voto_fut.x) %>%
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_ed_bas0 <- data_wide  %>% dplyr::select(voto_fut.x,nse_padre) %>% filter(nse_padre==1 | nse_padre==2 | nse_padre==3)
+bbdd_ed_bas0 <- na.omit(bbdd_ed_bas0)
 bbdd_ed_bas =
-  data_wide %>% filter(nse_padre==1 | nse_padre==2 | nse_padre==3) %>%
-              group_by(voto_fut.x	) %>% #pregunta a graficar
+  bbdd_ed_bas0 %>%
+              group_by(voto_fut.x) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>Ed. básica <br>o menos") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_ed_med0 <- data_wide  %>% dplyr::select(voto_fut.x,nse_padre) %>% filter(nse_padre==4 | nse_padre==5)
+bbdd_ed_med0 <- na.omit(bbdd_ed_med0)
 bbdd_ed_med =
-  data_wide %>% filter(nse_padre==4 | nse_padre==5) %>%
-              group_by(voto_fut.x	) %>% #pregunta a graficar
+  bbdd_ed_med0 %>%
+              group_by(voto_fut.x) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>Ed. media") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_ed_ter0 <- data_wide  %>% dplyr::select(voto_fut.x,nse_padre) %>% filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10)
+bbdd_ed_ter0 <- na.omit(bbdd_ed_ter0)
 bbdd_ed_ter =
-  data_wide %>% filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>%
-              group_by(voto_fut.x	) %>% #pregunta a graficar
+  bbdd_ed_ter0 %>% 
+              group_by(voto_fut.x) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>Ed. terciaria") %>%
              mutate(prop=round(n*100/sum(n),1))
 
@@ -11953,27 +12295,41 @@ ggsave(elec_int2_pres21_edpad, file = "../output/graphs/elec_int2_pres21_edpad.j
 ```{r}
 ### variable voto_fut.x
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_fut.x)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_fut.x) %>%
-             summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
+  bbdd_general0 %>% group_by(voto_fut.x) %>%
+  summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_nunca0 <- data_wide  %>% dplyr::select(voto_fut.x,conv_padr_poli) %>% filter(conv_padr_poli==1)
+bbdd_nunca0 <- na.omit(bbdd_nunca0)
 bbdd_nunca =
-  data_wide %>% filter(conv_padr_poli==1) %>%
+  bbdd_nunca0 %>% 
               group_by(voto_fut.x) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>d</span>4. Nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_casi_nunca0 <- data_wide  %>% dplyr::select(voto_fut.x,conv_padr_poli) %>% filter(conv_padr_poli==2)
+bbdd_casi_nunca0 <- na.omit(bbdd_casi_nunca0)
 bbdd_casi_nunca =
-  data_wide %>% filter(conv_padr_poli==2) %>%
+  bbdd_casi_nunca0 %>%
               group_by(voto_fut.x) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>3. Casi nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_a_veces0 <- data_wide  %>% dplyr::select(voto_fut.x,conv_padr_poli) %>% filter(conv_padr_poli==3)
+bbdd_a_veces0 <- na.omit(bbdd_a_veces0)
 bbdd_a_veces =
-  data_wide %>% filter(conv_padr_poli==3) %>%
+  bbdd_a_veces0 %>% 
               group_by(voto_fut.x) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>2. A veces") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_frecuent0 <- data_wide  %>% dplyr::select(voto_fut.x,conv_padr_poli) %>% filter(conv_padr_poli==4)
+bbdd_frecuent0 <- na.omit(bbdd_frecuent0)
 bbdd_frecuent =
-  data_wide %>% filter(conv_padr_poli==4) %>%
+  bbdd_frecuent0 %>%
               group_by(voto_fut.x) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>1. Frecuentemente") %>%
              mutate(prop=round(n*100/sum(n),1))
@@ -12008,27 +12364,41 @@ ggsave(elec_int2_pres21_pad_3y4, file = "../output/graphs/elec_int2_pres21_pad_3
 ```{r}
 ### variable voto_fut.x
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_fut.x)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_fut.x) %>%
-             summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
+  bbdd_general0 %>% group_by(voto_fut.x) %>%
+  summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_nunca0 <- data_wide  %>% dplyr::select(voto_fut.x,conv_padres_21) %>% filter(conv_padres_21==1)
+bbdd_nunca0 <- na.omit(bbdd_nunca0)
 bbdd_nunca =
-  data_wide %>% filter(conv_padres_21==1) %>%
+  bbdd_nunca0 %>% 
               group_by(voto_fut.x) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>d</span>4. Nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_casi_nunca0 <- data_wide  %>% dplyr::select(voto_fut.x,conv_padres_21) %>% filter(conv_padres_21==2)
+bbdd_casi_nunca0 <- na.omit(bbdd_casi_nunca0)
 bbdd_casi_nunca =
-  data_wide %>% filter(conv_padres_21==2) %>%
+  bbdd_casi_nunca0 %>%
               group_by(voto_fut.x) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>3. Casi nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_a_veces0 <- data_wide  %>% dplyr::select(voto_fut.x,conv_padres_21) %>% filter(conv_padres_21==3)
+bbdd_a_veces0 <- na.omit(bbdd_a_veces0)
 bbdd_a_veces =
-  data_wide %>% filter(conv_padres_21==3) %>%
+  bbdd_a_veces0 %>% 
               group_by(voto_fut.x) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>2. A veces") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_frecuent0 <- data_wide  %>% dplyr::select(voto_fut.x,conv_padres_21) %>% filter(conv_padres_21==4)
+bbdd_frecuent0 <- na.omit(bbdd_frecuent0)
 bbdd_frecuent =
-  data_wide %>% filter(conv_padres_21==4) %>%
+  bbdd_frecuent0 %>%
               group_by(voto_fut.x) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>1. Frecuentemente") %>%
              mutate(prop=round(n*100/sum(n),1))
@@ -12063,27 +12433,41 @@ ggsave(elec_int2_pres21_pad_3y4, file = "../output/graphs/elec_int2_pres21_pad_e
 ```{r}
 ### variable voto_fut.x
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_fut.x)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_fut.x) %>%
-             summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
+  bbdd_general0 %>% group_by(voto_fut.x) %>%
+  summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_nunca0 <- data_wide  %>% dplyr::select(voto_fut.x,conv_padres_20) %>% filter(conv_padres_20==1)
+bbdd_nunca0 <- na.omit(bbdd_nunca0)
 bbdd_nunca =
-  data_wide %>% filter(conv_padres_20==1) %>%
+  bbdd_nunca0 %>% 
               group_by(voto_fut.x) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>d</span>4. Nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_casi_nunca0 <- data_wide  %>% dplyr::select(voto_fut.x,conv_padres_20) %>% filter(conv_padres_20==2)
+bbdd_casi_nunca0 <- na.omit(bbdd_casi_nunca0)
 bbdd_casi_nunca =
-  data_wide %>% filter(conv_padres_20==2) %>%
+  bbdd_casi_nunca0 %>%
               group_by(voto_fut.x) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>3. Casi nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_a_veces0 <- data_wide  %>% dplyr::select(voto_fut.x,conv_padres_20) %>% filter(conv_padres_20==3)
+bbdd_a_veces0 <- na.omit(bbdd_a_veces0)
 bbdd_a_veces =
-  data_wide %>% filter(conv_padres_20==3) %>%
+  bbdd_a_veces0 %>% 
               group_by(voto_fut.x) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>2. A veces") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_frecuent0 <- data_wide  %>% dplyr::select(voto_fut.x,conv_padres_20) %>% filter(conv_padres_20==4)
+bbdd_frecuent0 <- na.omit(bbdd_frecuent0)
 bbdd_frecuent =
-  data_wide %>% filter(conv_padres_20==4) %>%
+  bbdd_frecuent0 %>%
               group_by(voto_fut.x) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>1. Frecuentemente") %>%
              mutate(prop=round(n*100/sum(n),1))
@@ -12118,27 +12502,41 @@ ggsave(elec_int2_pres21_pad_3y4, file = "../output/graphs/elec_int2_pres21_pad_2
 ```{r}
 ### variable voto_fut.x
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_fut.x)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_fut.x) %>%
-             summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
+  bbdd_general0 %>% group_by(voto_fut.x) %>%
+  summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_nunca0 <- data_wide  %>% dplyr::select(voto_fut.x,conv_padres) %>% filter(conv_padres==1)
+bbdd_nunca0 <- na.omit(bbdd_nunca0)
 bbdd_nunca =
-  data_wide %>% filter(conv_padres==1) %>%
+  bbdd_nunca0 %>% 
               group_by(voto_fut.x) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>d</span>4. Nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_casi_nunca0 <- data_wide  %>% dplyr::select(voto_fut.x,conv_padres) %>% filter(conv_padres==2)
+bbdd_casi_nunca0 <- na.omit(bbdd_casi_nunca0)
 bbdd_casi_nunca =
-  data_wide %>% filter(conv_padres==2) %>%
+  bbdd_casi_nunca0 %>%
               group_by(voto_fut.x) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>3. Casi nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_a_veces0 <- data_wide  %>% dplyr::select(voto_fut.x,conv_padres) %>% filter(conv_padres==3)
+bbdd_a_veces0 <- na.omit(bbdd_a_veces0)
 bbdd_a_veces =
-  data_wide %>% filter(conv_padres==3) %>%
+  bbdd_a_veces0 %>% 
               group_by(voto_fut.x) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>2. A veces") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_frecuent0 <- data_wide  %>% dplyr::select(voto_fut.x,conv_padres) %>% filter(conv_padres==4)
+bbdd_frecuent0 <- na.omit(bbdd_frecuent0)
 bbdd_frecuent =
-  data_wide %>% filter(conv_padres==4) %>%
+  bbdd_frecuent0 %>%
               group_by(voto_fut.x) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>1. Frecuentemente") %>%
              mutate(prop=round(n*100/sum(n),1))
@@ -12173,27 +12571,41 @@ ggsave(elec_int2_pres21_pad_3y4, file = "../output/graphs/elec_int2_pres21_pad_2
 ```{r}
 ### variable voto_fut.x
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_fut.x)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_fut.x) %>%
-             summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
+  bbdd_general0 %>% group_by(voto_fut.x) %>%
+  summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_nunca0 <- data_wide  %>% dplyr::select(voto_fut.x,conv_padres_21b) %>% filter(conv_padres_21b==1)
+bbdd_nunca0 <- na.omit(bbdd_nunca0)
 bbdd_nunca =
-  data_wide %>% filter(conv_padres_21b==1) %>%
+  bbdd_nunca0 %>% 
               group_by(voto_fut.x) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>d</span>4. Nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_casi_nunca0 <- data_wide  %>% dplyr::select(voto_fut.x,conv_padres_21b) %>% filter(conv_padres_21b==2)
+bbdd_casi_nunca0 <- na.omit(bbdd_casi_nunca0)
 bbdd_casi_nunca =
-  data_wide %>% filter(conv_padres_21b==2) %>%
+  bbdd_casi_nunca0 %>%
               group_by(voto_fut.x) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>3. Casi nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_a_veces0 <- data_wide  %>% dplyr::select(voto_fut.x,conv_padres_21b) %>% filter(conv_padres_21b==3)
+bbdd_a_veces0 <- na.omit(bbdd_a_veces0)
 bbdd_a_veces =
-  data_wide %>% filter(conv_padres_21b==3) %>%
+  bbdd_a_veces0 %>% 
               group_by(voto_fut.x) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>2. A veces") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_frecuent0 <- data_wide  %>% dplyr::select(voto_fut.x,conv_padres_21b) %>% filter(conv_padres_21b==4)
+bbdd_frecuent0 <- na.omit(bbdd_frecuent0)
 bbdd_frecuent =
-  data_wide %>% filter(conv_padres_21b==4) %>%
+  bbdd_frecuent0 %>%
               group_by(voto_fut.x) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>1. Frecuentemente") %>%
              mutate(prop=round(n*100/sum(n),1))
@@ -12229,23 +12641,34 @@ ggsave(elec_int2_pres21_pad_3y4, file = "../output/graphs/elec_int2_pres21_pad_2
 ```{r}
 ### variable voto_const	
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_const)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_const	) %>%
+  bbdd_general0 %>% group_by(voto_const) %>%
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_mun0 <- data_wide  %>% dplyr::select(voto_const,edm_admi) %>% filter(edm_admi==1)
+bbdd_mun0 <- na.omit(bbdd_mun0)
 bbdd_mun =
-  data_wide %>% filter(edm_admi==1) %>%
-              group_by(voto_const	) %>% #pregunta a graficar
+  bbdd_mun0 %>% 
+              group_by(voto_const) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>Municipal") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_sub0 <- data_wide  %>% dplyr::select(voto_const,edm_admi) %>% filter(edm_admi==2)
+bbdd_sub0 <- na.omit(bbdd_sub0)
 bbdd_sub =
-  data_wide %>% filter(edm_admi==2) %>%
-              group_by(voto_const	) %>% #pregunta a graficar
+  bbdd_sub0 %>% 
+              group_by(voto_const) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>Part. Subvencionado") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_priv0 <- data_wide  %>% dplyr::select(voto_const,edm_admi) %>% filter(edm_admi==3)
+bbdd_priv0 <- na.omit(bbdd_priv0)
 bbdd_priv =
-  data_wide %>% filter(edm_admi==3) %>%
-              group_by(voto_const	) %>% #pregunta a graficar
+  bbdd_priv0 %>% 
+              group_by(voto_const) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>Part. Pagado") %>%
              mutate(prop=round(n*100/sum(n),1))
 
@@ -12279,23 +12702,34 @@ ggsave(elec_const21_dep, file = "../output/graphs/elec_const21_dep.jpg",device =
 ```{r}
 ### variable voto_const	
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_const)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_const	) %>%
+  bbdd_general0 %>% group_by(voto_const) %>%
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_ed_bas0 <- data_wide  %>% dplyr::select(voto_const,nse_madre) %>% filter(nse_madre==1 | nse_madre==2 | nse_madre==3)
+bbdd_ed_bas0 <- na.omit(bbdd_ed_bas0)
 bbdd_ed_bas =
-  data_wide %>% filter(nse_madre==1 | nse_madre==2 | nse_madre==3) %>%
-              group_by(voto_const	) %>% #pregunta a graficar
+  bbdd_ed_bas0 %>%
+              group_by(voto_const) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>Ed. básica <br>o menos") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_ed_med0 <- data_wide  %>% dplyr::select(voto_const,nse_madre) %>% filter(nse_madre==4 | nse_madre==5)
+bbdd_ed_med0 <- na.omit(bbdd_ed_med0)
 bbdd_ed_med =
-  data_wide %>% filter(nse_madre==4 | nse_madre==5) %>%
-              group_by(voto_const	) %>% #pregunta a graficar
+  bbdd_ed_med0 %>%
+              group_by(voto_const) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>Ed. media") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_ed_ter0 <- data_wide  %>% dplyr::select(voto_const,nse_madre) %>% filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10)
+bbdd_ed_ter0 <- na.omit(bbdd_ed_ter0)
 bbdd_ed_ter =
-  data_wide %>% filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>%
-              group_by(voto_const	) %>% #pregunta a graficar
+  bbdd_ed_ter0 %>% 
+              group_by(voto_const) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>Ed. terciaria") %>%
              mutate(prop=round(n*100/sum(n),1))
 
@@ -12328,23 +12762,34 @@ ggsave(elec_const21_edmad, file = "../output/graphs/elec_const21_edmad.jpg",devi
 ```{r}
 ### variable voto_const	
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_const)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_const	) %>%
+  bbdd_general0 %>% group_by(voto_const) %>%
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_ed_bas0 <- data_wide  %>% dplyr::select(voto_const,nse_padre) %>% filter(nse_padre==1 | nse_padre==2 | nse_padre==3)
+bbdd_ed_bas0 <- na.omit(bbdd_ed_bas0)
 bbdd_ed_bas =
-  data_wide %>% filter(nse_padre==1 | nse_padre==2 | nse_padre==3) %>%
-              group_by(voto_const	) %>% #pregunta a graficar
+  bbdd_ed_bas0 %>%
+              group_by(voto_const) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>Ed. básica <br>o menos") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_ed_med0 <- data_wide  %>% dplyr::select(voto_const,nse_padre) %>% filter(nse_padre==4 | nse_padre==5)
+bbdd_ed_med0 <- na.omit(bbdd_ed_med0)
 bbdd_ed_med =
-  data_wide %>% filter(nse_padre==4 | nse_padre==5) %>%
-              group_by(voto_const	) %>% #pregunta a graficar
+  bbdd_ed_med0 %>%
+              group_by(voto_const) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>Ed. media") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_ed_ter0 <- data_wide  %>% dplyr::select(voto_const,nse_padre) %>% filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10)
+bbdd_ed_ter0 <- na.omit(bbdd_ed_ter0)
 bbdd_ed_ter =
-  data_wide %>% filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>%
-              group_by(voto_const	) %>% #pregunta a graficar
+  bbdd_ed_ter0 %>% 
+              group_by(voto_const) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>Ed. terciaria") %>%
              mutate(prop=round(n*100/sum(n),1))
 
@@ -12377,28 +12822,42 @@ ggsave(elec_const21_edpad, file = "../output/graphs/elec_const21_edpad.jpg",devi
 ```{r}
 ### variable voto_const	
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_const)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_const	) %>%
-             summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
+  bbdd_general0 %>% group_by(voto_const) %>%
+  summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_nunca0 <- data_wide  %>% dplyr::select(voto_const,conv_padr_poli) %>% filter(conv_padr_poli==1)
+bbdd_nunca0 <- na.omit(bbdd_nunca0)
 bbdd_nunca =
-  data_wide %>% filter(conv_padr_poli==1) %>%
-              group_by(voto_const	) %>% #pregunta a graficar
+  bbdd_nunca0 %>% 
+              group_by(voto_const) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>d</span>4. Nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_casi_nunca0 <- data_wide  %>% dplyr::select(voto_const,conv_padr_poli) %>% filter(conv_padr_poli==2)
+bbdd_casi_nunca0 <- na.omit(bbdd_casi_nunca0)
 bbdd_casi_nunca =
-  data_wide %>% filter(conv_padr_poli==2) %>%
-              group_by(voto_const	) %>% #pregunta a graficar
+  bbdd_casi_nunca0 %>%
+              group_by(voto_const) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>3. Casi nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_a_veces0 <- data_wide  %>% dplyr::select(voto_const,conv_padr_poli) %>% filter(conv_padr_poli==3)
+bbdd_a_veces0 <- na.omit(bbdd_a_veces0)
 bbdd_a_veces =
-  data_wide %>% filter(conv_padr_poli==3) %>%
-              group_by(voto_const	) %>% #pregunta a graficar
+  bbdd_a_veces0 %>% 
+              group_by(voto_const) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>2. A veces") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_frecuent0 <- data_wide  %>% dplyr::select(voto_const,conv_padr_poli) %>% filter(conv_padr_poli==4)
+bbdd_frecuent0 <- na.omit(bbdd_frecuent0)
 bbdd_frecuent =
-  data_wide %>% filter(conv_padr_poli==4) %>%
-              group_by(voto_const	) %>% #pregunta a graficar
+  bbdd_frecuent0 %>%
+              group_by(voto_const) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>1. Frecuentemente") %>%
              mutate(prop=round(n*100/sum(n),1))
 
@@ -12432,29 +12891,35 @@ ggsave(elec_const21_conv_pad_3y4, file = "../output/graphs/elec_const21_conv_pad
 ```{r}
 ### variable voto_const	
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_const)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_const	) %>%
-             summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
+  bbdd_general0 %>% group_by(voto_const) %>%
+  summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_nunca0 <- data_wide  %>% dplyr::select(voto_const,conv_padres_21) %>% filter(conv_padres_21==1)
+bbdd_nunca0 <- na.omit(bbdd_nunca0)
 bbdd_nunca =
-  data_wide %>% filter(conv_padres_21==1) %>%
-              group_by(voto_const	) %>% #pregunta a graficar
+  bbdd_nunca0 %>% 
+              group_by(voto_const) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>d</span>4. Nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_casi_nunca0 <- data_wide  %>% dplyr::select(voto_const,conv_padres_21) %>% filter(conv_padres_21==2)
+bbdd_casi_nunca0 <- na.omit(bbdd_casi_nunca0)
 bbdd_casi_nunca =
-  data_wide %>% filter(conv_padres_21==2) %>%
-              group_by(voto_const	) %>% #pregunta a graficar
+  bbdd_casi_nunca0 %>%
+              group_by(voto_const) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>3. Casi nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_a_veces0 <- data_wide  %>% dplyr::select(voto_const,conv_padres_21) %>% filter(conv_padres_21==3)
+bbdd_a_veces0 <- na.omit(bbdd_a_veces0)
 bbdd_a_veces =
-  data_wide %>% filter(conv_padres_21==3) %>%
-              group_by(voto_const	) %>% #pregunta a graficar
+  bbdd_a_veces0 %>% 
+              group_by(voto_const) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>2. A veces") %>%
-             mutate(prop=round(n*100/sum(n),1))
-bbdd_frecuent =
-  data_wide %>% filter(conv_padres_21==4) %>%
-              group_by(voto_const	) %>% #pregunta a graficar
-             summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>1. Frecuentemente") %>%
              mutate(prop=round(n*100/sum(n),1))
 
 bbdd_grafico = rbind(bbdd_general,bbdd_nunca,bbdd_casi_nunca,bbdd_a_veces,bbdd_frecuent)
@@ -12487,28 +12952,42 @@ ggsave(elec_const21_conv_pad_3y4, file = "../output/graphs/elec_const21_conv_pad
 ```{r}
 ### variable voto_const	
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_const)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_const	) %>%
-             summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
+  bbdd_general0 %>% group_by(voto_const) %>%
+  summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_nunca0 <- data_wide  %>% dplyr::select(voto_const,conv_padres_20) %>% filter(conv_padres_20==1)
+bbdd_nunca0 <- na.omit(bbdd_nunca0)
 bbdd_nunca =
-  data_wide %>% filter(conv_padres_20==1) %>%
-              group_by(voto_const	) %>% #pregunta a graficar
+  bbdd_nunca0 %>% 
+              group_by(voto_const) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>d</span>4. Nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_casi_nunca0 <- data_wide  %>% dplyr::select(voto_const,conv_padres_20) %>% filter(conv_padres_20==2)
+bbdd_casi_nunca0 <- na.omit(bbdd_casi_nunca0)
 bbdd_casi_nunca =
-  data_wide %>% filter(conv_padres_20==2) %>%
-              group_by(voto_const	) %>% #pregunta a graficar
+  bbdd_casi_nunca0 %>%
+              group_by(voto_const) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>3. Casi nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_a_veces0 <- data_wide  %>% dplyr::select(voto_const,conv_padres_20) %>% filter(conv_padres_20==3)
+bbdd_a_veces0 <- na.omit(bbdd_a_veces0)
 bbdd_a_veces =
-  data_wide %>% filter(conv_padres_20==3) %>%
-              group_by(voto_const	) %>% #pregunta a graficar
+  bbdd_a_veces0 %>% 
+              group_by(voto_const) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>2. A veces") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_frecuent0 <- data_wide  %>% dplyr::select(voto_const,conv_padres_20) %>% filter(conv_padres_20==4)
+bbdd_frecuent0 <- na.omit(bbdd_frecuent0)
 bbdd_frecuent =
-  data_wide %>% filter(conv_padres_20==4) %>%
-              group_by(voto_const	) %>% #pregunta a graficar
+  bbdd_frecuent0 %>%
+              group_by(voto_const) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>1. Frecuentemente") %>%
              mutate(prop=round(n*100/sum(n),1))
 
@@ -12542,28 +13021,42 @@ ggsave(elec_const21_conv_pad_3y4, file = "../output/graphs/elec_const21_conv_pad
 ```{r}
 ### variable voto_const	
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_const)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_const	) %>%
-             summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
+  bbdd_general0 %>% group_by(voto_const) %>%
+  summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_nunca0 <- data_wide  %>% dplyr::select(voto_const,conv_padres) %>% filter(conv_padres==1)
+bbdd_nunca0 <- na.omit(bbdd_nunca0)
 bbdd_nunca =
-  data_wide %>% filter(conv_padres==1) %>%
-              group_by(voto_const	) %>% #pregunta a graficar
+  bbdd_nunca0 %>% 
+              group_by(voto_const) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>d</span>4. Nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_casi_nunca0 <- data_wide  %>% dplyr::select(voto_const,conv_padres) %>% filter(conv_padres==2)
+bbdd_casi_nunca0 <- na.omit(bbdd_casi_nunca0)
 bbdd_casi_nunca =
-  data_wide %>% filter(conv_padres==2) %>%
-              group_by(voto_const	) %>% #pregunta a graficar
+  bbdd_casi_nunca0 %>%
+              group_by(voto_const) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>3. Casi nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_a_veces0 <- data_wide  %>% dplyr::select(voto_const,conv_padres) %>% filter(conv_padres==3)
+bbdd_a_veces0 <- na.omit(bbdd_a_veces0)
 bbdd_a_veces =
-  data_wide %>% filter(conv_padres==3) %>%
-              group_by(voto_const	) %>% #pregunta a graficar
+  bbdd_a_veces0 %>% 
+              group_by(voto_const) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>2. A veces") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_frecuent0 <- data_wide  %>% dplyr::select(voto_const,conv_padres) %>% filter(conv_padres==4)
+bbdd_frecuent0 <- na.omit(bbdd_frecuent0)
 bbdd_frecuent =
-  data_wide %>% filter(conv_padres==4) %>%
-              group_by(voto_const	) %>% #pregunta a graficar
+  bbdd_frecuent0 %>%
+              group_by(voto_const) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>1. Frecuentemente") %>%
              mutate(prop=round(n*100/sum(n),1))
 
@@ -12597,28 +13090,42 @@ ggsave(elec_const21_conv_pad_3y4, file = "../output/graphs/elec_const21_conv_pad
 ```{r}
 ### variable voto_const	
 
+bbdd_general0 <- data_wide  %>% dplyr::select(voto_const)
+bbdd_general0 <- na.omit(bbdd_general0)
 bbdd_general =
-  data_wide %>% group_by(voto_const	) %>%
-             summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
+  bbdd_general0 %>% group_by(voto_const) %>%
+  summarise(n=n(), tipe="<span style='color:#FFFFFF'>e</span>General") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_nunca0 <- data_wide  %>% dplyr::select(voto_const,conv_padres_21b) %>% filter(conv_padres_21b==1)
+bbdd_nunca0 <- na.omit(bbdd_nunca0)
 bbdd_nunca =
-  data_wide %>% filter(conv_padres_21b==1) %>%
-              group_by(voto_const	) %>% #pregunta a graficar
+  bbdd_nunca0 %>% 
+              group_by(voto_const) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>d</span>4. Nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_casi_nunca0 <- data_wide  %>% dplyr::select(voto_const,conv_padres_21b) %>% filter(conv_padres_21b==2)
+bbdd_casi_nunca0 <- na.omit(bbdd_casi_nunca0)
 bbdd_casi_nunca =
-  data_wide %>% filter(conv_padres_21b==2) %>%
-              group_by(voto_const	) %>% #pregunta a graficar
+  bbdd_casi_nunca0 %>%
+              group_by(voto_const) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>c</span>3. Casi nunca") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_a_veces0 <- data_wide  %>% dplyr::select(voto_const,conv_padres_21b) %>% filter(conv_padres_21b==3)
+bbdd_a_veces0 <- na.omit(bbdd_a_veces0)
 bbdd_a_veces =
-  data_wide %>% filter(conv_padres_21b==3) %>%
-              group_by(voto_const	) %>% #pregunta a graficar
+  bbdd_a_veces0 %>% 
+              group_by(voto_const) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>b</span>2. A veces") %>%
              mutate(prop=round(n*100/sum(n),1))
+
+bbdd_frecuent0 <- data_wide  %>% dplyr::select(voto_const,conv_padres_21b) %>% filter(conv_padres_21b==4)
+bbdd_frecuent0 <- na.omit(bbdd_frecuent0)
 bbdd_frecuent =
-  data_wide %>% filter(conv_padres_21b==4) %>%
-              group_by(voto_const	) %>% #pregunta a graficar
+  bbdd_frecuent0 %>%
+              group_by(voto_const) %>% #pregunta a graficar
              summarise(n=n(), tipe="<span style='color:#FFFFFF'>a</span>1. Frecuentemente") %>%
              mutate(prop=round(n*100/sum(n),1))
 
