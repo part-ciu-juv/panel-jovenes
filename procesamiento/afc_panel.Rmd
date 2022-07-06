@@ -186,6 +186,28 @@ fits = c("chisq", "df", "pvalue", "cfi", "tli", "rmsea") ,
 type = "html")
 ```
 
+### Modelo de medición sin activismo no disruptivo
+```{r,results='asis'}
+# Especificación del modelo
+afc0.2 <- '
+act_disrup =~ part_pol_marcha_dis + part_pol_bloqueo + part_pol_rayar_w01 + part_pol_toma_w01
+act_online =~ part_pol_online + part_online_post + part_online_com + part_online_seg
+'
+# Estimación del modelo
+fit_0.2 <- lavaan::cfa(afc0.2, data = part_pol_3y4, ordered = T,
+                     std.lv = TRUE , #factor loadings standarized
+                     )
+# lavaan::summary(fit_0, fit.measures = T, standardized = T)
+# lavaan::fitMeasures(fit_0, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea"))
+
+# create table report
+semTable::semTable(
+  fit_0.2 ,columns =c("estse" , "z" , "p"),
+  paramSets = c("loadings") ,
+fits = c("chisq", "df", "pvalue", "cfi", "tli", "rmsea") ,
+type = "html")
+```
+
 ### Reporte 3ero y 4to
 
 En los análisis se puede ver una dirección positiva y gran magnitud en la correlación entre las variables que miden un mismo constructo latente, solo con la excepción que hay una mayor correlación entre participación en marchas pacíficas con participación en marchas con disturbios que con firmar; además de ser casi todas las correlaciones significativas. El modelo de análisis factorial confirmatorio arrojó un chi cuadrado de 372.145 con 32 grados de libertad (p<.01), la división de estos valores es mayor a 4 (11.6). Por último, cfi > .95 (.996), tli > .95 (.994); y rmsea = .06 (.061).
@@ -310,6 +332,25 @@ semTable::semTable(
 fits = c("chisq", "df", "pvalue", "cfi", "tli", "rmsea") ,
 type = "html")
 ```
+
+### Modelo de medición sin participación no disruptiva
+```{r,results='asis'}
+afc1.2 <- '
+act_disrup =~ part_pol_marc_dis_21 + part_pol_bloq_21 + part_pol_rayar_21 + part_pol_toma_21
+act_online =~ part_pol_online_info_21 + part_pol_online_post_21 + part_pol_online_com_21 + part_pol_online_seg_21
+'
+
+fit_1.2 <- lavaan::cfa(afc1.2, data = part_pol_est, ordered = T,
+                     std.lv = TRUE , #factor loadings standarized
+                     )
+
+semTable::semTable(
+  fit_1.2 ,columns =c("estse" , "z" , "p"),
+  paramSets = c("loadings") ,
+fits = c("chisq", "df", "pvalue", "cfi", "tli", "rmsea") ,
+type = "html")
+```
+
 ### Reporte estallido
 
 En los análisis se puede ver una dirección positiva y gran magnitud en la correlación entre las variables que miden un mismo constructo latente, solo con la excepción que hay una mayor correlación entre participación en marchas pacíficas con participación en marchas con disturbios que con firmar; además de ser casi todas las correlaciones significativas.El modelo de análisis factorial confirmatorio arrojó un chi cuadrado de 952.014 con 32 grados de libertad (p<.01), la división de estos valores es mayor a 4 (29.8). Por último, cfi > .95 (.991), tli > .95 (.987); y rmsea > .06 (.102). 
@@ -433,6 +474,25 @@ semTable::semTable(
 fits = c("chisq", "df", "pvalue", "cfi", "tli", "rmsea") ,
 type = "html")
 ```
+
+### Modelo de medición sin participación no disruptiva
+```{r,results='asis'}
+afc2.2 <- '
+act_disrup =~ part_pol_marc_dis_20 + part_pol_bloq_20 + part_pol_rayar_20 + part_pol_toma_20
+act_online =~ part_pol_online_info_20 + part_pol_online_post_20 + part_pol_online_com_20 + part_pol_online_seg_20
+'
+
+fit_2.2 <- lavaan::cfa(afc2.2, data = part_pol_20, ordered = T,
+                     std.lv = TRUE , #factor loadings standarized
+                     )
+
+semTable::semTable(
+  fit_2.2 ,columns =c("estse" , "z" , "p"),
+  paramSets = c("loadings") ,
+fits = c("chisq", "df", "pvalue", "cfi", "tli", "rmsea") ,
+type = "html")
+```
+
 ### Reporte 2020
 
 En los análisis se puede ver una dirección positiva y gran magnitud en la correlación entre las variables que miden un mismo constructo latente, excepto por marchas pacíficas con marchas con disturbios , además de ser casi todas las correlaciones significativas. El modelo de análisis factorial confirmatorio arrojó un chi cuadrado de 920.7 con 32 grados de libertad, la división de estos valores es mayor a 4 (28.8). Por último, cfi > .95 (.995), tli > .95 (.992); y rmsea > .06 (.101) 
@@ -552,6 +612,29 @@ fit_3 <- lavaan::cfa(afc3, data = part_pol_21.1, ordered = T,
 # create table report
 semTable::semTable(
   fit_3 ,columns =c("estse" , "z" , "p"),
+  paramSets = c("loadings") ,
+fits = c("chisq", "df", "pvalue", "cfi", "tli", "rmsea") ,
+type = "html")
+```
+
+### Modelo de medición sin participación no disruptiva
+```{r,results='asis'}
+# Especificación del modelo
+afc3.2 <- '
+act_disrup =~ part_pol_marc_dis + part_pol_bloq + part_pol_rayar_w02 + part_pol_toma_w02
+act_online =~ part_pol_online_info + part_pol_online_post + part_pol_online_com + part_pol_online_seg
+'
+# Estimación del modelo
+
+fit_3.2 <- lavaan::cfa(afc3.2, data = part_pol_21.1, ordered = T,
+                     std.lv = TRUE , #factor loadings standarized
+                     )
+#lavaan::summary(fit_2, fit.measures = T, standardized = T)
+#lavaan::fitMeasures(fit_2, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea"))
+
+# create table report
+semTable::semTable(
+  fit_3.2 ,columns =c("estse" , "z" , "p"),
   paramSets = c("loadings") ,
 fits = c("chisq", "df", "pvalue", "cfi", "tli", "rmsea") ,
 type = "html")
@@ -678,20 +761,77 @@ fits = c("chisq", "df", "pvalue", "cfi", "tli", "rmsea") ,
 type = "html")
 ```
 
+### Modelo de medición sin participación no disruptiva
+```{r,results='asis'}
+afc4.2<- '
+act_disrup =~ part_pol_marc_dis_21b + part_pol_bloq_21b + part_pol_rayar_21b + part_pol_toma_21b
+act_online =~ part_pol_online_info_21b + part_pol_online_post_21b + part_pol_online_com_21b + part_pol_online_seg_21b
+'
+# Estimación del modelo
+fit_4.2 <- lavaan::cfa(afc4.2, data = part_pol_21.2, ordered = T,
+                     std.lv = TRUE , #factor loadings standarized
+                     )
+
+#lavaan::summary(fit_4, fit.measures = T, standardized = T)
+#lavaan::fitMeasures(fit_4, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea"))
+
+# create table report
+semTable::semTable(
+  fit_4.2 ,columns =c("estse" , "z" , "p"),
+  paramSets = c("loadings") ,
+fits = c("chisq", "df", "pvalue", "cfi", "tli", "rmsea") ,
+type = "html")
+```
 ### Reporte segundo semestre 2021
 
 En los análisis se puede ver una dirección positiva y gran magnitud en la correlación entre las variables que miden un mismo constructo latente, solo con la excepción que hay una mayor correlación entre participación en marchas pacíficas con participación en marchas con disturbios que con firmar; además de ser casi todas las correlaciones significativas. El modelo de análisis factorial confirmatorio arrojó un chi cuadrado de 131.342 con 32 grados de libertad (p<.01), la división de estos valores es ligeramente mayor a 4 (4.1). Por último, cfi > .95 (.997), tli > .95 (.996); y rmsea < .06 (.054).
 
 ## Resumen ajuste 5 tiempos
 
-```{r}
-rbind(
-lavaan::fitMeasures(fit_0, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea")),
-lavaan::fitMeasures(fit_1, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea")),
-lavaan::fitMeasures(fit_2, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea")),
-lavaan::fitMeasures(fit_3, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea")),
-lavaan::fitMeasures(fit_4, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea")))
+```{r, results='asis'}
 
 #tabla ajuste general
+fit <- list(fit_0, fit_1, fit_2, fit_3, fit_4)
+
+semTable::semTable(
+  fit ,
+  columns = c("estse" , "z" , "p"),
+  paramSets = c("loadings") ,
+  varLabels = NULL,
+  groups = NULL,
+  type = "html",
+  table.float = FALSE,
+  caption = NULL,
+  label = NULL,
+  longtable = FALSE,
+  print.results = TRUE,
+  centering = "siunitx",
+  alpha = c(0.05, 0.01, 0.001)
+)
+
+```
+
+### Resumen ajuste sin participación no disruptiva
+
+```{r, results='asis'}
+
+fit2 <- list(fit_0.2, fit_1.2, fit_2.2, fit_3.2, fit_4.2)
+
+semTable::semTable(
+  fit2 ,
+  columns = c("estse" , "z" , "p"),
+  paramSets = c("loadings") ,
+  varLabels = NULL,
+  groups = NULL,
+  type = "html",
+  table.float = FALSE,
+  caption = NULL,
+  label = NULL,
+  longtable = FALSE,
+  print.results = TRUE,
+  centering = "siunitx",
+  alpha = c(0.05, 0.01, 0.001)
+)
+
 ```
 

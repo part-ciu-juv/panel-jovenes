@@ -73,20 +73,20 @@ load(here::here("output/data_wide.RData"))
 ```{r}
 id_filtro <- data_w03$folio_encuestado
 
-df_wide <- 
-data_wide %>% 
+df_wide <-
+  data_wide %>%
   filter(folio_encuestado %in% id_filtro,
-         consentimiento_w01==1)
+         consentimiento_w01 == 1)
 
 #check participación
 table(df_wide$consentimiento_w01)
 table(df_wide$Progress_w03) #ver si hay 0% progreso
 
+sjmisc::frq(df_wide$folio_encuestado) %>% 
+              data.frame() %>% 
+              filter (frq >= 2)
 
-df <- data.frame(a=c(1,2,3,4,5,6,7,7,7,7,7,8,8,8,8,9,9,9))
-filtro <- c(1,5,7,9)
-df$a %in% filtro
-df %>% filter(a %in% filtro)
+save(df_wide, file = "df_wide.RData")
 ```
 
 
