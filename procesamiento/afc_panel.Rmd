@@ -22,9 +22,9 @@ knitr::opts_chunk$set(message = FALSE,
 ```{r}
 pacman::p_load(sjPlot, sjlabelled,readr, summarytools, haven, dplyr,kableExtra,
           readxl, ggplot2,ggtext,lavaan,sjmisc, stringr)
-ola1<-read_dta("../input/data/proc/data_01.dta")
-ola2<-read_dta("../input/data/proc/data_02.dta")
-ola3<-read_dta("../input/data/proc/data_03.dta")
+ola1<-read_dta(here::here("input/data/proc/data_01.dta"))
+ola2<-read_dta(here::here("input/data/proc/data_02.dta"))
+ola3<-read_dta(here::here("input/data/proc/data_03.dta"))
 data_wide <- full_join(
   x = ola1,
   #datos ola 1
@@ -180,7 +180,7 @@ fit_0 <- lavaan::cfa(afc0, data = part_pol_3y4, ordered = T,
 
 # create table report
 semTable::semTable(
-  fit_0 ,columns =c("estse" , "z" , "p"),
+  fit_0 ,columns =c("estse"),
   paramSets = c("loadings") ,
 fits = c("chisq", "df", "pvalue", "cfi", "tli", "rmsea") ,
 type = "html")
@@ -202,7 +202,7 @@ fit_0.2 <- lavaan::cfa(afc0.2, data = part_pol_3y4, ordered = T,
 
 # create table report
 semTable::semTable(
-  fit_0.2 ,columns =c("estse" , "z" , "p"),
+  fit_0.2 ,columns =c("estse"),
   paramSets = c("loadings") ,
 fits = c("chisq", "df", "pvalue", "cfi", "tli", "rmsea") ,
 type = "html")
@@ -327,7 +327,7 @@ fit_1 <- lavaan::cfa(afc1, data = part_pol_est, ordered = T,
 
 # create table report
 semTable::semTable(
-  fit_1 ,columns =c("estse" , "z" , "p"),
+  fit_1 ,columns =c("estse"),
   paramSets = c("loadings") ,
 fits = c("chisq", "df", "pvalue", "cfi", "tli", "rmsea") ,
 type = "html")
@@ -345,7 +345,7 @@ fit_1.2 <- lavaan::cfa(afc1.2, data = part_pol_est, ordered = T,
                      )
 
 semTable::semTable(
-  fit_1.2 ,columns =c("estse" , "z" , "p"),
+  fit_1.2 ,columns =c("estse"),
   paramSets = c("loadings") ,
 fits = c("chisq", "df", "pvalue", "cfi", "tli", "rmsea") ,
 type = "html")
@@ -469,7 +469,7 @@ fit_2 <- lavaan::cfa(afc2, data = part_pol_20, ordered = T,
 
 # create table report
 semTable::semTable(
-  fit_2 ,columns =c("estse" , "z" , "p"),
+  fit_2 ,columns =c("estse"),
   paramSets = c("loadings") ,
 fits = c("chisq", "df", "pvalue", "cfi", "tli", "rmsea") ,
 type = "html")
@@ -487,7 +487,7 @@ fit_2.2 <- lavaan::cfa(afc2.2, data = part_pol_20, ordered = T,
                      )
 
 semTable::semTable(
-  fit_2.2 ,columns =c("estse" , "z" , "p"),
+  fit_2.2 ,columns =c("estse"),
   paramSets = c("loadings") ,
 fits = c("chisq", "df", "pvalue", "cfi", "tli", "rmsea") ,
 type = "html")
@@ -611,7 +611,7 @@ fit_3 <- lavaan::cfa(afc3, data = part_pol_21.1, ordered = T,
 
 # create table report
 semTable::semTable(
-  fit_3 ,columns =c("estse" , "z" , "p"),
+  fit_3 ,columns =c("estse"),
   paramSets = c("loadings") ,
 fits = c("chisq", "df", "pvalue", "cfi", "tli", "rmsea") ,
 type = "html")
@@ -634,7 +634,7 @@ fit_3.2 <- lavaan::cfa(afc3.2, data = part_pol_21.1, ordered = T,
 
 # create table report
 semTable::semTable(
-  fit_3.2 ,columns =c("estse" , "z" , "p"),
+  fit_3.2 ,columns =c("estse"),
   paramSets = c("loadings") ,
 fits = c("chisq", "df", "pvalue", "cfi", "tli", "rmsea") ,
 type = "html")
@@ -755,7 +755,7 @@ fit_4 <- lavaan::cfa(afc4, data = part_pol_21.2, ordered = T,
 
 # create table report
 semTable::semTable(
-  fit_4 ,columns =c("estse" , "z" , "p"),
+  fit_4 ,columns =c("estse"),
   paramSets = c("loadings") ,
 fits = c("chisq", "df", "pvalue", "cfi", "tli", "rmsea") ,
 type = "html")
@@ -777,7 +777,7 @@ fit_4.2 <- lavaan::cfa(afc4.2, data = part_pol_21.2, ordered = T,
 
 # create table report
 semTable::semTable(
-  fit_4.2 ,columns =c("estse" , "z" , "p"),
+  fit_4.2 ,columns =c("estse"),
   paramSets = c("loadings") ,
 fits = c("chisq", "df", "pvalue", "cfi", "tli", "rmsea") ,
 type = "html")
@@ -795,7 +795,7 @@ fit <- list(fit_0, fit_1, fit_2, fit_3, fit_4)
 
 semTable::semTable(
   fit ,
-  columns = c("estse" , "z" , "p"),
+  columns = c("estse"),
   paramSets = c("loadings") ,
   varLabels = NULL,
   groups = NULL,
@@ -819,7 +819,7 @@ fit2 <- list(fit_0.2, fit_1.2, fit_2.2, fit_3.2, fit_4.2)
 
 semTable::semTable(
   fit2 ,
-  columns = c("estse" , "z" , "p"),
+  columns = c("estse"),
   paramSets = c("loadings") ,
   varLabels = NULL,
   groups = NULL,

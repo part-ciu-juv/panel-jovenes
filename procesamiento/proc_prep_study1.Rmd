@@ -41,7 +41,8 @@ div.tocify {
 }
 ```
 
-**load packages**
+# Data 
+
 ```{r}
 if (!require("pacman")) install.packages("pacman") # instalar pacman
 pacman::p_load(dplyr,       # Manipulacion de datos 
@@ -57,20 +58,14 @@ pacman::p_load(dplyr,       # Manipulacion de datos
                survey,
                tibble
                )
+rm(list=ls())
 
-```
-
-# Datos
-
-```{r}
 load(here::here("output/data_01.RData"))
 load(here::here("output/data_02.RData"))
 load(here::here("output/data_03.RData"))
 load(here::here("output/data_wide.RData"))
-```
 
 
-```{r}
 id_filtro <- data_w03$folio_encuestado
 
 df_wide <-
@@ -82,24 +77,344 @@ df_wide <-
 table(df_wide$consentimiento_w01)
 table(df_wide$Progress_w03) #ver si hay 0% progreso
 
+
 sjmisc::frq(df_wide$folio_encuestado) %>% 
               data.frame() %>% 
               filter (frq >= 2)
 
-save(df_wide, file = "df_wide.RData")
+sjPlot::view_df(df_wide,
+                show.na = T,
+                show.frq = T,
+                show.prc = T,
+                show.type = T,
+                file = here::here("output/codebook_df_wide.html")
+                )
+
+save(df_wide, file = "input/data/proc/df_wide.RData")
 ```
 
+# Study 1
+
+* Momento 1a: 3ro y 4to medio
+* Momento 2a: estallido social
+* Momento 3a: Año 2020
+* Momento 3e: submuestra de quienes cursan/cursaron Educación terciaria
+* Momento 4a: 1er semestre 2021
+* Momento 5a: 2do semestre 2021
+
+```{r}
+if (!require("pacman")) install.packages("pacman") # instalar pacman
+pacman::p_load(dplyr,       # Manipulacion de datos 
+               haven,       # importar datos en .dta o .sav
+               sjmisc,      # descriptivos y frecuencias
+               sjPlot,      # tablas, plots y descriptivos
+               sjlabelled,
+               summarytools,# resumen de dataframe
+               knitr,       # tablas kable
+               kableExtra,  # tablas kable personalizadas
+               ggplot2,     # plots
+               corrplot,    # plot correlacion
+               survey,
+               tibble
+               )
+rm(list=ls())
+load(here::here("input/data/proc/df_wide.RData"))
+
+# df_wide %>% select(matches("conv_p")) %>% sjPlot::view_df(show.prc = T,show.na = T)
+# df_wide %>% select(matches("marcha_pad")) %>% sjPlot::view_df(show.prc = T,show.na = T)
+# df_wide %>% select(matches("part_")) %>% sjPlot::view_df(show.prc = T,show.na = T)
+
+study_1 <- 
+df_wide %>% 
+  select(
+    educ="cs_educ_w01",
+    edmad="nse_madre_w01",
+    edpad="nse_padre_w01",
+    psu="edm_psu_w01",
+    mujer="cs_genero_w01",
+    #conversacion
+    conv1a=conv_padr_poli_w01,
+    conv2a=conv_padres_21_w01,
+    conv3a=conv_padres_20_w01,
+    # conv4e=est_egre_conv_padres_w02, #egresados
+    conv4a=conv_padres_w02,
+    conv5a=conv_padres_21b_w03,
+    #marcha
+    marc1a=marcha_pad_w01,
+    marc2a=marcha_pad_21_w01,
+    marc3a=marcha_pad_20_w01,
+    # marc4e=est_egre_marcha_pad_w02, #egresados
+    marc4a=marcha_pad_w02,
+    marc5a=marcha_pad_21b_w03,
+    # Participacion politica
+    ## momento 1: 3ro y 4to medio
+    firm1a=part_pol_firma_w01,
+    mpas1a=part_pol_marcha_pas_w01,
+    mdis1a=part_pol_marcha_dis_w01,
+    bloq1a=part_pol_bloqueo_w01,
+    raya1a=part_pol_rayar_w01,
+    toma1a=part_pol_toma_w01,
+    onli1a=part_pol_online_w01,
+    post1a=part_online_post_w01,
+    come1a=part_online_com_w01,
+    segu1a=part_online_seg_w01,
+    ## momento 2: estallido social
+    firm2a=part_pol_firma_21_w01,
+    mpas2a=part_pol_marc_pac_21_w01,
+    mdis2a=part_pol_marc_dis_21_w01,
+    bloq2a=part_pol_bloq_21_w01,
+    raya2a=part_pol_rayar_21_w01,
+    toma2a=part_pol_toma_21_w01,
+    onli2a=part_pol_online_info_21_w01,
+    post2a=part_pol_online_post_21_w01,
+    come2a=part_pol_online_com_21_w01,
+    segu2a=part_pol_online_seg_21_w01,
+    ## momento 3a: agno 2020
+    firm3a=part_pol_firma_20_w01,
+    mpas3a=part_pol_marc_pac_20_w01,
+    mdis3a=part_pol_marc_dis_20_w01,
+    bloq3a=part_pol_bloq_20_w01,
+    raya3a=part_pol_rayar_20_w01,
+    toma3a=part_pol_toma_20_w01,
+    onli3a=part_pol_online_info_20_w01,
+    post3a=part_pol_online_post_20_w01,
+    come3a=part_pol_online_com_20_w01,
+    segu3a=part_pol_online_seg_20_w01,
+    ## momento 3e: submuestra egresados
+    # firm3e=est_egre_part_pol_firma_w02,
+    # mpas3e=est_egre_part_pol_marc_pac_w02,
+    # mdis3e=est_egre_part_pol_marc_dis_w02,
+    # bloq3e=est_egre_part_pol_bloq_w02,
+    # raya3e=est_egre_part_pol_rayar_w02,
+    # toma3e=est_egre_part_pol_toma_w02,
+    # onli3e=est_egre_part_pol_online_info_w02,
+    # post3e=est_egre_part_pol_online_post_w02,
+    # come3e=est_egre_part_pol_online_com_w02,
+    # segu3e=est_egre_part_pol_online_seg_w02,
+    ## momento 4: 1er semestre 2021
+    firm4a=part_pol_firma_w02,
+    mpas4a=part_pol_marc_pac_w02,
+    mdis4a=part_pol_marc_dis_w02,
+    bloq4a=part_pol_bloq_w02,
+    raya4a=part_pol_rayar_w02,
+    toma4a=part_pol_toma_w02,
+    onli4a=part_pol_online_info_w02,
+    post4a=part_pol_online_post_w02,
+    come4a=part_pol_online_com_w02,
+    segu4a=part_pol_online_seg_w02,
+    ## momento 5: 2do semestre 2021
+    firm5a=part_pol_firma_21b_w03,
+    mpas5a=part_pol_marc_pac_21b_w03,
+    mdis5a=part_pol_marc_dis_21b_w03,
+    bloq5a=part_pol_bloq_21b_w03,
+    raya5a=part_pol_rayar_21b_w03,
+    toma5a=part_pol_toma_21b_w03,
+    onli5a=part_pol_online_info_21b_w03,
+    post5a=part_pol_online_post_21b_w03,
+    come5a=part_pol_online_com_21b_w03,
+    segu5a=part_pol_online_seg_21b_w03,
+    # Voto
+    votpr17="voto_pres_17_w01",
+    votpleb="voto_pleb_w01",
+    votcons="voto_const_w01",
+    # votfut1="voto_fut_w01",
+    votconv="voto_conv2_w02",
+    votmuni="voto_muni_w02",
+    votgobe="voto_gob_w02",
+    # votfut2="voto_fut_w02",
+    votdipu="voto_dipu_w03",
+    vot1vue="voto_privuelta_w03",
+    vot2vue="voto_segvuelta_w03",
+    pospol1=pos_pol_w01
+    ) 
+
+# sjPlot::view_df(study_1,show.prc = T,show.type = T)
+
+# recode y labels_______________________________________________________________
+
+# PSU
+study_1$psu <- set_label(study_1$psu,"University Selection Test (PSU)")
+
+# Educaction categorical
+sjmisc::frq(study_1$educ)
+study_1$educat <- car::recode(study_1$educ,"lo:5=1;6:7=2;8:10=3;99=NA",as.factor = T) 
+study_1$educat <- factor(study_1$educat,
+                  levels = 1:3,ordered = T,
+                  labels = c("High school or less","Vocational","Universitary or higher")) 
+study_1$educat <- sjlabelled::set_label(study_1$educat,"Education")
+sjmisc::frq(study_1$educat)
+
+# Educaction years (mother)
+sjmisc::frq(study_1$educ)
+study_1$educyear <- as.numeric(car::recode(study_1$educ,"1=0;2=4.3;3=7.5;4=9.8;5=12.02;6=13.9;7=14.8;8=14.9;9=16.9;10=19.07;99=NA")) 
+study_1$educyear <- sjlabelled::set_label(study_1$educyear,"Years of Education ")
+sjmisc::frq(study_1$educyear)
 
 
-Tareas
+# Educaction categorical (mother)
+sjmisc::frq(study_1$edmad)
+study_1$edmadcat <- car::recode(study_1$edmad,"lo:5=1;6:7=2;8:10=3;99=NA",as.factor = T) 
+study_1$edmadcat <- factor(study_1$edmadcat,
+                  levels = 1:3,ordered = T,
+                  labels = c("High school or less","Vocational","Universitary or higher")) 
+study_1$edmadcat <- sjlabelled::set_label(study_1$edmadcat,"Education (mother)")
+sjmisc::frq(study_1$edmadcat)
 
-1. Filtrar base de datos wide y fijarla para el N de la ola 3
-  - obtener los IDS de la ola 3
-  - con los IDS filtrar la ola 1 y la ola 2
-  
-2. Generar base de datos para análisis
-  -
-  
+# Educaction years (mother)
+sjmisc::frq(study_1$edmad)
+study_1$edmadyear <- as.numeric(car::recode(study_1$edmad,"1=0;2=4.3;3=7.5;4=9.8;5=12.02;6=13.9;7=14.8;8=14.9;9=16.9;10=19.07;99=NA"))
+study_1$edmadyear <- sjlabelled::set_label(study_1$edmadyear,"Years of Education (mother)")
+sjmisc::frq(study_1$edmadyear)
+
+# Educaction categorical (father)
+sjmisc::frq(study_1$edpad)
+study_1$edpadcat <- car::recode(study_1$edpad,"lo:5=1;6:7=2;8:10=3;99=NA",
+                                as.factor = T) 
+study_1$edpadcat <- factor(study_1$edpadcat,
+                  levels = 1:3,ordered = T,
+                  labels = c("High school or less","Vocational","Universitary or higher")) 
+study_1$edpadcat <- sjlabelled::set_label(study_1$edpadcat,"Education (father)")
+sjmisc::frq(study_1$edpadcat)
+
+# Educaction years (father)
+sjmisc::frq(study_1$edpad)
+study_1$edpadyear <- as.numeric(car::recode(study_1$edpad,"1=0;2=4.3;3=7.5;4=9.8;5=12.02;6=13.9;7=14.8;8=14.9;9=16.9;10=19.07;99=NA")) 
+study_1$edpadyear <- sjlabelled::set_label(study_1$edpadyear,"Years of Education (father)")
+sjmisc::frq(study_1$edpadyear)
+
+#Education (parents average)
+
+study_1$edparavg <-  (study_1$edpadyear+study_1$edmadyear)/2
+study_1$edparavg <- sjlabelled::set_label(study_1$edparavg,"Years of Education (parents)")
+sjmisc::frq(study_1$edparavg)
+
+
+ # Partipation (all moments in life cycle)
+vars <- study_1 %>% select(firm1a:segu5a) %>% names()
+study_1[,vars]<- lapply(study_1[,vars], ordered)
+valab <- c("Never","Almost never","Sometimes","Frequently")
+
+p1<- c("High school (1): ",
+       "Oct 2019 - Jan 2020 (2): ",
+       "Mar - Dec 2020 (3): ",
+       "First half: 2021 (4): ",
+       "Second half: 2021 (5): ")
+p2<- c(
+  "Signing petitions, in face-to-face or by internet",
+  "Participating in peaceful protests",
+  "Participating in protests with riots",
+  "Participating in street or road blockades",
+  "Painting or scratching walls with demands or slogans",
+  "Participating in the occupation of a building or institution",
+  "Use the internet to search for information on social and/or political issues",
+  "Posting images or messages on the internet about social and/or political issues",
+  "Sharing or commenting on someone else posting about social and political issues",
+  "Following people on social media for their content on social and political issues")
+etiquetas <- paste0(rep(p1,each=length(p2)),p2)
+
+study_1[,vars]  <-
+  sjlabelled::set_label(x = study_1[,vars],
+                        label = etiquetas)
+study_1[,vars]  <-
+  sjlabelled::set_labels(x = study_1[,vars],
+                        labels = valab)
+# sjPlot::view_df(study_1,show.prc = T,show.type = T)
+
+# Partipation: voting in elections
+## Question with age limit
+varsvote <- study_1 %>% select(votpr17,votpleb,votcons) %>% names()
+study_1[,varsvote]<- lapply(study_1[,varsvote], ordered)
+valab <- c("No","Yes","Did not have the age")
+p2<- c(
+  "Vote: Presidential elections (2017)",
+  "Vote: Constitutional referendum (2020)",
+  "Vote: Constituent Conventionals and municipal elections (2021)")
+etiquetas <- p2
+study_1[,varsvote]  <-
+  sjlabelled::set_label(x = study_1[,varsvote],
+                        label = etiquetas)
+study_1[,varsvote]  <-
+  sjlabelled::set_labels(x = study_1[,varsvote],
+                        labels = valab)
+# study_1[,varsvote] %>% view_df()
+## Question without age limit
+varsvote <- study_1 %>% select(votconv:vot2vue) %>% names()
+study_1[,varsvote]<- lapply(study_1[,varsvote], ordered)
+valab <- c("No","Yes")
+p2<- c(
+  "Vote: Constituent Conventionals elections (2021)",
+  "Vote: Municipal elections (2021)",
+  "Vote: Regional Governor elections (2021)",
+  "Vote: Parliamentary elections (2021)",
+  "Vote: Presidential elections - first round (2020)",
+  "Vote: Presidential elections - second round (2020)")
+etiquetas <- p2
+
+study_1[,varsvote]  <-
+  sjlabelled::set_label(x = study_1[,varsvote],
+                        label = etiquetas)
+study_1[,varsvote]  <-
+  sjlabelled::set_labels(x = study_1[,varsvote],
+                        labels = valab)
+
+study_1[,varsvote] %>% view_df()
+
+# Socialization: 
+# Conversation with parents about political issues
+# Participate in manifestations with one of your parents
+vars2 <- study_1 %>% select(conv1a:marc5a) %>% names()
+study_1[,vars2]<- lapply(study_1[,vars2], ordered)
+
+valab <- c("Never","Almost never","Sometimes","Frequently")
+
+p1<- c("High school (1): ",
+       "Oct 2019 - Jan 2020 (2): ",
+       "Mar - Dec 2020 (3): ",
+       "First half: 2021 (4): ",
+       "Second half: 2021 (5): ")
+p2 <- c("Talking with your parents about social and/or political issues")
+p3 <- c("Participate in a manifestation with one of my parents")
+
+etiquetas <- c(paste0(rep(p1,each=length(p2)),p2),paste0(rep(p1,each=length(p2)),p3))
+
+study_1[,vars2]  <-
+  sjlabelled::set_label(x = study_1[,vars2],
+                        label = etiquetas)
+study_1[,vars2]  <-
+  sjlabelled::set_labels(x = study_1[,vars2],
+                        labels = valab)
+
+# Gender
+sjmisc::frq(study_1$mujer)
+study_1$mujer <- factor(study_1$mujer,levels = c(1,2),labels = c("Man","Woman"))
+study_1$mujer <- sjlabelled::set_label(study_1$mujer,"Gender")
+sjmisc::frq(study_1$mujer)
+
+# political position
+
+sjmisc::frq(study_1$pospol1)
+study_1$pospol <- as.numeric(car::recode(study_1$pospol1,recodes = "1:2=1;3=2;4:5=3;6:8=4"))
+study_1<- fastDummies::dummy_cols(.data = study_1,select_columns = "pospol",remove_first_dummy = T,ignore_na = T)
+study_1 <- study_1 %>% rename(pospolcen=pospol_2,pospolizq=pospol_3,pospolind=pospol_4)
+study_1$pospol <- factor(study_1$pospol,levels = 1:4,
+                          labels = c("Right","Center","Left","Independent, No Answer, Don't Know"))
+study_1$pospol <- sjlabelled::set_label(study_1$pospol,"Political position")
+sjmisc::frq(study_1$pospol)
+
+study_1 %>% select(starts_with("pospol")) %>% sjmisc::frq()
+
+df <- study_1 %>% select(psu,educyear,edmadyear,edpadyear,starts_with("onli")) %>% na.omit()
+# skimr::skim(df)
+
+cormat<- polycor::hetcor(data = df)
+cormat$correlations
+round(cormat$tests,5)
+corrplot::corrplot.mixed(cormat$correlations)
+
+# sjPlot::view_df(study_1,show.prc = T,show.type = T,show.frq = T,show.na = T)
+# save(study_1,file = here::here("input/data/proc/study1.RData"))
+```
+
 
 
 
