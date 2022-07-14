@@ -8,8 +8,6 @@ output:
     toc: true
     toc_float:
         collapsed: false
-    toc_depth: 2
-    code_folding: "hide"
 editor_options:
   chunk_output_type: console
 ---
@@ -20,7 +18,8 @@ editor_options:
 knitr::opts_chunk$set(warning = FALSE,
                       message = FALSE, 
                       cache = TRUE,
-                      results = "hold")
+                      results = "hold", 
+                      echo = F)
 options(scipen=999)
 rm(list=ls())
 options(knitr.kable.NA = '')
@@ -72,7 +71,7 @@ data1 <- study_1 %>%
 
 ### Disruptive & Online {-}
 
-```{r part-edpad, results='asis'}
+```{r part-edpad, echo=FALSE, results='asis'}
 rm(list=ls())
 if (!require("pacman")) install.packages("pacman") # instalar pacman
 pacman::p_load(dplyr,       # Manipulacion de datos 
@@ -91,14 +90,6 @@ pacman::p_load(dplyr,       # Manipulacion de datos
 
 load(here::here("input/data/proc/study1.RData"))
 data1 <- study_1 %>% dplyr::select(-educ,-edmad,-edpad) %>% na.omit()
-
-df <- data1 %>% select(psu,educyear,edmadyear,edpadyear,starts_with("onli")) %>% na.omit()
-# skimr::skim(df)
-
-cormat<- polycor::hetcor(data = df)
-cormat$correlations
-round(cormat$tests,5)
-corrplot::corrplot.mixed(cormat$correlations)
 
 m1a<- '
         # modelo de medicion

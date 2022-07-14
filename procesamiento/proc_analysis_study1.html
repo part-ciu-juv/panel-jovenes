@@ -1282,83 +1282,6 @@ window.buildTabsets = function(tocID) {
 };
 
 </script>
-<script>
-window.initializeCodeFolding = function(show) {
-
-  // handlers for show-all and hide all
-  $("#rmd-show-all-code").click(function() {
-    $('div.r-code-collapse').each(function() {
-      $(this).collapse('show');
-    });
-  });
-  $("#rmd-hide-all-code").click(function() {
-    $('div.r-code-collapse').each(function() {
-      $(this).collapse('hide');
-    });
-  });
-
-  // index for unique code element ids
-  var currentIndex = 1;
-
-  // select all R code blocks
-  var rCodeBlocks = $('pre.r, pre.python, pre.bash, pre.sql, pre.cpp, pre.stan, pre.julia, pre.foldable');
-  rCodeBlocks.each(function() {
-    // skip if the block has fold-none class
-    if ($(this).hasClass('fold-none')) return;
-
-    // create a collapsable div to wrap the code in
-    var div = $('<div class="collapse r-code-collapse"></div>');
-    var showThis = (show || $(this).hasClass('fold-show')) && !$(this).hasClass('fold-hide');
-    var id = 'rcode-643E0F36' + currentIndex++;
-    div.attr('id', id);
-    $(this).before(div);
-    $(this).detach().appendTo(div);
-
-    // add a show code button right above
-    var showCodeText = $('<span>' + (showThis ? 'Hide' : 'Code') + '</span>');
-    var showCodeButton = $('<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm code-folding-btn pull-right float-right"></button>');
-    showCodeButton.append(showCodeText);
-    showCodeButton
-        .attr('data-toggle', 'collapse')
-        .attr('data-bs-toggle', 'collapse') // BS5
-        .attr('data-target', '#' + id)
-        .attr('data-bs-target', '#' + id)   // BS5
-        .attr('aria-expanded', showThis)
-        .attr('aria-controls', id);
-
-    var buttonRow = $('<div class="row"></div>');
-    var buttonCol = $('<div class="col-md-12"></div>');
-
-    buttonCol.append(showCodeButton);
-    buttonRow.append(buttonCol);
-
-    div.before(buttonRow);
-
-    // show the div if necessary
-    if (showThis) div.collapse('show');
-
-    // update state of button on show/hide
-    //   * Change text
-    //   * add a class for intermediate states styling
-    div.on('hide.bs.collapse', function () {
-      showCodeText.text('Code');
-      showCodeButton.addClass('btn-collapsing');
-    });
-    div.on('hidden.bs.collapse', function () {
-      showCodeButton.removeClass('btn-collapsing');
-    });
-    div.on('show.bs.collapse', function () {
-      showCodeText.text('Hide');
-      showCodeButton.addClass('btn-expanding');
-    });
-    div.on('shown.bs.collapse', function () {
-      showCodeButton.removeClass('btn-expanding');
-    });
-
-  });
-
-}
-</script>
 <style type="text/css">.hljs-literal {
 color: #990073;
 }
@@ -1719,9 +1642,6 @@ pre code {
 </style>
 
 <!-- code folding -->
-<style type="text/css">
-.code-folding-btn { margin-bottom: 4px; }
-</style>
 
 
 
@@ -1817,19 +1737,11 @@ div.tocify {
 
 <div id="header">
 
-<div class="btn-group pull-right float-right">
-<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
-<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
-<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
-<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
-</ul>
-</div>
-
 
 
 <h1 class="title toc-ignore">Data preparation - Study 1</h1>
 <h4 class="author">Julio Iturra</h4>
-<h4 class="date">jueves 14 julio 2022 17:10:57</h4>
+<h4 class="date">jueves 14 julio 2022 17:54:33</h4>
 
 </div>
 
@@ -1856,145 +1768,6 @@ div.tocify {
 <h2><span class="header-section-number">2.1</span> Pol. Part</h2>
 <div id="disruptive-online" class="section level3 unnumbered">
 <h3>Disruptive &amp; Online</h3>
-<pre class="r"><code>rm(list=ls())
-if (!require(&quot;pacman&quot;)) install.packages(&quot;pacman&quot;) # instalar pacman
-pacman::p_load(dplyr,       # Manipulacion de datos 
-               haven,       # importar datos en .dta o .sav
-               sjmisc,      # descriptivos y frecuencias
-               sjPlot,      # tablas, plots y descriptivos
-               sjlabelled,
-               summarytools,# resumen de dataframe
-               knitr,       # tablas kable
-               kableExtra,  # tablas kable personalizadas
-               ggplot2,     # plots
-               corrplot,    # plot correlacion
-               tibble,
-               lavaan
-               )
-
-load(here::here(&quot;input/data/proc/study1.RData&quot;))
-data1 &lt;- study_1 %&gt;% dplyr::select(-educ,-edmad,-edpad) %&gt;% na.omit()
-
-m1a&lt;- &#39;
-        # modelo de medicion
-        disrup1a =~ mdis1a + bloq1a + raya1a + toma1a
-        online1a =~ onli1a + post1a + come1a + segu1a
-        
-        # (1) modelo de regresion: PARTICIPACION DISRUPTIVA ____________________
-        # efecto directo
-        disrup1a ~ C1*edpadyear+B1A*educyear+B1B*conv1a+mujer+pospolcen+pospolizq+pospolind
-        
-        # efecto mediacion predictor sobre mediador (DECLARAR UNA VEZ)
-        # educ padres sobre educacion hijos
-        educyear ~ A1A*edpadyear+mujer+pospolcen+pospolizq+pospolind
-        
-        # educ padres sobre conversacion hijos
-        conv1a ~ A1B*edpadyear+mujer+pospolcen+pospolizq+pospolind
-        
-        # efecto indirecto (A*B)
-        # educpadres by educ-hijos (A1)
-        ind_dis1_educ:= A1A*B1A 
-        # educpadres by conversation (A2)
-        ind_dis2_conv:= A1B*B1B
-
-        # total effect
-        tot_dis1_educ:= C1 + (A1A*B1A)
-        tot_dis2_conv:= C1 + (A1B*B1B)
-        
-        # (2) modelo de regresion: PARTICIPACION ONLINE ________________________
-        # efecto directo
-        online1a ~ C2*edpadyear+B2A*educyear+B2B*conv1a+mujer+pospolcen+pospolizq+pospolind
-        
-        # efecto indirecto (A*B)
-        # educpadres by educ-hijos (A2)
-        ind_onl_educ:= A1A*B2A 
-        # educpadres by conversation (A2)
-        ind_onl2_conv:= A1B*B2B
-
-        # total effect
-        tot_onl1_educ:= C2 + (A1A*B2A)
-        tot_onl2_conv:= C2 + (A1A*B2B)        
-&#39;
-
-
-m2a &lt;- stringr::str_replace_all(string = m1a,pattern = &quot;1a&quot;,replacement = &quot;2a&quot;)
-m3a &lt;- stringr::str_replace_all(string = m1a,pattern = &quot;1a&quot;,replacement = &quot;3a&quot;)
-m4a &lt;- stringr::str_replace_all(string = m1a,pattern = &quot;1a&quot;,replacement = &quot;4a&quot;)
-m5a &lt;- stringr::str_replace_all(string = m1a,pattern = &quot;1a&quot;,replacement = &quot;5a&quot;)
-
-models &lt;- c(m1a,m2a,m3a,m4a,m5a)
-
-fits &lt;- list()
-for (i in 1:length(models)) {
-    fits[[i]] &lt;- lavaan::sem(model = models[[i]], data = data1,ordered = T)    
-}
-
-fit&lt;- texreg::get.data(l = fits)
-filt&lt;- data.frame(coef=fit[[1]]@coef.names)
-
-tabhux &lt;- texreg::huxtablereg(fit,single.row = T)
-tabhux2 &lt;- dplyr::filter(tabhux,(grepl(&#39; ~ &#39;, V1)))
-tabhux3 &lt;- dplyr::filter(tabhux2,!(grepl(&#39;mujer&#39;, V1)))
-tabhux4 &lt;- dplyr::filter(tabhux3,!(grepl(&#39;pospol&#39;, V1)))
-fitind &lt;- tabhux %&gt;% filter(V1 %in% c(&quot;cfi&quot;,&quot;tli&quot;,&quot;rmsea&quot;,&quot;nobs&quot;)) 
-
-tabind_dis &lt;- dplyr::filter(tabhux,(grepl(&#39;ind_dis&#39;, V1))) 
-tabtot_dis &lt;- dplyr::filter(tabhux,(grepl(&#39;tot_dis&#39;, V1)))
-
-tabind_onl &lt;- dplyr::filter(tabhux,(grepl(&#39;ind_onl&#39;, V1)))
-tabtot_onl &lt;- dplyr::filter(tabhux,(grepl(&#39;tot_onl&#39;, V1)))
-
-coalesce_all_columns &lt;- function(df) {
-  tibble(
-    V1 = df$V1[1],
-    V2 = na.omit(df$V2),
-    V3 = na.omit(df$V3),
-    V4 = na.omit(df$V4),
-    V5 = na.omit(df$V5),
-    V6 = na.omit(df$V6)        
-  )
-}
-
-#Participacion disruptiva
-tabdis &lt;- tabhux4 %&gt;%  dplyr::filter((grepl(&#39;disrup&#39;, V1))) %&gt;% 
-  mutate(V1=stringr::str_replace_all(string = V1,
-                                     pattern = &quot;1a|2a|3a|4a|5a&quot;,
-                                     replacement = &quot;&quot;)) %&gt;% 
-  as.data.frame()
-tabdis[tabdis==&quot;&quot;] &lt;- NA
-tabdis &lt;- tabdis %&gt;%  group_by(V1) %&gt;% do(coalesce_all_columns(.)) %&gt;%  ungroup() %&gt;% 
-  rbind(tabind_dis,tabtot_dis,fitind) 
-
-#Participacion online
-tabonl &lt;- tabhux4 %&gt;%  dplyr::filter((grepl(&#39;online&#39;, V1))) %&gt;% 
-  mutate(V1=stringr::str_replace_all(string = V1,
-                                     pattern = &quot;1a|2a|3a|4a|5a&quot;,
-                                     replacement = &quot;&quot;)) %&gt;% 
-  as.data.frame()
-tabonl[tabonl==&quot;&quot;] &lt;- NA  
-tabonl &lt;- tabonl %&gt;%  group_by(V1) %&gt;% do(coalesce_all_columns(.)) %&gt;%  ungroup() %&gt;% 
-  rbind(tabind_dis,tabtot_dis,fitind)   
-
-coef &lt;- c(&quot;Conversation&quot; ,
-  &quot;Years of education - father&quot;,
-  &quot;Years of education&quot;,
-  &quot;Ind: Education&quot;,
-  &quot;Ind: Conversation&quot;,
-  &quot;Total: Education&quot;,
-  &quot;Total: Conversation&quot;,
-  &quot;CFI&quot;,
-  &quot;RMSEA&quot;,
-  &quot;TLI&quot;,
-  &quot;N&quot;)
-
-col &lt;- c(&quot; &quot;,paste0(&quot;Model &quot;,1:length(fits)))
-tabdis$V1 &lt;- coef 
-kable(tabdis,format = &quot;html&quot;,
-      booktabs=T,
-      row.names = F,
-      caption = &quot;Disruptive political participation, father education and conversation&quot;,
-      col.names = col) %&gt;% 
-  kable_styling(full_width = F)</code></pre>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:part-edpad">Table 2.1: </span>Disruptive political participation, father education and conversation
@@ -2243,14 +2016,6 @@ N
 </tr>
 </tbody>
 </table>
-<pre class="r"><code>tabonl$V1 &lt;- coef 
-kable(tabonl,format = &quot;html&quot;,
-      booktabs=T,
-      row.names = F,
-      caption = &quot;Online political participation, father education and conversation&quot;,
-      col.names = col) %&gt;% 
-  kable_styling(full_width = F) %&gt;% 
-  row_spec(7,hline_after = T)</code></pre>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:part-edpad">Table 2.1: </span>Online political participation, father education and conversation
@@ -2499,145 +2264,6 @@ N
 </tr>
 </tbody>
 </table>
-<pre class="r"><code>rm(list=ls())
-if (!require(&quot;pacman&quot;)) install.packages(&quot;pacman&quot;) # instalar pacman
-pacman::p_load(dplyr,       # Manipulacion de datos 
-               haven,       # importar datos en .dta o .sav
-               sjmisc,      # descriptivos y frecuencias
-               sjPlot,      # tablas, plots y descriptivos
-               sjlabelled,
-               summarytools,# resumen de dataframe
-               knitr,       # tablas kable
-               kableExtra,  # tablas kable personalizadas
-               ggplot2,     # plots
-               corrplot,    # plot correlacion
-               tibble,
-               lavaan
-               )
-
-load(here::here(&quot;input/data/proc/study1.RData&quot;))
-data1 &lt;- study_1 %&gt;% dplyr::select(-educ,-edmad,-edpad) %&gt;% na.omit()
-
-m1a&lt;- &#39;
-        # modelo de medicion
-        disrup1a =~ mdis1a + bloq1a + raya1a + toma1a
-        online1a =~ onli1a + post1a + come1a + segu1a
-        
-        # (1) modelo de regresion: PARTICIPACION DISRUPTIVA ____________________
-        # efecto directo
-        disrup1a ~ C1*edmadyear+B1A*educyear+B1B*conv1a+mujer+pospolcen+pospolizq+pospolind
-        
-        # efecto mediacion predictor sobre mediador (DECLARAR UNA VEZ)
-        # educ padres sobre educacion hijos
-        educyear ~ A1A*edmadyear+mujer+pospolcen+pospolizq+pospolind
-        
-        # educ padres sobre conversacion hijos
-        conv1a ~ A1B*edmadyear+mujer+pospolcen+pospolizq+pospolind
-        
-        # efecto indirecto (A*B)
-        # educpadres by educ-hijos (A1)
-        ind_dis1_educ:= A1A*B1A 
-        # educpadres by conversation (A2)
-        ind_dis2_conv:= A1B*B1B
-
-        # total effect
-        tot_dis1_educ:= C1 + (A1A*B1A)
-        tot_dis2_conv:= C1 + (A1B*B1B)
-        
-        # (2) modelo de regresion: PARTICIPACION ONLINE ________________________
-        # efecto directo
-        online1a ~ C2*edmadyear+B2A*educyear+B2B*conv1a+mujer+pospolcen+pospolizq+pospolind
-        
-        # efecto indirecto (A*B)
-        # educpadres by educ-hijos (A2)
-        ind_onl_educ:= A1A*B2A 
-        # educpadres by conversation (A2)
-        ind_onl2_conv:= A1B*B2B
-
-        # total effect
-        tot_onl1_educ:= C2 + (A1A*B2A)
-        tot_onl2_conv:= C2 + (A1A*B2B)        
-&#39;
-
-
-m2a &lt;- stringr::str_replace_all(string = m1a,pattern = &quot;1a&quot;,replacement = &quot;2a&quot;)
-m3a &lt;- stringr::str_replace_all(string = m1a,pattern = &quot;1a&quot;,replacement = &quot;3a&quot;)
-m4a &lt;- stringr::str_replace_all(string = m1a,pattern = &quot;1a&quot;,replacement = &quot;4a&quot;)
-m5a &lt;- stringr::str_replace_all(string = m1a,pattern = &quot;1a&quot;,replacement = &quot;5a&quot;)
-
-models &lt;- c(m1a,m2a,m3a,m4a,m5a)
-
-fits &lt;- list()
-for (i in 1:length(models)) {
-    fits[[i]] &lt;- lavaan::sem(model = models[[i]], data = data1,ordered = T)    
-}
-
-fit&lt;- texreg::get.data(l = fits)
-filt&lt;- data.frame(coef=fit[[1]]@coef.names)
-
-tabhux &lt;- texreg::huxtablereg(fit,single.row = T)
-tabhux2 &lt;- dplyr::filter(tabhux,(grepl(&#39; ~ &#39;, V1)))
-tabhux3 &lt;- dplyr::filter(tabhux2,!(grepl(&#39;mujer&#39;, V1)))
-tabhux4 &lt;- dplyr::filter(tabhux3,!(grepl(&#39;pospol&#39;, V1)))
-fitind &lt;- tabhux %&gt;% filter(V1 %in% c(&quot;cfi&quot;,&quot;tli&quot;,&quot;rmsea&quot;,&quot;nobs&quot;)) 
-
-tabind_dis &lt;- dplyr::filter(tabhux,(grepl(&#39;ind_dis&#39;, V1))) 
-tabtot_dis &lt;- dplyr::filter(tabhux,(grepl(&#39;tot_dis&#39;, V1)))
-
-tabind_onl &lt;- dplyr::filter(tabhux,(grepl(&#39;ind_onl&#39;, V1)))
-tabtot_onl &lt;- dplyr::filter(tabhux,(grepl(&#39;tot_onl&#39;, V1)))
-
-coalesce_all_columns &lt;- function(df) {
-  tibble(
-    V1 = df$V1[1],
-    V2 = na.omit(df$V2),
-    V3 = na.omit(df$V3),
-    V4 = na.omit(df$V4),
-    V5 = na.omit(df$V5),
-    V6 = na.omit(df$V6)        
-  )
-}
-
-#Participacion disruptiva
-tabdis &lt;- tabhux4 %&gt;%  dplyr::filter((grepl(&#39;disrup&#39;, V1))) %&gt;% 
-  mutate(V1=stringr::str_replace_all(string = V1,
-                                     pattern = &quot;1a|2a|3a|4a|5a&quot;,
-                                     replacement = &quot;&quot;)) %&gt;% 
-  as.data.frame()
-tabdis[tabdis==&quot;&quot;] &lt;- NA
-tabdis &lt;- tabdis %&gt;%  group_by(V1) %&gt;% do(coalesce_all_columns(.)) %&gt;%  ungroup() %&gt;% 
-  rbind(tabind_dis,tabtot_dis,fitind) 
-
-#Participacion online
-tabonl &lt;- tabhux4 %&gt;%  dplyr::filter((grepl(&#39;online&#39;, V1))) %&gt;% 
-  mutate(V1=stringr::str_replace_all(string = V1,
-                                     pattern = &quot;1a|2a|3a|4a|5a&quot;,
-                                     replacement = &quot;&quot;)) %&gt;% 
-  as.data.frame()
-tabonl[tabonl==&quot;&quot;] &lt;- NA  
-tabonl &lt;- tabonl %&gt;%  group_by(V1) %&gt;% do(coalesce_all_columns(.)) %&gt;%  ungroup() %&gt;% 
-  rbind(tabind_dis,tabtot_dis,fitind)   
-
-coef &lt;- c(&quot;Conversation&quot; ,
-  &quot;Years of education - mother&quot;,
-  &quot;Years of education&quot;,
-  &quot;Ind: Education&quot;,
-  &quot;Ind: Conversation&quot;,
-  &quot;Total: Education&quot;,
-  &quot;Total: Conversation&quot;,
-  &quot;CFI&quot;,
-  &quot;RMSEA&quot;,
-  &quot;TLI&quot;,
-  &quot;N&quot;)
-
-col &lt;- c(&quot; &quot;,paste0(&quot;Model &quot;,1:length(fits)))
-tabdis$V1 &lt;- coef
-kable(tabdis,format = &quot;html&quot;,
-      booktabs=T,
-      row.names = F,
-      caption = &quot;Disruptive political participation, mother education and conversation&quot;,
-      col.names = col) %&gt;% 
-  kable_styling(full_width = F)</code></pre>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:part-edmad">Table 2.2: </span>Disruptive political participation, mother education and conversation
@@ -2886,14 +2512,6 @@ N
 </tr>
 </tbody>
 </table>
-<pre class="r"><code>tabonl$V1 &lt;- coef
-kable(tabonl,format = &quot;html&quot;,
-      booktabs=T,
-      row.names = F,
-      caption = &quot;Online political participation, mother education and conversation&quot;,
-      col.names = col) %&gt;% 
-  kable_styling(full_width = F) %&gt;% 
-  row_spec(7,hline_after = T)</code></pre>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:part-edmad">Table 2.2: </span>Online political participation, mother education and conversation
@@ -3142,145 +2760,6 @@ N
 </tr>
 </tbody>
 </table>
-<pre class="r"><code>rm(list=ls())
-if (!require(&quot;pacman&quot;)) install.packages(&quot;pacman&quot;) # instalar pacman
-pacman::p_load(dplyr,       # Manipulacion de datos 
-               haven,       # importar datos en .dta o .sav
-               sjmisc,      # descriptivos y frecuencias
-               sjPlot,      # tablas, plots y descriptivos
-               sjlabelled,
-               summarytools,# resumen de dataframe
-               knitr,       # tablas kable
-               kableExtra,  # tablas kable personalizadas
-               ggplot2,     # plots
-               corrplot,    # plot correlacion
-               tibble,
-               lavaan
-               )
-
-load(here::here(&quot;input/data/proc/study1.RData&quot;))
-data1 &lt;- study_1 %&gt;% dplyr::select(-educ,-edmad,-edpad) %&gt;% na.omit()
-
-m1a&lt;- &#39;
-        # modelo de medicion
-        disrup1a =~ mdis1a + bloq1a + raya1a + toma1a
-        online1a =~ onli1a + post1a + come1a + segu1a
-        
-        # (1) modelo de regresion: PARTICIPACION DISRUPTIVA ____________________
-        # efecto directo
-        disrup1a ~ C1*edparavg+B1A*educyear+B1B*conv1a+mujer+pospolcen+pospolizq+pospolind
-        
-        # efecto mediacion predictor sobre mediador (DECLARAR UNA VEZ)
-        # educ padres sobre educacion hijos
-        educyear ~ A1A*edparavg+mujer+pospolcen+pospolizq+pospolind
-        
-        # educ padres sobre conversacion hijos
-        conv1a ~ A1B*edparavg+mujer+pospolcen+pospolizq+pospolind
-        
-        # efecto indirecto (A*B)
-        # educpadres by educ-hijos (A1)
-        ind_dis1_educ:= A1A*B1A 
-        # educpadres by conversation (A2)
-        ind_dis2_conv:= A1B*B1B
-
-        # total effect
-        tot_dis1_educ:= C1 + (A1A*B1A)
-        tot_dis2_conv:= C1 + (A1B*B1B)
-        
-        # (2) modelo de regresion: PARTICIPACION ONLINE ________________________
-        # efecto directo
-        online1a ~ C2*edparavg+B2A*educyear+B2B*conv1a+mujer+pospolcen+pospolizq+pospolind
-        
-        # efecto indirecto (A*B)
-        # educpadres by educ-hijos (A2)
-        ind_onl_educ:= A1A*B2A 
-        # educpadres by conversation (A2)
-        ind_onl2_conv:= A1B*B2B
-
-        # total effect
-        tot_onl1_educ:= C2 + (A1A*B2A)
-        tot_onl2_conv:= C2 + (A1A*B2B)        
-&#39;
-
-
-m2a &lt;- stringr::str_replace_all(string = m1a,pattern = &quot;1a&quot;,replacement = &quot;2a&quot;)
-m3a &lt;- stringr::str_replace_all(string = m1a,pattern = &quot;1a&quot;,replacement = &quot;3a&quot;)
-m4a &lt;- stringr::str_replace_all(string = m1a,pattern = &quot;1a&quot;,replacement = &quot;4a&quot;)
-m5a &lt;- stringr::str_replace_all(string = m1a,pattern = &quot;1a&quot;,replacement = &quot;5a&quot;)
-
-models &lt;- c(m1a,m2a,m3a,m4a,m5a)
-
-fits &lt;- list()
-for (i in 1:length(models)) {
-    fits[[i]] &lt;- lavaan::sem(model = models[[i]], data = data1,ordered = T)    
-}
-
-fit&lt;- texreg::get.data(l = fits)
-filt&lt;- data.frame(coef=fit[[1]]@coef.names)
-
-tabhux &lt;- texreg::huxtablereg(fit,single.row = T)
-tabhux2 &lt;- dplyr::filter(tabhux,(grepl(&#39; ~ &#39;, V1)))
-tabhux3 &lt;- dplyr::filter(tabhux2,!(grepl(&#39;mujer&#39;, V1)))
-tabhux4 &lt;- dplyr::filter(tabhux3,!(grepl(&#39;pospol&#39;, V1)))
-fitind &lt;- tabhux %&gt;% filter(V1 %in% c(&quot;cfi&quot;,&quot;tli&quot;,&quot;rmsea&quot;,&quot;nobs&quot;)) 
-
-tabind_dis &lt;- dplyr::filter(tabhux,(grepl(&#39;ind_dis&#39;, V1))) 
-tabtot_dis &lt;- dplyr::filter(tabhux,(grepl(&#39;tot_dis&#39;, V1)))
-
-tabind_onl &lt;- dplyr::filter(tabhux,(grepl(&#39;ind_onl&#39;, V1)))
-tabtot_onl &lt;- dplyr::filter(tabhux,(grepl(&#39;tot_onl&#39;, V1)))
-
-coalesce_all_columns &lt;- function(df) {
-  tibble(
-    V1 = df$V1[1],
-    V2 = na.omit(df$V2),
-    V3 = na.omit(df$V3),
-    V4 = na.omit(df$V4),
-    V5 = na.omit(df$V5),
-    V6 = na.omit(df$V6)        
-  )
-}
-
-#Participacion disruptiva
-tabdis &lt;- tabhux4 %&gt;%  dplyr::filter((grepl(&#39;disrup&#39;, V1))) %&gt;% 
-  mutate(V1=stringr::str_replace_all(string = V1,
-                                     pattern = &quot;1a|2a|3a|4a|5a&quot;,
-                                     replacement = &quot;&quot;)) %&gt;% 
-  as.data.frame()
-tabdis[tabdis==&quot;&quot;] &lt;- NA
-tabdis &lt;- tabdis %&gt;%  group_by(V1) %&gt;% do(coalesce_all_columns(.)) %&gt;%  ungroup() %&gt;% 
-  rbind(tabind_dis,tabtot_dis,fitind) 
-
-#Participacion online
-tabonl &lt;- tabhux4 %&gt;%  dplyr::filter((grepl(&#39;online&#39;, V1))) %&gt;% 
-  mutate(V1=stringr::str_replace_all(string = V1,
-                                     pattern = &quot;1a|2a|3a|4a|5a&quot;,
-                                     replacement = &quot;&quot;)) %&gt;% 
-  as.data.frame()
-tabonl[tabonl==&quot;&quot;] &lt;- NA  
-tabonl &lt;- tabonl %&gt;%  group_by(V1) %&gt;% do(coalesce_all_columns(.)) %&gt;%  ungroup() %&gt;% 
-  rbind(tabind_dis,tabtot_dis,fitind)   
-
-coef &lt;- c(&quot;Conversation&quot; ,
-  &quot;Years of education - average&quot;,
-  &quot;Years of education&quot;,
-  &quot;Ind: Education&quot;,
-  &quot;Ind: Conversation&quot;,
-  &quot;Total: Education&quot;,
-  &quot;Total: Conversation&quot;,
-  &quot;CFI&quot;,
-  &quot;RMSEA&quot;,
-  &quot;TLI&quot;,
-  &quot;N&quot;)
-
-col &lt;- c(&quot; &quot;,paste0(&quot;Model &quot;,1:length(fits)))
-tabdis$V1 &lt;- coef
-kable(tabdis,format = &quot;html&quot;,
-      booktabs=T,
-      row.names = F,
-      caption = &quot;Disruptive political participation, parental education and conversation&quot;,
-      col.names = col) %&gt;% 
-  kable_styling(full_width = F)</code></pre>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:part-edavg">Table 2.3: </span>Disruptive political participation, parental education and conversation
@@ -3529,14 +3008,6 @@ N
 </tr>
 </tbody>
 </table>
-<pre class="r"><code>tabonl$V1 &lt;- coef
-kable(tabonl,format = &quot;html&quot;,
-      booktabs=T,
-      row.names = F,
-      caption = &quot;Online political participation, parental education and conversation&quot;,
-      col.names = col) %&gt;% 
-  kable_styling(full_width = F) %&gt;% 
-  row_spec(7,hline_after = T)</code></pre>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:part-edavg">Table 2.3: </span>Online political participation, parental education and conversation
@@ -3788,96 +3259,6 @@ N
 </div>
 <div id="voting-behaviour" class="section level3 unnumbered">
 <h3>Voting behaviour</h3>
-<pre class="r"><code>rm(list=ls())
-if (!require(&quot;pacman&quot;)) install.packages(&quot;pacman&quot;) # instalar pacman
-pacman::p_load(dplyr,       # Manipulacion de datos 
-               haven,       # importar datos en .dta o .sav
-               sjmisc,      # descriptivos y frecuencias
-               sjPlot,      # tablas, plots y descriptivos
-               sjlabelled,
-               summarytools,# resumen de dataframe
-               knitr,       # tablas kable
-               kableExtra,  # tablas kable personalizadas
-               ggplot2,     # plots
-               texreg,
-               mediation
-               )
-
-load(here::here(&quot;input/data/proc/study1.RData&quot;))
-data1 &lt;- study_1 %&gt;% 
-  dplyr::select(-educ,-edmad,-edpad) %&gt;% 
-  dplyr::filter(votpr17 !=2 &amp; votpleb !=2 &amp; votcons !=2) %&gt;%
-  dplyr::select(mujer:conv5a,votpr17:vot2vue,
-         educyear,edmadyear,edpadyear,edparavg,
-         pospolcen,pospolizq,pospolind,pospol) %&gt;% 
-  mutate(conv1a=as_numeric(conv1a),
-         conv3a=as_numeric(conv3a),
-         conv4a=as_numeric(conv4a),
-         conv5a=as_numeric(conv5a)) %&gt;% 
-  na.omit()
-
-# view_df(data1)
-# sjmisc::frq(data1$votpr17)
-# sjmisc::frq(data1$votpleb)
-# sjmisc::frq(data1$votcons)
-
-# Hypothesis___________________________________________________________________
-m1 &lt;- &quot;edpadyear+educyear+conv1a+mujer+pospol&quot;#highschool
-m2 &lt;- &quot;edpadyear+educyear+conv3a+mujer+pospol&quot;# 2sem 2020
-m3 &lt;- &quot;edpadyear+educyear+conv4a+mujer+pospol&quot;# 1sem 2021
-m4 &lt;- &quot;edpadyear+educyear+conv5a+mujer+pospol&quot;# 2sem 2021
-
-# Set the independent variables (IVs)
-ivs1&lt;- data1 %&gt;% dplyr::select(votpr17) %&gt;% names()        #highschool
-ivs2&lt;- data1 %&gt;% dplyr::select(votpleb) %&gt;% names()        # 2sem 2020
-ivs3&lt;- data1 %&gt;% dplyr::select(votcons:votgobe) %&gt;% names()# 1sem 2021
-ivs4&lt;- data1 %&gt;% dplyr::select(votdipu:vot2vue) %&gt;% names()# 2sem 2021
-
-ivs &lt;- c(ivs1,ivs2,ivs3,ivs4)
-
-# Create the object for each model
-models &lt;- list()
-for (i in ivs1) {
-models[[i]] &lt;- paste0(i,&quot;~&quot;,m1)  
-}
-
-for (i in ivs2) {
-models[[i]] &lt;- paste0(i,&quot;~&quot;,m2)  
-}
-
-for (i in ivs3) {
-models[[i]] &lt;- paste0(i,&quot;~&quot;,m3)  
-}
-
-for (i in ivs4) {
-models[[i]] &lt;- paste0(i,&quot;~&quot;,m4)  
-}
-
-# Estimate logit models
-fits &lt;- list()
-for (i in ivs) {
-  for (z in models[[i]]) {
-    fits[[z]] &lt;- glm(formula =z, data = data1,family = binomial(link=&quot;logit&quot;))
-  }
-}
-fit1 &lt;- fits
-# change model names within list
-names(fit1) &lt;- paste0(ivs)
-
-# Tables_______________________________________________________________________
-omit &lt;- &quot;(Intercept)|(mujer)|(pospol)&quot;
-
-# detail for subsections:
-# https://stackoverflow.com/questions/69338331/r-markdown-create-section-headers-in-r-and-print-r-output-in-same-section
-
-
-caption &lt;- &quot;Voting behaviour, father education and conversation&quot;
-htmlreg(l = fit1[names(fit1)[grepl(&quot;vot&quot;, names(fit1),&quot;\n&quot;)]],
-        omit.coef = omit,
-        caption = caption,
-        caption.above = T
-        # reorder.coef = reorderc
-        )</code></pre>
 <table class="texreg" style="margin: 10px auto;border-collapse: collapse;border-spacing: 0px;color: #000000;border-top: 2px solid #000000;">
 <caption>
 Voting behaviour, father education and conversation
@@ -4470,176 +3851,6 @@ Num. obs.
 </tr>
 </tfoot>
 </table>
-<pre class="r"><code># Mediation analysis___________________________________________________________
-mededuc1 &lt;- &quot;edpadyear+conv1a+mujer+pospol&quot;#highschool
-mededuc2 &lt;- &quot;edpadyear+conv3a+mujer+pospol&quot;# 2sem 2020
-mededuc3 &lt;- &quot;edpadyear+conv4a+mujer+pospol&quot;# 1sem 2021
-mededuc4 &lt;- &quot;edpadyear+conv5a+mujer+pospol&quot;# 2sem 2021
-mededuc &lt;- c(mededuc1,mededuc2,mededuc3,mededuc4)
-
-medconv1 &lt;- &quot;edpadyear+educyear+mujer+pospol&quot;#highschool
-medconv2 &lt;- &quot;edpadyear+educyear+mujer+pospol&quot;# 2sem 2020
-medconv3 &lt;- &quot;edpadyear+educyear+mujer+pospol&quot;# 1sem 2021
-medconv4 &lt;- &quot;edpadyear+educyear+mujer+pospol&quot;# 2sem 2021
-medconv &lt;- c(medconv1,medconv2,medconv3,medconv4)
-
-ivs1 &lt;- c(&quot;educyear&quot;)
-ivs2 &lt;- c(&quot;conv1a&quot;,&quot;conv3a&quot;,&quot;conv4a&quot;,&quot;conv5a&quot;)
-
-# Create the object for each model
-lm.educ &lt;- list()
-for (i in ivs1) {
-lm.educ[[i]] &lt;- paste0(i,&quot;~&quot;,mededuc)
-}
-
-lm.conv &lt;- list()
-for (i in ivs2) {
-lm.conv[[i]] &lt;- paste0(i,&quot;~&quot;,medconv)
-}
-
-
-# Estimate OLS models: mediator~predictor
-fit_educ &lt;- list()
-for (i in ivs1) {
-  for (z in lm.educ[[i]]) {
-    fit_educ[[z]] &lt;- lm(formula =z, data = data1)
-  }
-}
-
-
-fit_conv &lt;- list()
-for (i in ivs2) {
-  for (z in lm.conv[[i]]) {
-    fit_conv[[z]] &lt;- lm(formula =z, data = data1)
-  }
-}
-
-# change model names within list
-names(fit_educ) &lt;- paste0(&quot;ed_&quot;,ivs2)
-names(fit_conv) &lt;- paste0(&quot;co_&quot;,ivs2)
-
-
-# Estimate mediation model_____________________________________________________
-
-############################.
-# mediated by Education    #
-############################.
-medieduc &lt;- list()
-for (i in c(&quot;votpr17&quot;)) {
-  for (z in c(&quot;ed_conv1a&quot;)) {
-medieduc[[i]]&lt;- mediation::mediate(fit_educ[[z]],fit1[[i]], 
-                                treat=&quot;edpadyear&quot;, mediator=&quot;educyear&quot;)    
-  }
-}
-
-for (i in &quot;votpleb&quot;) {
-  for (z in &quot;ed_conv3a&quot;) {
-medieduc[[i]]&lt;- mediation::mediate(fit_educ[[z]],fit1[[i]], 
-                                treat=&quot;edpadyear&quot;, mediator=&quot;educyear&quot;)    
-  }
-}
-
-
-for (i in c(&quot;votcons&quot;,&quot;votconv&quot;,&quot;votmuni&quot;,&quot;votgobe&quot;)) {
-  for (z in &quot;ed_conv4a&quot;) {
-medieduc[[i]]&lt;- mediation::mediate(fit_educ[[z]],fit1[[i]], 
-                                treat=&quot;edpadyear&quot;, mediator=&quot;educyear&quot;)    
-  }
-}
-
-for (i in c(&quot;votdipu&quot;,&quot;vot1vue&quot;,&quot;vot2vue&quot;)) {
-  for (z in &quot;ed_conv5a&quot;) {
-medieduc[[i]]&lt;- mediation::mediate(fit_educ[[z]],fit1[[i]],  
-                                treat=&quot;edpadyear&quot;, mediator=&quot;educyear&quot;)    
-  }
-}
-
-
-# extract the average mediation effects 
-label1 &lt;- 
-  stringr::str_remove_all(string = sjlabelled::get_label(study_1[,names(medieduc)]),
-                          pattern = &quot;Vote: &quot;)
-df_mededuc.ind &lt;- data.frame(
-  &quot;id&quot;=1:length(medieduc),
-  &quot;lab&quot;= label1,  
-  &quot;var&quot;=names(medieduc),
-  &quot;effect&quot;=&quot;Indirect&quot;,  
-  &quot;effect.avg&quot;=NA,
-  &quot;ci.lwr&quot;=NA,
-  &quot;ci.upr&quot;=NA,
-  &quot;pval&quot;=NA)
-
-for (i in 1:9) {
-  df_mededuc.ind$effect.avg[[i]] &lt;- medieduc[[i]][[&quot;d.avg&quot;]]
-  df_mededuc.ind$ci.lwr[[i]] &lt;- medieduc[[i]][[&quot;d.avg.ci&quot;]][1]
-  df_mededuc.ind$ci.upr[[i]] &lt;- medieduc[[i]][[&quot;d.avg.ci&quot;]][2]  
-  df_mededuc.ind$pval[[i]] &lt;- medieduc[[i]][[&quot;d.avg.p&quot;]]
-  }
-
-df_mededuc.dir &lt;- data.frame(
-  &quot;id&quot;=1:length(medieduc),
-  &quot;lab&quot;= label1,  
-  &quot;var&quot;=names(medieduc),
-  &quot;effect&quot;=rep(&quot;Direct&quot;,9),
-  &quot;effect.avg&quot;=NA,
-  &quot;ci.lwr&quot;=NA,
-  &quot;ci.upr&quot;=NA,
-  &quot;pval&quot;=NA)
-
-for (i in 1:9) {
-  df_mededuc.dir$effect.avg[[i]] &lt;- medieduc[[i]][[&quot;z.avg&quot;]]
-  df_mededuc.dir$ci.lwr[[i]] &lt;- medieduc[[i]][[&quot;z.avg.ci&quot;]][1]
-  df_mededuc.dir$ci.upr[[i]] &lt;- medieduc[[i]][[&quot;z.avg.ci&quot;]][2]  
-  df_mededuc.dir$pval[[i]] &lt;- medieduc[[i]][[&quot;z.avg.p&quot;]]
-  }
-
-
-df_mededuc.tot &lt;- data.frame(
-  &quot;id&quot;=1:length(medieduc),
-  &quot;lab&quot;= label1,  
-  &quot;var&quot;=names(medieduc),
-  &quot;effect&quot;=rep(&quot;Total&quot;,9),
-  &quot;effect.avg&quot;=NA,
-  &quot;ci.lwr&quot;=NA,
-  &quot;ci.upr&quot;=NA,
-  &quot;pval&quot;=NA)
-
-for (i in 1:9) {
-  df_mededuc.tot$effect.avg[[i]] &lt;- medieduc[[i]][[&quot;tau.coef&quot;]]
-  df_mededuc.tot$ci.lwr[[i]] &lt;- medieduc[[i]][[&quot;tau.ci&quot;]][1]
-  df_mededuc.tot$ci.upr[[i]] &lt;- medieduc[[i]][[&quot;tau.ci&quot;]][2]  
-  df_mededuc.tot$pval[[i]] &lt;- medieduc[[i]][[&quot;tau.p&quot;]]
-  }
-
-df_mededuc.prop &lt;- data.frame(
-  &quot;id&quot;=1:length(medieduc),
-  &quot;lab&quot;= label1,
-  &quot;var&quot;=names(medieduc),
-  &quot;effect&quot;=rep(&quot;Proportion&quot;,9),
-  &quot;effect.avg&quot;=NA,
-  &quot;ci.lwr&quot;=NA,
-  &quot;ci.upr&quot;=NA,
-  &quot;pval&quot;=NA)
-
-for (i in 1:9) {
-  df_mededuc.prop$effect.avg[[i]] &lt;- medieduc[[i]][[&quot;n.avg&quot;]]
-  df_mededuc.prop$ci.lwr[[i]] &lt;- medieduc[[i]][[&quot;n.avg.ci&quot;]][1]
-  df_mededuc.prop$ci.upr[[i]] &lt;- medieduc[[i]][[&quot;n.avg.ci&quot;]][2]  
-  df_mededuc.prop$pval[[i]] &lt;- medieduc[[i]][[&quot;n.avg.p&quot;]]
-  }
-
-df_mededuc &lt;- bind_rows(df_mededuc.ind,df_mededuc.dir,df_mededuc.tot,df_mededuc.prop) %&gt;% 
-  arrange(id) %&gt;% 
-  mutate(sig=gtools::stars.pval(pval)) %&gt;%
-  dplyr::select(-&quot;id&quot;,-&quot;var&quot;)
-
-colnames &lt;- c(&quot; &quot;,&quot;Type&quot;,&quot;Effect&quot;,&quot;Lower CI&quot;,&quot;Upper CI&quot;,&quot;p-value&quot;,&quot;Sig.&quot;)
-note &lt;- &quot;‘***’ p &lt; 0.001 ‘**’ p &lt; 0.01 ‘*’ p &lt; 0.05 ‘.’ p &lt; 0.1&quot;
-kable(df_mededuc,format = &quot;html&quot;,digits = 3, col.names = colnames, 
-      caption = &quot;Mediated effect of Father Education by Education on Voting behaviour&quot;) %&gt;% 
-  kable_styling(full_width = F) %&gt;% 
-  collapse_rows(columns = 1) %&gt;% 
-footnote(general = note,footnote_as_chunk = T)   </code></pre>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;">
 <caption>
 <span id="tab:vot-edpad">Table 2.4: </span>Mediated effect of Father Education by Education on Voting behaviour
@@ -4703,10 +3914,10 @@ Direct
 -0.002
 </td>
 <td style="text-align:right;">
-0.017
+0.018
 </td>
 <td style="text-align:right;">
-0.162
+0.112
 </td>
 <td style="text-align:left;">
 </td>
@@ -4725,31 +3936,31 @@ Total
 0.023
 </td>
 <td style="text-align:right;">
-0.006
+0.014
 </td>
 <td style="text-align:left;">
-**
-</td>
+<ul>
+<li></td>
 </tr>
 <tr>
 <td style="text-align:left;">
 Proportion
 </td>
 <td style="text-align:right;">
-0.394
+0.393
 </td>
 <td style="text-align:right;">
-0.166
+0.153
 </td>
 <td style="text-align:right;">
-1.987
+1.549
 </td>
 <td style="text-align:right;">
-0.006
+0.014
 </td>
 <td style="text-align:left;">
-**
-</td>
+<ul>
+<li></td>
 </tr>
 <tr>
 <td style="text-align:left;vertical-align: middle !important;" rowspan="4">
@@ -4774,7 +3985,8 @@ Indirect
 **
 </td>
 </tr>
-<tr>
+<tr></li>
+</ul>
 <td style="text-align:left;">
 Direct
 </td>
@@ -4785,10 +3997,10 @@ Direct
 -0.002
 </td>
 <td style="text-align:right;">
-0.017
+0.016
 </td>
 <td style="text-align:right;">
-0.174
+0.148
 </td>
 <td style="text-align:left;">
 </td>
@@ -4807,27 +4019,28 @@ Total
 0.020
 </td>
 <td style="text-align:right;">
-0.032
+0.034
 </td>
 <td style="text-align:left;">
 <ul>
 <li></td>
 </tr>
-<tr>
+<tr></li>
+</ul>
 <td style="text-align:left;">
 Proportion
 </td>
 <td style="text-align:right;">
-0.321
+0.314
 </td>
 <td style="text-align:right;">
-0.100
+0.102
 </td>
 <td style="text-align:right;">
-2.041
+1.694
 </td>
 <td style="text-align:right;">
-0.030
+0.036
 </td>
 <td style="text-align:left;">
 <ul>
@@ -4871,28 +4084,7 @@ Direct
 0.020
 </td>
 <td style="text-align:right;">
-0.020
-</td>
-<td style="text-align:left;">
-<ul>
-<li></td>
-</tr>
-<tr></li>
-</ul>
-<td style="text-align:left;">
-Total
-</td>
-<td style="text-align:right;">
-0.015
-</td>
-<td style="text-align:right;">
-0.005
-</td>
-<td style="text-align:right;">
-0.025
-</td>
-<td style="text-align:right;">
-0.002
+0.010
 </td>
 <td style="text-align:left;">
 **
@@ -4900,22 +4092,42 @@ Total
 </tr>
 <tr>
 <td style="text-align:left;">
+Total
+</td>
+<td style="text-align:right;">
+0.015
+</td>
+<td style="text-align:right;">
+0.006
+</td>
+<td style="text-align:right;">
+0.024
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:left;">
+***
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 Proportion
 </td>
 <td style="text-align:right;">
-0.274
+0.269
 </td>
 <td style="text-align:right;">
-0.128
+0.126
 </td>
 <td style="text-align:right;">
-0.668
+0.654
 </td>
 <td style="text-align:right;">
-0.002
+0.000
 </td>
 <td style="text-align:left;">
-**
+***
 </td>
 </tr>
 <tr>
@@ -4955,7 +4167,7 @@ Direct
 0.009
 </td>
 <td style="text-align:right;">
-0.970
+0.966
 </td>
 <td style="text-align:left;">
 </td>
@@ -4965,16 +4177,16 @@ Direct
 Total
 </td>
 <td style="text-align:right;">
-0.003
+0.004
 </td>
 <td style="text-align:right;">
--0.004
+-0.003
 </td>
 <td style="text-align:right;">
 0.012
 </td>
 <td style="text-align:right;">
-0.404
+0.384
 </td>
 <td style="text-align:left;">
 </td>
@@ -4984,16 +4196,16 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.609
+0.595
 </td>
 <td style="text-align:right;">
--6.761
+-5.462
 </td>
 <td style="text-align:right;">
-11.583
+9.333
 </td>
 <td style="text-align:right;">
-0.404
+0.384
 </td>
 <td style="text-align:left;">
 </td>
@@ -5012,7 +4224,7 @@ Indirect
 0.002
 </td>
 <td style="text-align:right;">
-0.006
+0.005
 </td>
 <td style="text-align:right;">
 0.000
@@ -5029,13 +4241,13 @@ Direct
 0.003
 </td>
 <td style="text-align:right;">
--0.006
+-0.005
 </td>
 <td style="text-align:right;">
-0.013
+0.012
 </td>
 <td style="text-align:right;">
-0.602
+0.554
 </td>
 <td style="text-align:left;">
 </td>
@@ -5048,13 +4260,13 @@ Total
 0.006
 </td>
 <td style="text-align:right;">
--0.003
+-0.002
 </td>
 <td style="text-align:right;">
-0.016
+0.015
 </td>
 <td style="text-align:right;">
-0.186
+0.190
 </td>
 <td style="text-align:left;">
 </td>
@@ -5064,16 +4276,16 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.508
+0.496
 </td>
 <td style="text-align:right;">
--3.808
+-5.455
 </td>
 <td style="text-align:right;">
-4.862
+3.855
 </td>
 <td style="text-align:right;">
-0.186
+0.190
 </td>
 <td style="text-align:left;">
 </td>
@@ -5095,10 +4307,10 @@ Indirect
 0.005
 </td>
 <td style="text-align:right;">
-0.000
+0.002
 </td>
 <td style="text-align:left;">
-***
+**
 </td>
 </tr>
 <tr>
@@ -5115,10 +4327,9 @@ Direct
 0.016
 </td>
 <td style="text-align:right;">
-0.098
+0.108
 </td>
 <td style="text-align:left;">
-.
 </td>
 </tr>
 <tr>
@@ -5135,7 +4346,7 @@ Total
 0.019
 </td>
 <td style="text-align:right;">
-0.018
+0.014
 </td>
 <td style="text-align:left;">
 <ul>
@@ -5147,16 +4358,16 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.278
+0.273
 </td>
 <td style="text-align:right;">
-0.081
+0.086
 </td>
 <td style="text-align:right;">
-1.388
+1.655
 </td>
 <td style="text-align:right;">
-0.018
+0.016
 </td>
 <td style="text-align:left;">
 <ul>
@@ -5200,7 +4411,7 @@ Direct
 0.007
 </td>
 <td style="text-align:right;">
-0.660
+0.668
 </td>
 <td style="text-align:left;">
 </td>
@@ -5219,7 +4430,7 @@ Total
 0.010
 </td>
 <td style="text-align:right;">
-0.710
+0.744
 </td>
 <td style="text-align:left;">
 </td>
@@ -5229,16 +4440,16 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.553
+0.534
 </td>
 <td style="text-align:right;">
--8.440
+-14.835
 </td>
 <td style="text-align:right;">
-12.173
+11.728
 </td>
 <td style="text-align:right;">
-0.710
+0.744
 </td>
 <td style="text-align:left;">
 </td>
@@ -5260,7 +4471,7 @@ Indirect
 0.003
 </td>
 <td style="text-align:right;">
-0.032
+0.036
 </td>
 <td style="text-align:left;">
 <ul>
@@ -5281,7 +4492,7 @@ Direct
 0.004
 </td>
 <td style="text-align:right;">
-0.274
+0.250
 </td>
 <td style="text-align:left;">
 </td>
@@ -5297,10 +4508,10 @@ Total
 -0.006
 </td>
 <td style="text-align:right;">
-0.005
+0.006
 </td>
 <td style="text-align:right;">
-0.460
+0.442
 </td>
 <td style="text-align:left;">
 </td>
@@ -5310,16 +4521,16 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
--0.259
+-0.277
 </td>
 <td style="text-align:right;">
--4.615
+-3.050
 </td>
 <td style="text-align:right;">
-3.590
+5.370
 </td>
 <td style="text-align:right;">
-0.480
+0.466
 </td>
 <td style="text-align:left;">
 </td>
@@ -5355,13 +4566,13 @@ Direct
 -0.001
 </td>
 <td style="text-align:right;">
--0.005
+-0.006
 </td>
 <td style="text-align:right;">
-0.007
+0.006
 </td>
 <td style="text-align:right;">
-0.706
+0.580
 </td>
 <td style="text-align:left;">
 </td>
@@ -5371,16 +4582,16 @@ Direct
 Total
 </td>
 <td style="text-align:right;">
-0.001
+0.000
 </td>
 <td style="text-align:right;">
--0.004
+-0.005
 </td>
 <td style="text-align:right;">
 0.009
 </td>
 <td style="text-align:right;">
-0.920
+0.978
 </td>
 <td style="text-align:left;">
 </td>
@@ -5390,16 +4601,16 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.208
+-0.095
 </td>
 <td style="text-align:right;">
--6.507
+-5.378
 </td>
 <td style="text-align:right;">
-6.687
+10.892
 </td>
 <td style="text-align:right;">
-0.924
+0.982
 </td>
 <td style="text-align:left;">
 </td>
@@ -5414,120 +4625,6 @@ Proportion
 </tfoot>
 </table></li>
 </ul>
-<pre class="r"><code>############################.
-# mediated by conversation #
-############################.
-
-mediconv &lt;- list()
-for (i in c(&quot;votpr17&quot;)) {
-  for (z in c(&quot;co_conv1a&quot;)) {
-mediconv[[i]]&lt;- mediation::mediate(fit_conv[[z]],fit1[[i]], 
-                                treat=&quot;edpadyear&quot;, mediator=&quot;conv1a&quot;)    
-  }
-}
-
-for (i in &quot;votpleb&quot;) {
-  for (z in &quot;co_conv3a&quot;) {
-mediconv[[i]]&lt;- mediation::mediate(fit_conv[[z]],fit1[[i]], 
-                                treat=&quot;edpadyear&quot;, mediator=&quot;conv3a&quot;)    
-  }
-}
-
-
-for (i in c(&quot;votcons&quot;,&quot;votconv&quot;,&quot;votmuni&quot;,&quot;votgobe&quot;)) {
-  for (z in &quot;co_conv4a&quot;) {
-mediconv[[i]]&lt;- mediation::mediate(fit_conv[[z]],fit1[[i]],
-                                treat=&quot;edpadyear&quot;, mediator=&quot;conv4a&quot;)    
-  }
-}
-
-for (i in c(&quot;votdipu&quot;,&quot;vot1vue&quot;,&quot;vot2vue&quot;)) {
-  for (z in &quot;co_conv5a&quot;) {
-mediconv[[i]]&lt;- mediation::mediate(fit_conv[[z]],fit1[[i]],
-                                treat=&quot;edpadyear&quot;, mediator=&quot;conv5a&quot;)    
-  }
-}
-
-# extract the average mediation effects 
-df_medconv.ind &lt;- data.frame(
-  &quot;id&quot;=1:length(mediconv),
-  &quot;lab&quot;= label1,    
-  &quot;var&quot;=names(mediconv),
-  &quot;effect&quot;=&quot;Indirect&quot;,  
-  &quot;effect.avg&quot;=NA,
-  &quot;ci.lwr&quot;=NA,
-  &quot;ci.upr&quot;=NA,
-  &quot;pval&quot;=NA)
-
-for (i in 1:9) {
-  df_medconv.ind$effect.avg[[i]] &lt;- mediconv[[i]][[&quot;d.avg&quot;]]
-  df_medconv.ind$ci.lwr[[i]] &lt;- mediconv[[i]][[&quot;d.avg.ci&quot;]][1]
-  df_medconv.ind$ci.upr[[i]] &lt;- mediconv[[i]][[&quot;d.avg.ci&quot;]][2]  
-  df_medconv.ind$pval[[i]] &lt;- mediconv[[i]][[&quot;d.avg.p&quot;]]
-  }
-
-df_medconv.dir &lt;- data.frame(
-  &quot;id&quot;=1:length(mediconv),
-  &quot;lab&quot;= label1,    
-  &quot;var&quot;=names(mediconv),
-  &quot;effect&quot;=rep(&quot;Direct&quot;,9),
-  &quot;effect.avg&quot;=NA,
-  &quot;ci.lwr&quot;=NA,
-  &quot;ci.upr&quot;=NA,
-  &quot;pval&quot;=NA)
-
-for (i in 1:9) {
-  df_medconv.dir$effect.avg[[i]] &lt;- mediconv[[i]][[&quot;z.avg&quot;]]
-  df_medconv.dir$ci.lwr[[i]] &lt;- mediconv[[i]][[&quot;z.avg.ci&quot;]][1]
-  df_medconv.dir$ci.upr[[i]] &lt;- mediconv[[i]][[&quot;z.avg.ci&quot;]][2]  
-  df_medconv.dir$pval[[i]] &lt;- mediconv[[i]][[&quot;z.avg.p&quot;]]
-  }
-
-
-df_medconv.tot &lt;- data.frame(
-  &quot;id&quot;=1:length(medieduc),
-  &quot;lab&quot;= label1,    
-  &quot;var&quot;=names(medieduc),
-  &quot;effect&quot;=rep(&quot;Total&quot;,9),
-  &quot;effect.avg&quot;=NA,
-  &quot;ci.lwr&quot;=NA,
-  &quot;ci.upr&quot;=NA,
-  &quot;pval&quot;=NA)
-
-for (i in 1:9) {
-  df_medconv.tot$effect.avg[[i]] &lt;- mediconv[[i]][[&quot;tau.coef&quot;]]
-  df_medconv.tot$ci.lwr[[i]] &lt;- mediconv[[i]][[&quot;tau.ci&quot;]][1]
-  df_medconv.tot$ci.upr[[i]] &lt;- mediconv[[i]][[&quot;tau.ci&quot;]][2]  
-  df_medconv.tot$pval[[i]] &lt;- mediconv[[i]][[&quot;tau.p&quot;]]
-  }
-
-df_medconv.prop &lt;- data.frame(
-  &quot;id&quot;=1:length(medieduc),
-  &quot;lab&quot;= label1,    
-  &quot;var&quot;=names(medieduc),
-  &quot;effect&quot;=rep(&quot;Proportion&quot;,9),
-  &quot;effect.avg&quot;=NA,
-  &quot;ci.lwr&quot;=NA,
-  &quot;ci.upr&quot;=NA,
-  &quot;pval&quot;=NA)
-
-for (i in 1:9) {
-  df_medconv.prop$effect.avg[[i]] &lt;- mediconv[[i]][[&quot;n.avg&quot;]]
-  df_medconv.prop$ci.lwr[[i]] &lt;- mediconv[[i]][[&quot;n.avg.ci&quot;]][1]
-  df_medconv.prop$ci.upr[[i]] &lt;- mediconv[[i]][[&quot;n.avg.ci&quot;]][2]  
-  df_medconv.prop$pval[[i]] &lt;- mediconv[[i]][[&quot;n.avg.p&quot;]]
-  }
-
-df_medconv &lt;- bind_rows(df_medconv.ind,df_medconv.dir,df_medconv.tot,df_medconv.prop) %&gt;% 
-  arrange(id) %&gt;% 
-  mutate(sig=gtools::stars.pval(pval)) %&gt;% 
-  dplyr::select(-&quot;id&quot;,-&quot;var&quot;)
-
-kable(df_medconv,format = &quot;html&quot;,digits = 3,col.names = colnames, 
-      caption = &quot;Mediated effect of Father Education by Conversation on Voting behaviour&quot;) %&gt;% 
-  kable_styling(full_width = F) %&gt;% 
-  collapse_rows(columns = 1) %&gt;% 
-  footnote(general = note,footnote_as_chunk = T) </code></pre>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;">
 <caption>
 <span id="tab:vot-edpad">Table 2.4: </span>Mediated effect of Father Education by Conversation on Voting behaviour
@@ -5574,7 +4671,7 @@ Indirect
 0.002
 </td>
 <td style="text-align:right;">
-0.026
+0.034
 </td>
 <td style="text-align:left;">
 <ul>
@@ -5591,10 +4688,10 @@ Direct
 -0.001
 </td>
 <td style="text-align:right;">
-0.016
+0.017
 </td>
 <td style="text-align:right;">
-0.122
+0.112
 </td>
 <td style="text-align:left;">
 </td>
@@ -5613,7 +4710,7 @@ Total
 0.018
 </td>
 <td style="text-align:right;">
-0.064
+0.062
 </td>
 <td style="text-align:left;">
 .
@@ -5624,16 +4721,16 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.119
+0.122
 </td>
 <td style="text-align:right;">
--0.252
+-0.162
 </td>
 <td style="text-align:right;">
-1.110
+0.995
 </td>
 <td style="text-align:right;">
-0.086
+0.096
 </td>
 <td style="text-align:left;">
 .
@@ -5656,7 +4753,7 @@ Indirect
 0.004
 </td>
 <td style="text-align:right;">
-0.042
+0.032
 </td>
 <td style="text-align:left;">
 <ul>
@@ -5671,13 +4768,13 @@ Direct
 0.006
 </td>
 <td style="text-align:right;">
--0.001
+-0.002
 </td>
 <td style="text-align:right;">
-0.017
+0.016
 </td>
 <td style="text-align:right;">
-0.132
+0.156
 </td>
 <td style="text-align:left;">
 </td>
@@ -5693,34 +4790,32 @@ Total
 0.000
 </td>
 <td style="text-align:right;">
-0.018
+0.019
 </td>
 <td style="text-align:right;">
-0.050
+0.088
 </td>
 <td style="text-align:left;">
-<ul>
-<li></td>
+.
+</td>
 </tr>
-<tr></li>
-</ul>
+<tr>
 <td style="text-align:left;">
 Proportion
 </td>
 <td style="text-align:right;">
-0.219
+0.211
 </td>
 <td style="text-align:right;">
--0.075
+-0.993
 </td>
 <td style="text-align:right;">
-1.361
+1.325
 </td>
 <td style="text-align:right;">
-0.080
+0.112
 </td>
 <td style="text-align:left;">
-.
 </td>
 </tr>
 <tr>
@@ -5740,10 +4835,10 @@ Indirect
 0.005
 </td>
 <td style="text-align:right;">
-0.002
+0.000
 </td>
 <td style="text-align:left;">
-**
+***
 </td>
 </tr>
 <tr>
@@ -5754,13 +4849,13 @@ Direct
 0.011
 </td>
 <td style="text-align:right;">
-0.003
+0.002
 </td>
 <td style="text-align:right;">
-0.021
+0.020
 </td>
 <td style="text-align:right;">
-0.014
+0.018
 </td>
 <td style="text-align:left;">
 <ul>
@@ -5781,10 +4876,10 @@ Total
 0.023
 </td>
 <td style="text-align:right;">
-0.000
+0.002
 </td>
 <td style="text-align:left;">
-***
+**
 </td>
 </tr>
 <tr>
@@ -5792,13 +4887,13 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.212
+0.207
 </td>
 <td style="text-align:right;">
-0.080
+0.086
 </td>
 <td style="text-align:right;">
-0.537
+0.603
 </td>
 <td style="text-align:right;">
 0.002
@@ -5824,10 +4919,10 @@ Indirect
 0.005
 </td>
 <td style="text-align:right;">
-0.002
+0.000
 </td>
 <td style="text-align:left;">
-**
+***
 </td>
 </tr>
 <tr>
@@ -5841,10 +4936,10 @@ Direct
 -0.006
 </td>
 <td style="text-align:right;">
-0.009
+0.008
 </td>
 <td style="text-align:right;">
-0.990
+0.932
 </td>
 <td style="text-align:left;">
 </td>
@@ -5863,7 +4958,7 @@ Total
 0.012
 </td>
 <td style="text-align:right;">
-0.482
+0.524
 </td>
 <td style="text-align:left;">
 </td>
@@ -5873,16 +4968,16 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.541
+0.531
 </td>
 <td style="text-align:right;">
--7.544
+-12.270
 </td>
 <td style="text-align:right;">
-11.450
+6.690
 </td>
 <td style="text-align:right;">
-0.484
+0.524
 </td>
 <td style="text-align:left;">
 </td>
@@ -5890,86 +4985,6 @@ Proportion
 <tr>
 <td style="text-align:left;vertical-align: middle !important;" rowspan="4">
 Municipal elections (2021)
-</td>
-<td style="text-align:left;">
-Indirect
-</td>
-<td style="text-align:right;">
-0.003
-</td>
-<td style="text-align:right;">
-0.001
-</td>
-<td style="text-align:right;">
-0.005
-</td>
-<td style="text-align:right;">
-0.002
-</td>
-<td style="text-align:left;">
-**
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Direct
-</td>
-<td style="text-align:right;">
-0.003
-</td>
-<td style="text-align:right;">
--0.005
-</td>
-<td style="text-align:right;">
-0.012
-</td>
-<td style="text-align:right;">
-0.574
-</td>
-<td style="text-align:left;">
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Total
-</td>
-<td style="text-align:right;">
-0.005
-</td>
-<td style="text-align:right;">
--0.003
-</td>
-<td style="text-align:right;">
-0.016
-</td>
-<td style="text-align:right;">
-0.250
-</td>
-<td style="text-align:left;">
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Proportion
-</td>
-<td style="text-align:right;">
-0.433
-</td>
-<td style="text-align:right;">
--4.030
-</td>
-<td style="text-align:right;">
-5.095
-</td>
-<td style="text-align:right;">
-0.252
-</td>
-<td style="text-align:left;">
-</td>
-</tr>
-<tr>
-<td style="text-align:left;vertical-align: middle !important;" rowspan="4">
-Regional Governor elections (2021)
 </td>
 <td style="text-align:left;">
 Indirect
@@ -5995,19 +5010,98 @@ Indirect
 Direct
 </td>
 <td style="text-align:right;">
-0.008
+0.003
 </td>
 <td style="text-align:right;">
--0.001
+-0.005
+</td>
+<td style="text-align:right;">
+0.012
+</td>
+<td style="text-align:right;">
+0.576
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Total
+</td>
+<td style="text-align:right;">
+0.006
+</td>
+<td style="text-align:right;">
+-0.003
+</td>
+<td style="text-align:right;">
+0.015
+</td>
+<td style="text-align:right;">
+0.244
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Proportion
+</td>
+<td style="text-align:right;">
+0.422
+</td>
+<td style="text-align:right;">
+-4.609
+</td>
+<td style="text-align:right;">
+3.664
+</td>
+<td style="text-align:right;">
+0.244
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: middle !important;" rowspan="4">
+Regional Governor elections (2021)
+</td>
+<td style="text-align:left;">
+Indirect
+</td>
+<td style="text-align:right;">
+0.003
+</td>
+<td style="text-align:right;">
+0.001
+</td>
+<td style="text-align:right;">
+0.006
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:left;">
+***
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Direct
+</td>
+<td style="text-align:right;">
+0.007
+</td>
+<td style="text-align:right;">
+-0.002
 </td>
 <td style="text-align:right;">
 0.016
 </td>
 <td style="text-align:right;">
-0.090
+0.110
 </td>
 <td style="text-align:left;">
-.
 </td>
 </tr>
 <tr>
@@ -6021,10 +5115,10 @@ Total
 0.001
 </td>
 <td style="text-align:right;">
-0.020
+0.019
 </td>
 <td style="text-align:right;">
-0.022
+0.026
 </td>
 <td style="text-align:left;">
 <ul>
@@ -6036,16 +5130,16 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.298
+0.302
 </td>
 <td style="text-align:right;">
-0.114
+0.098
 </td>
 <td style="text-align:right;">
-1.273
+1.376
 </td>
 <td style="text-align:right;">
-0.022
+0.026
 </td>
 <td style="text-align:left;">
 <ul>
@@ -6068,10 +5162,10 @@ Indirect
 0.003
 </td>
 <td style="text-align:right;">
-0.000
+0.002
 </td>
 <td style="text-align:left;">
-***
+**
 </td>
 </tr>
 <tr></li>
@@ -6089,7 +5183,7 @@ Direct
 0.007
 </td>
 <td style="text-align:right;">
-0.672
+0.634
 </td>
 <td style="text-align:left;">
 </td>
@@ -6099,7 +5193,7 @@ Direct
 Total
 </td>
 <td style="text-align:right;">
-0.001
+0.000
 </td>
 <td style="text-align:right;">
 -0.005
@@ -6108,7 +5202,7 @@ Total
 0.009
 </td>
 <td style="text-align:right;">
-0.992
+0.996
 </td>
 <td style="text-align:left;">
 </td>
@@ -6118,16 +5212,16 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.084
+0.096
 </td>
 <td style="text-align:right;">
--4.388
+-6.367
 </td>
 <td style="text-align:right;">
-5.056
+6.504
 </td>
 <td style="text-align:right;">
-0.992
+0.994
 </td>
 <td style="text-align:left;">
 </td>
@@ -6169,7 +5263,7 @@ Direct
 0.004
 </td>
 <td style="text-align:right;">
-0.216
+0.282
 </td>
 <td style="text-align:left;">
 </td>
@@ -6188,7 +5282,7 @@ Total
 0.006
 </td>
 <td style="text-align:right;">
-0.438
+0.500
 </td>
 <td style="text-align:left;">
 </td>
@@ -6198,16 +5292,16 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
--0.302
+-0.300
 </td>
 <td style="text-align:right;">
--5.393
+-4.690
 </td>
 <td style="text-align:right;">
-4.606
+4.099
 </td>
 <td style="text-align:right;">
-0.440
+0.502
 </td>
 <td style="text-align:left;">
 </td>
@@ -6229,10 +5323,10 @@ Indirect
 0.003
 </td>
 <td style="text-align:right;">
-0.000
+0.002
 </td>
 <td style="text-align:left;">
-***
+**
 </td>
 </tr>
 <tr>
@@ -6249,7 +5343,7 @@ Direct
 0.006
 </td>
 <td style="text-align:right;">
-0.592
+0.590
 </td>
 <td style="text-align:left;">
 </td>
@@ -6268,7 +5362,7 @@ Total
 0.008
 </td>
 <td style="text-align:right;">
-0.928
+0.896
 </td>
 <td style="text-align:left;">
 </td>
@@ -6278,16 +5372,16 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
--0.147
+-0.154
 </td>
 <td style="text-align:right;">
--5.882
+-6.893
 </td>
 <td style="text-align:right;">
-7.406
+5.437
 </td>
 <td style="text-align:right;">
-0.928
+0.898
 </td>
 <td style="text-align:left;">
 </td>
@@ -6302,103 +5396,6 @@ Proportion
 </tfoot>
 </table></li>
 </ul>
-<pre class="r"><code>rm(list=ls())
-if (!require(&quot;pacman&quot;)) install.packages(&quot;pacman&quot;) # instalar pacman
-pacman::p_load(dplyr,       # Manipulacion de datos 
-               haven,       # importar datos en .dta o .sav
-               sjmisc,      # descriptivos y frecuencias
-               sjPlot,      # tablas, plots y descriptivos
-               sjlabelled,
-               summarytools,# resumen de dataframe
-               knitr,       # tablas kable
-               kableExtra,  # tablas kable personalizadas
-               ggplot2,     # plots
-               corrplot,    # plot correlacion
-               tibble,
-               lavaan,
-               texreg
-               )
-
-load(here::here(&quot;input/data/proc/study1.RData&quot;))
-data1 &lt;- study_1 %&gt;% 
-  dplyr::select(-educ,-edmad,-edpad) %&gt;% 
-  dplyr::filter(votpr17 !=2 &amp; votpleb !=2 &amp; votcons !=2) %&gt;%
-  dplyr::select(mujer:conv5a,votpr17:vot2vue,
-         educyear,edmadyear,edpadyear,edparavg,
-         pospolcen,pospolizq,pospolind,pospol 
-         ) %&gt;% 
-  dplyr::mutate(conv1a=as_numeric(conv1a),
-         conv3a=as_numeric(conv3a),
-         conv4a=as_numeric(conv4a),
-         conv5a=as_numeric(conv5a)) %&gt;% 
-  na.omit()
-
-# view_df(data1)
-
-# sjmisc::frq(data1$votpr17)
-# sjmisc::frq(data1$votpleb)
-# sjmisc::frq(data1$votcons)
-
-# Hypothesis___________________________________________________________________
-m1 &lt;- &quot;edmadyear+educyear+conv1a+mujer+pospol&quot;#highschool
-m2 &lt;- &quot;edmadyear+educyear+conv3a+mujer+pospol&quot;# 2sem 2020
-m3 &lt;- &quot;edmadyear+educyear+conv4a+mujer+pospol&quot;# 1sem 2021
-m4 &lt;- &quot;edmadyear+educyear+conv5a+mujer+pospol&quot;# 2sem 2021
-
-hipotesis &lt;- c(m1,m2,m3,m4)
-
-# Set the independent variables (IVs)
-ivs1&lt;- data1 %&gt;% dplyr::select(votpr17) %&gt;% names()        #highschool
-ivs2&lt;- data1 %&gt;% dplyr::select(votpleb) %&gt;% names()        # 2sem 2020
-ivs3&lt;- data1 %&gt;% dplyr::select(votcons:votgobe) %&gt;% names()# 1sem 2021
-ivs4&lt;- data1 %&gt;% dplyr::select(votdipu:vot2vue) %&gt;% names()# 2sem 2021
-
-ivs &lt;- c(ivs1,ivs2,ivs3,ivs4)
-
-# Create the object for each model
-models &lt;- list()
-for (i in ivs1) {
-models[[i]] &lt;- paste0(i,&quot;~&quot;,m1)  
-}
-
-for (i in ivs2) {
-models[[i]] &lt;- paste0(i,&quot;~&quot;,m2)  
-}
-
-for (i in ivs3) {
-models[[i]] &lt;- paste0(i,&quot;~&quot;,m3)  
-}
-
-for (i in ivs4) {
-models[[i]] &lt;- paste0(i,&quot;~&quot;,m4)  
-}
-
-# Estimate logit models
-fits &lt;- list()
-for (i in ivs) {
-  for (z in models[[i]]) {
-    fits[[z]] &lt;- glm(formula =z, data = data1,family = &quot;binomial&quot;)
-  }
-}
-fit1 &lt;- fits
-# change model names within list
-names(fit1) &lt;- paste0(ivs)
-
-# Tables_______________________________________________________________________
-omit &lt;- &quot;(Intercept)|(mujer)|(pospol)&quot;
-
-# detail for subsections:
-# https://stackoverflow.com/questions/69338331/r-markdown-create-section-headers-in-r-and-print-r-output-in-same-section
-
-
-
-caption &lt;- &quot;Voting behaviour, mother education and conversation&quot;
-htmlreg(l = fit1[names(fit1)[grepl(&quot;vot&quot;, names(fit1),&quot;\n&quot;)]],
-        omit.coef = omit,
-        caption = caption,
-        caption.above = T
-        # reorder.coef = reorderc
-        )</code></pre>
 <table class="texreg" style="margin: 10px auto;border-collapse: collapse;border-spacing: 0px;color: #000000;border-top: 2px solid #000000;">
 <caption>
 Voting behaviour, mother education and conversation
@@ -6991,176 +5988,6 @@ Num. obs.
 </tr>
 </tfoot>
 </table>
-<pre class="r"><code># Mediation analysis___________________________________________________________
-mededuc1 &lt;- &quot;edmadyear+conv1a+mujer+pospol&quot;#highschool
-mededuc2 &lt;- &quot;edmadyear+conv3a+mujer+pospol&quot;# 2sem 2020
-mededuc3 &lt;- &quot;edmadyear+conv4a+mujer+pospol&quot;# 1sem 2021
-mededuc4 &lt;- &quot;edmadyear+conv5a+mujer+pospol&quot;# 2sem 2021
-mededuc &lt;- c(mededuc1,mededuc2,mededuc3,mededuc4)
-
-medconv1 &lt;- &quot;edmadyear+educyear+mujer+pospol&quot;#highschool
-medconv2 &lt;- &quot;edmadyear+educyear+mujer+pospol&quot;# 2sem 2020
-medconv3 &lt;- &quot;edmadyear+educyear+mujer+pospol&quot;# 1sem 2021
-medconv4 &lt;- &quot;edmadyear+educyear+mujer+pospol&quot;# 2sem 2021
-medconv &lt;- c(medconv1,medconv2,medconv3,medconv4)
-
-ivs1 &lt;- c(&quot;educyear&quot;)
-ivs2 &lt;- c(&quot;conv1a&quot;,&quot;conv3a&quot;,&quot;conv4a&quot;,&quot;conv5a&quot;)
-
-# Create the object for each model
-lm.educ &lt;- list()
-for (i in ivs1) {
-lm.educ[[i]] &lt;- paste0(i,&quot;~&quot;,mededuc)
-}
-
-lm.conv &lt;- list()
-for (i in ivs2) {
-lm.conv[[i]] &lt;- paste0(i,&quot;~&quot;,medconv)
-}
-
-
-# Estimate OLS models: mediator~predictor
-fit_educ &lt;- list()
-for (i in ivs1) {
-  for (z in lm.educ[[i]]) {
-    fit_educ[[z]] &lt;- lm(formula =z, data = data1)
-  }
-}
-
-
-fit_conv &lt;- list()
-for (i in ivs2) {
-  for (z in lm.conv[[i]]) {
-    fit_conv[[z]] &lt;- lm(formula =z, data = data1)
-  }
-}
-
-# change model names within list
-names(fit_educ) &lt;- paste0(&quot;ed_&quot;,ivs2)
-names(fit_conv) &lt;- paste0(&quot;co_&quot;,ivs2)
-
-# Estimate mediation model_____________________________________________________
-
-############################.
-# mediated by Education    #
-############################.
-medieduc &lt;- list()
-for (i in c(&quot;votpr17&quot;)) {
-  for (z in c(&quot;ed_conv1a&quot;)) {
-medieduc[[i]]&lt;- mediation::mediate(fit_educ[[z]],fit1[[i]], 
-                                treat=&quot;edmadyear&quot;, mediator=&quot;educyear&quot;)    
-  }
-}
-
-for (i in &quot;votpleb&quot;) {
-  for (z in &quot;ed_conv3a&quot;) {
-medieduc[[i]]&lt;- mediation::mediate(fit_educ[[z]],fit1[[i]], 
-                                treat=&quot;edmadyear&quot;, mediator=&quot;educyear&quot;)    
-  }
-}
-
-
-for (i in c(&quot;votcons&quot;,&quot;votconv&quot;,&quot;votmuni&quot;,&quot;votgobe&quot;)) {
-  for (z in &quot;ed_conv4a&quot;) {
-medieduc[[i]]&lt;- mediation::mediate(fit_educ[[z]],fit1[[i]], 
-                                treat=&quot;edmadyear&quot;, mediator=&quot;educyear&quot;)    
-  }
-}
-
-for (i in c(&quot;votdipu&quot;,&quot;vot1vue&quot;,&quot;vot2vue&quot;)) {
-  for (z in &quot;ed_conv5a&quot;) {
-medieduc[[i]]&lt;- mediation::mediate(fit_educ[[z]],fit1[[i]],  
-                                treat=&quot;edmadyear&quot;, mediator=&quot;educyear&quot;)    
-  }
-}
-
-
-# extract the average mediation effects 
-label1 &lt;- 
-  stringr::str_remove_all(string = sjlabelled::get_label(study_1[,names(medieduc)]),
-                          pattern = &quot;Vote: &quot;)
-
-df_mededuc.ind &lt;- data.frame(
-  &quot;id&quot;=1:length(medieduc),
-  &quot;lab&quot;= label1,    
-  &quot;var&quot;=names(medieduc),
-  &quot;effect&quot;=&quot;Indirect&quot;,  
-  &quot;effect.avg&quot;=NA,
-  &quot;ci.lwr&quot;=NA,
-  &quot;ci.upr&quot;=NA,
-  &quot;pval&quot;=NA)
-
-for (i in 1:9) {
-  df_mededuc.ind$effect.avg[[i]] &lt;- medieduc[[i]][[&quot;d.avg&quot;]]
-  df_mededuc.ind$ci.lwr[[i]] &lt;- medieduc[[i]][[&quot;d.avg.ci&quot;]][1]
-  df_mededuc.ind$ci.upr[[i]] &lt;- medieduc[[i]][[&quot;d.avg.ci&quot;]][2]  
-  df_mededuc.ind$pval[[i]] &lt;- medieduc[[i]][[&quot;d.avg.p&quot;]]
-  }
-
-df_mededuc.dir &lt;- data.frame(
-  &quot;id&quot;=1:length(medieduc),
-  &quot;lab&quot;= label1,  
-  &quot;var&quot;=names(medieduc),
-  &quot;effect&quot;=rep(&quot;Direct&quot;,9),
-  &quot;effect.avg&quot;=NA,
-  &quot;ci.lwr&quot;=NA,
-  &quot;ci.upr&quot;=NA,
-  &quot;pval&quot;=NA)
-
-for (i in 1:9) {
-  df_mededuc.dir$effect.avg[[i]] &lt;- medieduc[[i]][[&quot;z.avg&quot;]]
-  df_mededuc.dir$ci.lwr[[i]] &lt;- medieduc[[i]][[&quot;z.avg.ci&quot;]][1]
-  df_mededuc.dir$ci.upr[[i]] &lt;- medieduc[[i]][[&quot;z.avg.ci&quot;]][2]  
-  df_mededuc.dir$pval[[i]] &lt;- medieduc[[i]][[&quot;z.avg.p&quot;]]
-  }
-
-
-df_mededuc.tot &lt;- data.frame(
-  &quot;id&quot;=1:length(medieduc),
-  &quot;lab&quot;= label1,    
-  &quot;var&quot;=names(medieduc),
-  &quot;effect&quot;=rep(&quot;Total&quot;,9),
-  &quot;effect.avg&quot;=NA,
-  &quot;ci.lwr&quot;=NA,
-  &quot;ci.upr&quot;=NA,
-  &quot;pval&quot;=NA)
-
-for (i in 1:9) {
-  df_mededuc.tot$effect.avg[[i]] &lt;- medieduc[[i]][[&quot;tau.coef&quot;]]
-  df_mededuc.tot$ci.lwr[[i]] &lt;- medieduc[[i]][[&quot;tau.ci&quot;]][1]
-  df_mededuc.tot$ci.upr[[i]] &lt;- medieduc[[i]][[&quot;tau.ci&quot;]][2]  
-  df_mededuc.tot$pval[[i]] &lt;- medieduc[[i]][[&quot;tau.p&quot;]]
-  }
-
-df_mededuc.prop &lt;- data.frame(
-  &quot;id&quot;=1:length(medieduc),
-  &quot;lab&quot;= label1,    
-  &quot;var&quot;=names(medieduc),
-  &quot;effect&quot;=rep(&quot;Proportion&quot;,9),
-  &quot;effect.avg&quot;=NA,
-  &quot;ci.lwr&quot;=NA,
-  &quot;ci.upr&quot;=NA,
-  &quot;pval&quot;=NA)
-
-for (i in 1:9) {
-  df_mededuc.prop$effect.avg[[i]] &lt;- medieduc[[i]][[&quot;n.avg&quot;]]
-  df_mededuc.prop$ci.lwr[[i]] &lt;- medieduc[[i]][[&quot;n.avg.ci&quot;]][1]
-  df_mededuc.prop$ci.upr[[i]] &lt;- medieduc[[i]][[&quot;n.avg.ci&quot;]][2]  
-  df_mededuc.prop$pval[[i]] &lt;- medieduc[[i]][[&quot;n.avg.p&quot;]]
-  }
-
-df_mededuc &lt;- bind_rows(df_mededuc.ind,df_mededuc.dir,df_mededuc.tot,df_mededuc.prop) %&gt;% 
-  arrange(id) %&gt;% 
-  mutate(sig=gtools::stars.pval(pval)) %&gt;% 
-  dplyr::select(-&quot;id&quot;,-&quot;var&quot;)
-
-colnames &lt;- c(&quot; &quot;,&quot;Type&quot;,&quot;Effect&quot;,&quot;Lower CI&quot;,&quot;Upper CI&quot;,&quot;p-value&quot;,&quot;Sig.&quot;)
-note &lt;- &quot;‘***’ p &lt; 0.001 ‘**’ p &lt; 0.01 ‘*’ p &lt; 0.05 ‘.’ p &lt; 0.1&quot;
-kable(df_mededuc,format = &quot;html&quot;,digits = 3, col.names = colnames,
-      caption = &quot;Mediated effect of Mother Education by Education on Voting behaviour&quot;) %&gt;% 
-  kable_styling(full_width = F) %&gt;% 
-  collapse_rows(columns = 1) %&gt;% 
-  footnote(general = note,footnote_as_chunk = T)   </code></pre>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;">
 <caption>
 <span id="tab:vot-edmad">Table 2.5: </span>Mediated effect of Mother Education by Education on Voting behaviour
@@ -7204,7 +6031,7 @@ Indirect
 0.003
 </td>
 <td style="text-align:right;">
-0.010
+0.009
 </td>
 <td style="text-align:right;">
 0.000
@@ -7221,10 +6048,10 @@ Direct
 0.013
 </td>
 <td style="text-align:right;">
-0.003
+0.004
 </td>
 <td style="text-align:right;">
-0.023
+0.024
 </td>
 <td style="text-align:right;">
 0.006
@@ -7238,10 +6065,10 @@ Direct
 Total
 </td>
 <td style="text-align:right;">
-0.019
+0.020
 </td>
 <td style="text-align:right;">
-0.009
+0.010
 </td>
 <td style="text-align:right;">
 0.029
@@ -7258,13 +6085,13 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.326
+0.315
 </td>
 <td style="text-align:right;">
-0.153
+0.152
 </td>
 <td style="text-align:right;">
-0.646
+0.636
 </td>
 <td style="text-align:right;">
 0.000
@@ -7310,7 +6137,7 @@ Direct
 0.018
 </td>
 <td style="text-align:right;">
-0.092
+0.080
 </td>
 <td style="text-align:left;">
 .
@@ -7321,16 +6148,16 @@ Direct
 Total
 </td>
 <td style="text-align:right;">
-0.011
+0.012
 </td>
 <td style="text-align:right;">
-0.002
+0.003
 </td>
 <td style="text-align:right;">
 0.022
 </td>
 <td style="text-align:right;">
-0.008
+0.006
 </td>
 <td style="text-align:left;">
 **
@@ -7341,16 +6168,16 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.346
+0.353
 </td>
 <td style="text-align:right;">
-0.106
+0.124
 </td>
 <td style="text-align:right;">
-1.207
+1.143
 </td>
 <td style="text-align:right;">
-0.008
+0.006
 </td>
 <td style="text-align:left;">
 **
@@ -7373,10 +6200,10 @@ Indirect
 0.009
 </td>
 <td style="text-align:right;">
-0.002
+0.000
 </td>
 <td style="text-align:left;">
-**
+***
 </td>
 </tr>
 <tr>
@@ -7390,10 +6217,10 @@ Direct
 0.002
 </td>
 <td style="text-align:right;">
-0.019
+0.020
 </td>
 <td style="text-align:right;">
-0.012
+0.024
 </td>
 <td style="text-align:left;">
 <ul>
@@ -7424,19 +6251,19 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.351
+0.352
 </td>
 <td style="text-align:right;">
-0.173
+0.174
 </td>
 <td style="text-align:right;">
-0.786
+0.763
 </td>
 <td style="text-align:right;">
-0.002
+0.000
 </td>
 <td style="text-align:left;">
-**
+***
 </td>
 </tr>
 <tr>
@@ -7453,7 +6280,7 @@ Indirect
 0.002
 </td>
 <td style="text-align:right;">
-0.008
+0.007
 </td>
 <td style="text-align:right;">
 0.000
@@ -7476,7 +6303,7 @@ Direct
 0.013
 </td>
 <td style="text-align:right;">
-0.402
+0.414
 </td>
 <td style="text-align:left;">
 </td>
@@ -7495,7 +6322,7 @@ Total
 0.018
 </td>
 <td style="text-align:right;">
-0.046
+0.048
 </td>
 <td style="text-align:left;">
 <ul>
@@ -7507,16 +6334,16 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.542
+0.561
 </td>
 <td style="text-align:right;">
-0.129
+0.066
 </td>
 <td style="text-align:right;">
-3.471
+3.645
 </td>
 <td style="text-align:right;">
-0.046
+0.048
 </td>
 <td style="text-align:left;">
 <ul>
@@ -7551,16 +6378,16 @@ Indirect
 Direct
 </td>
 <td style="text-align:right;">
-0.005
+0.004
 </td>
 <td style="text-align:right;">
 -0.004
 </td>
 <td style="text-align:right;">
-0.014
+0.013
 </td>
 <td style="text-align:right;">
-0.320
+0.342
 </td>
 <td style="text-align:left;">
 </td>
@@ -7576,34 +6403,35 @@ Total
 0.000
 </td>
 <td style="text-align:right;">
-0.019
+0.018
 </td>
 <td style="text-align:right;">
-0.052
+0.048
 </td>
 <td style="text-align:left;">
-.
-</td>
+<ul>
+<li></td>
 </tr>
-<tr>
+<tr></li>
+</ul>
 <td style="text-align:left;">
 Proportion
 </td>
 <td style="text-align:right;">
-0.498
+0.519
 </td>
 <td style="text-align:right;">
--0.511
+0.105
 </td>
 <td style="text-align:right;">
-2.769
+2.960
 </td>
 <td style="text-align:right;">
-0.052
+0.048
 </td>
 <td style="text-align:left;">
-.
-</td>
+<ul>
+<li></td>
 </tr>
 <tr>
 <td style="text-align:left;vertical-align: middle !important;" rowspan="4">
@@ -7619,7 +6447,7 @@ Indirect
 0.001
 </td>
 <td style="text-align:right;">
-0.007
+0.006
 </td>
 <td style="text-align:right;">
 0.000
@@ -7628,7 +6456,8 @@ Indirect
 ***
 </td>
 </tr>
-<tr>
+<tr></li>
+</ul>
 <td style="text-align:left;">
 Direct
 </td>
@@ -7636,19 +6465,20 @@ Direct
 0.011
 </td>
 <td style="text-align:right;">
-0.003
+0.002
 </td>
 <td style="text-align:right;">
 0.019
 </td>
 <td style="text-align:right;">
-0.006
+0.014
 </td>
 <td style="text-align:left;">
-**
-</td>
+<ul>
+<li></td>
 </tr>
-<tr>
+<tr></li>
+</ul>
 <td style="text-align:left;">
 Total
 </td>
@@ -7656,16 +6486,16 @@ Total
 0.015
 </td>
 <td style="text-align:right;">
-0.007
+0.006
 </td>
 <td style="text-align:right;">
-0.023
+0.022
 </td>
 <td style="text-align:right;">
-0.000
+0.002
 </td>
 <td style="text-align:left;">
-***
+**
 </td>
 </tr>
 <tr>
@@ -7673,19 +6503,19 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.238
+0.245
 </td>
 <td style="text-align:right;">
-0.074
+0.078
 </td>
 <td style="text-align:right;">
-0.637
+0.640
 </td>
 <td style="text-align:right;">
-0.000
+0.002
 </td>
 <td style="text-align:left;">
-***
+**
 </td>
 </tr>
 <tr>
@@ -7702,7 +6532,7 @@ Indirect
 0.002
 </td>
 <td style="text-align:right;">
-0.008
+0.007
 </td>
 <td style="text-align:right;">
 0.000
@@ -7722,10 +6552,10 @@ Direct
 -0.005
 </td>
 <td style="text-align:right;">
-0.011
+0.012
 </td>
 <td style="text-align:right;">
-0.720
+0.702
 </td>
 <td style="text-align:left;">
 </td>
@@ -7744,10 +6574,9 @@ Total
 0.017
 </td>
 <td style="text-align:right;">
-0.098
+0.116
 </td>
 <td style="text-align:left;">
-.
 </td>
 </tr>
 <tr>
@@ -7755,19 +6584,18 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.674
+0.653
 </td>
 <td style="text-align:right;">
--2.589
+-5.686
 </td>
 <td style="text-align:right;">
-6.382
+7.609
 </td>
 <td style="text-align:right;">
-0.098
+0.116
 </td>
 <td style="text-align:left;">
-.
 </td>
 </tr>
 <tr>
@@ -7787,7 +6615,7 @@ Indirect
 0.004
 </td>
 <td style="text-align:right;">
-0.036
+0.032
 </td>
 <td style="text-align:left;">
 <ul>
@@ -7808,7 +6636,7 @@ Direct
 0.008
 </td>
 <td style="text-align:right;">
-0.962
+0.956
 </td>
 <td style="text-align:left;">
 </td>
@@ -7827,7 +6655,7 @@ Total
 0.011
 </td>
 <td style="text-align:right;">
-0.552
+0.596
 </td>
 <td style="text-align:left;">
 </td>
@@ -7837,16 +6665,16 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.365
+0.374
 </td>
 <td style="text-align:right;">
--8.248
+-4.968
 </td>
 <td style="text-align:right;">
-8.393
+7.024
 </td>
 <td style="text-align:right;">
-0.560
+0.620
 </td>
 <td style="text-align:left;">
 </td>
@@ -7868,14 +6696,13 @@ Indirect
 0.005
 </td>
 <td style="text-align:right;">
-0.018
+0.010
 </td>
 <td style="text-align:left;">
-<ul>
-<li></td>
+**
+</td>
 </tr>
-<tr></li>
-</ul>
+<tr>
 <td style="text-align:left;">
 Direct
 </td>
@@ -7886,10 +6713,10 @@ Direct
 -0.005
 </td>
 <td style="text-align:right;">
-0.011
+0.010
 </td>
 <td style="text-align:right;">
-0.894
+0.936
 </td>
 <td style="text-align:left;">
 </td>
@@ -7899,7 +6726,7 @@ Direct
 Total
 </td>
 <td style="text-align:right;">
-0.004
+0.003
 </td>
 <td style="text-align:right;">
 -0.003
@@ -7908,7 +6735,7 @@ Total
 0.013
 </td>
 <td style="text-align:right;">
-0.418
+0.440
 </td>
 <td style="text-align:left;">
 </td>
@@ -7918,16 +6745,16 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.478
+0.483
 </td>
 <td style="text-align:right;">
--6.187
+-7.291
 </td>
 <td style="text-align:right;">
-7.772
+7.043
 </td>
 <td style="text-align:right;">
-0.432
+0.450
 </td>
 <td style="text-align:left;">
 </td>
@@ -7942,120 +6769,6 @@ Proportion
 </tfoot>
 </table></li>
 </ul>
-<pre class="r"><code>############################.
-# mediated by conversation #
-############################.
-
-mediconv &lt;- list()
-for (i in c(&quot;votpr17&quot;)) {
-  for (z in c(&quot;co_conv1a&quot;)) {
-mediconv[[i]]&lt;- mediation::mediate(fit_conv[[z]],fit1[[i]], 
-                                treat=&quot;edmadyear&quot;, mediator=&quot;conv1a&quot;)    
-  }
-}
-
-for (i in &quot;votpleb&quot;) {
-  for (z in &quot;co_conv3a&quot;) {
-mediconv[[i]]&lt;- mediation::mediate(fit_conv[[z]],fit1[[i]], 
-                                treat=&quot;edmadyear&quot;, mediator=&quot;conv3a&quot;)    
-  }
-}
-
-
-for (i in c(&quot;votcons&quot;,&quot;votconv&quot;,&quot;votmuni&quot;,&quot;votgobe&quot;)) {
-  for (z in &quot;co_conv4a&quot;) {
-mediconv[[i]]&lt;- mediation::mediate(fit_conv[[z]],fit1[[i]],
-                                treat=&quot;edmadyear&quot;, mediator=&quot;conv4a&quot;)    
-  }
-}
-
-for (i in c(&quot;votdipu&quot;,&quot;vot1vue&quot;,&quot;vot2vue&quot;)) {
-  for (z in &quot;co_conv5a&quot;) {
-mediconv[[i]]&lt;- mediation::mediate(fit_conv[[z]],fit1[[i]],
-                                treat=&quot;edmadyear&quot;, mediator=&quot;conv5a&quot;)    
-  }
-}
-
-# extract the average mediation effects 
-df_medconv.ind &lt;- data.frame(
-  &quot;id&quot;=1:length(mediconv),
-  &quot;lab&quot;= label1,  
-  &quot;var&quot;=names(mediconv),
-  &quot;effect&quot;=&quot;Indirect&quot;,  
-  &quot;effect.avg&quot;=NA,
-  &quot;ci.lwr&quot;=NA,
-  &quot;ci.upr&quot;=NA,
-  &quot;pval&quot;=NA)
-
-for (i in 1:9) {
-  df_medconv.ind$effect.avg[[i]] &lt;- mediconv[[i]][[&quot;d.avg&quot;]]
-  df_medconv.ind$ci.lwr[[i]] &lt;- mediconv[[i]][[&quot;d.avg.ci&quot;]][1]
-  df_medconv.ind$ci.upr[[i]] &lt;- mediconv[[i]][[&quot;d.avg.ci&quot;]][2]  
-  df_medconv.ind$pval[[i]] &lt;- mediconv[[i]][[&quot;d.avg.p&quot;]]
-  }
-
-df_medconv.dir &lt;- data.frame(
-  &quot;id&quot;=1:length(mediconv),
-  &quot;lab&quot;= label1,  
-  &quot;var&quot;=names(mediconv),
-  &quot;effect&quot;=rep(&quot;Direct&quot;,9),
-  &quot;effect.avg&quot;=NA,
-  &quot;ci.lwr&quot;=NA,
-  &quot;ci.upr&quot;=NA,
-  &quot;pval&quot;=NA)
-
-for (i in 1:9) {
-  df_medconv.dir$effect.avg[[i]] &lt;- mediconv[[i]][[&quot;z.avg&quot;]]
-  df_medconv.dir$ci.lwr[[i]] &lt;- mediconv[[i]][[&quot;z.avg.ci&quot;]][1]
-  df_medconv.dir$ci.upr[[i]] &lt;- mediconv[[i]][[&quot;z.avg.ci&quot;]][2]  
-  df_medconv.dir$pval[[i]] &lt;- mediconv[[i]][[&quot;z.avg.p&quot;]]
-  }
-
-
-df_medconv.tot &lt;- data.frame(
-  &quot;id&quot;=1:length(medieduc),
-  &quot;lab&quot;= label1,  
-  &quot;var&quot;=names(medieduc),
-  &quot;effect&quot;=rep(&quot;Total&quot;,9),
-  &quot;effect.avg&quot;=NA,
-  &quot;ci.lwr&quot;=NA,
-  &quot;ci.upr&quot;=NA,
-  &quot;pval&quot;=NA)
-
-for (i in 1:9) {
-  df_medconv.tot$effect.avg[[i]] &lt;- mediconv[[i]][[&quot;tau.coef&quot;]]
-  df_medconv.tot$ci.lwr[[i]] &lt;- mediconv[[i]][[&quot;tau.ci&quot;]][1]
-  df_medconv.tot$ci.upr[[i]] &lt;- mediconv[[i]][[&quot;tau.ci&quot;]][2]  
-  df_medconv.tot$pval[[i]] &lt;- mediconv[[i]][[&quot;tau.p&quot;]]
-  }
-
-df_medconv.prop &lt;- data.frame(
-  &quot;id&quot;=1:length(medieduc),
-  &quot;lab&quot;= label1,  
-  &quot;var&quot;=names(medieduc),
-  &quot;effect&quot;=rep(&quot;Proportion&quot;,9),
-  &quot;effect.avg&quot;=NA,
-  &quot;ci.lwr&quot;=NA,
-  &quot;ci.upr&quot;=NA,
-  &quot;pval&quot;=NA)
-
-for (i in 1:9) {
-  df_medconv.prop$effect.avg[[i]] &lt;- mediconv[[i]][[&quot;n.avg&quot;]]
-  df_medconv.prop$ci.lwr[[i]] &lt;- mediconv[[i]][[&quot;n.avg.ci&quot;]][1]
-  df_medconv.prop$ci.upr[[i]] &lt;- mediconv[[i]][[&quot;n.avg.ci&quot;]][2]  
-  df_medconv.prop$pval[[i]] &lt;- mediconv[[i]][[&quot;n.avg.p&quot;]]
-  }
-
-df_medconv &lt;- bind_rows(df_medconv.ind,df_medconv.dir,df_medconv.tot,df_medconv.prop) %&gt;% 
-  arrange(id) %&gt;% 
-  mutate(sig=gtools::stars.pval(pval)) %&gt;% 
-  dplyr::select(-&quot;id&quot;,-&quot;var&quot;)
-
-kable(df_medconv,format = &quot;html&quot;,digits = 3,col.names = colnames, 
-      caption = &quot;Mediated effect of Mother Education by Conversation on Voting behaviour&quot;) %&gt;% 
-  kable_styling(full_width = F) %&gt;% 
-  collapse_rows(columns = 1) %&gt;% 
-  footnote(general = note,footnote_as_chunk = T)   </code></pre>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;">
 <caption>
 <span id="tab:vot-edmad">Table 2.5: </span>Mediated effect of Mother Education by Conversation on Voting behaviour
@@ -8102,7 +6815,7 @@ Indirect
 0.002
 </td>
 <td style="text-align:right;">
-0.038
+0.028
 </td>
 <td style="text-align:left;">
 <ul>
@@ -8116,13 +6829,13 @@ Direct
 0.013
 </td>
 <td style="text-align:right;">
-0.003
-</td>
-<td style="text-align:right;">
-0.023
-</td>
-<td style="text-align:right;">
 0.004
+</td>
+<td style="text-align:right;">
+0.024
+</td>
+<td style="text-align:right;">
+0.006
 </td>
 <td style="text-align:left;">
 **
@@ -8136,13 +6849,13 @@ Total
 0.014
 </td>
 <td style="text-align:right;">
+0.005
+</td>
+<td style="text-align:right;">
+0.025
+</td>
+<td style="text-align:right;">
 0.004
-</td>
-<td style="text-align:right;">
-0.024
-</td>
-<td style="text-align:right;">
-0.002
 </td>
 <td style="text-align:left;">
 **
@@ -8153,16 +6866,16 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.067
+0.071
 </td>
 <td style="text-align:right;">
-0.002
+0.003
 </td>
 <td style="text-align:right;">
-0.297
+0.264
 </td>
 <td style="text-align:right;">
-0.040
+0.032
 </td>
 <td style="text-align:left;">
 <ul>
@@ -8185,7 +6898,7 @@ Indirect
 0.003
 </td>
 <td style="text-align:right;">
-0.120
+0.124
 </td>
 <td style="text-align:left;">
 </td>
@@ -8202,10 +6915,10 @@ Direct
 0.000
 </td>
 <td style="text-align:right;">
-0.017
+0.018
 </td>
 <td style="text-align:right;">
-0.070
+0.072
 </td>
 <td style="text-align:left;">
 .
@@ -8219,13 +6932,13 @@ Total
 0.009
 </td>
 <td style="text-align:right;">
-0.001
+0.000
 </td>
 <td style="text-align:right;">
 0.019
 </td>
 <td style="text-align:right;">
-0.034
+0.032
 </td>
 <td style="text-align:left;">
 <ul>
@@ -8237,16 +6950,16 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
+0.152
+</td>
+<td style="text-align:right;">
+-0.157
+</td>
+<td style="text-align:right;">
+0.925
+</td>
+<td style="text-align:right;">
 0.148
-</td>
-<td style="text-align:right;">
--0.107
-</td>
-<td style="text-align:right;">
-0.813
-</td>
-<td style="text-align:right;">
-0.142
 </td>
 <td style="text-align:left;">
 </td>
@@ -8268,7 +6981,7 @@ Indirect
 0.004
 </td>
 <td style="text-align:right;">
-0.024
+0.022
 </td>
 <td style="text-align:left;">
 <ul>
@@ -8289,7 +7002,7 @@ Direct
 0.020
 </td>
 <td style="text-align:right;">
-0.018
+0.016
 </td>
 <td style="text-align:left;">
 <ul>
@@ -8310,7 +7023,7 @@ Total
 0.022
 </td>
 <td style="text-align:right;">
-0.004
+0.008
 </td>
 <td style="text-align:left;">
 **
@@ -8321,16 +7034,16 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.161
+0.157
 </td>
 <td style="text-align:right;">
-0.016
+0.019
 </td>
 <td style="text-align:right;">
-0.536
+0.526
 </td>
 <td style="text-align:right;">
-0.024
+0.030
 </td>
 <td style="text-align:left;">
 <ul>
@@ -8353,7 +7066,7 @@ Indirect
 0.004
 </td>
 <td style="text-align:right;">
-0.026
+0.022
 </td>
 <td style="text-align:left;">
 <ul>
@@ -8366,16 +7079,16 @@ Indirect
 Direct
 </td>
 <td style="text-align:right;">
-0.003
+0.004
 </td>
 <td style="text-align:right;">
 -0.004
 </td>
 <td style="text-align:right;">
-0.013
+0.012
 </td>
 <td style="text-align:right;">
-0.434
+0.406
 </td>
 <td style="text-align:left;">
 </td>
@@ -8385,7 +7098,7 @@ Direct
 Total
 </td>
 <td style="text-align:right;">
-0.005
+0.006
 </td>
 <td style="text-align:right;">
 -0.002
@@ -8394,7 +7107,7 @@ Total
 0.015
 </td>
 <td style="text-align:right;">
-0.206
+0.202
 </td>
 <td style="text-align:left;">
 </td>
@@ -8404,16 +7117,16 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.316
+0.286
 </td>
 <td style="text-align:right;">
--3.730
+-2.523
 </td>
 <td style="text-align:right;">
-3.852
+3.114
 </td>
 <td style="text-align:right;">
-0.208
+0.216
 </td>
 <td style="text-align:left;">
 </td>
@@ -8435,7 +7148,7 @@ Indirect
 0.004
 </td>
 <td style="text-align:right;">
-0.020
+0.028
 </td>
 <td style="text-align:left;">
 <ul>
@@ -8447,16 +7160,16 @@ Indirect
 Direct
 </td>
 <td style="text-align:right;">
-0.005
+0.004
 </td>
 <td style="text-align:right;">
--0.003
+-0.004
 </td>
 <td style="text-align:right;">
-0.015
+0.014
 </td>
 <td style="text-align:right;">
-0.298
+0.328
 </td>
 <td style="text-align:left;">
 </td>
@@ -8472,10 +7185,10 @@ Total
 -0.002
 </td>
 <td style="text-align:right;">
-0.017
+0.016
 </td>
 <td style="text-align:right;">
-0.144
+0.178
 </td>
 <td style="text-align:left;">
 </td>
@@ -8485,16 +7198,16 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.264
+0.268
 </td>
 <td style="text-align:right;">
--1.654
+-1.915
 </td>
 <td style="text-align:right;">
-2.305
+1.800
 </td>
 <td style="text-align:right;">
-0.160
+0.194
 </td>
 <td style="text-align:left;">
 </td>
@@ -8516,7 +7229,7 @@ Indirect
 0.004
 </td>
 <td style="text-align:right;">
-0.030
+0.016
 </td>
 <td style="text-align:left;">
 <ul>
@@ -8531,13 +7244,13 @@ Direct
 0.011
 </td>
 <td style="text-align:right;">
-0.003
+0.002
 </td>
 <td style="text-align:right;">
 0.020
 </td>
 <td style="text-align:right;">
-0.010
+0.004
 </td>
 <td style="text-align:left;">
 **
@@ -8551,16 +7264,16 @@ Total
 0.014
 </td>
 <td style="text-align:right;">
-0.005
+0.004
 </td>
 <td style="text-align:right;">
 0.022
 </td>
 <td style="text-align:right;">
-0.002
+0.000
 </td>
 <td style="text-align:left;">
-**
+***
 </td>
 </tr>
 <tr>
@@ -8571,13 +7284,13 @@ Proportion
 0.157
 </td>
 <td style="text-align:right;">
-0.017
+0.022
 </td>
 <td style="text-align:right;">
-0.415
+0.523
 </td>
 <td style="text-align:right;">
-0.032
+0.016
 </td>
 <td style="text-align:left;">
 <ul>
@@ -8600,7 +7313,7 @@ Indirect
 0.002
 </td>
 <td style="text-align:right;">
-0.302
+0.344
 </td>
 <td style="text-align:left;">
 </td>
@@ -8620,7 +7333,7 @@ Direct
 0.011
 </td>
 <td style="text-align:right;">
-0.682
+0.662
 </td>
 <td style="text-align:left;">
 </td>
@@ -8630,16 +7343,16 @@ Direct
 Total
 </td>
 <td style="text-align:right;">
-0.003
+0.002
 </td>
 <td style="text-align:right;">
 -0.004
 </td>
 <td style="text-align:right;">
-0.013
+0.012
 </td>
 <td style="text-align:right;">
-0.588
+0.594
 </td>
 <td style="text-align:left;">
 </td>
@@ -8649,16 +7362,16 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.103
+0.091
 </td>
 <td style="text-align:right;">
--2.270
+-1.923
 </td>
 <td style="text-align:right;">
-2.347
+1.524
 </td>
 <td style="text-align:right;">
-0.646
+0.686
 </td>
 <td style="text-align:left;">
 </td>
@@ -8680,7 +7393,7 @@ Indirect
 0.002
 </td>
 <td style="text-align:right;">
-0.332
+0.300
 </td>
 <td style="text-align:left;">
 </td>
@@ -8699,7 +7412,7 @@ Direct
 0.009
 </td>
 <td style="text-align:right;">
-0.924
+0.968
 </td>
 <td style="text-align:left;">
 </td>
@@ -8718,7 +7431,7 @@ Total
 0.010
 </td>
 <td style="text-align:right;">
-0.830
+0.840
 </td>
 <td style="text-align:left;">
 </td>
@@ -8728,16 +7441,16 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.054
+0.051
 </td>
 <td style="text-align:right;">
--2.185
+-3.504
 </td>
 <td style="text-align:right;">
-2.351
+3.065
 </td>
 <td style="text-align:right;">
-0.838
+0.844
 </td>
 <td style="text-align:left;">
 </td>
@@ -8753,13 +7466,13 @@ Indirect
 0.000
 </td>
 <td style="text-align:right;">
-0.000
+-0.001
 </td>
 <td style="text-align:right;">
 0.002
 </td>
 <td style="text-align:right;">
-0.332
+0.380
 </td>
 <td style="text-align:left;">
 </td>
@@ -8775,10 +7488,10 @@ Direct
 -0.004
 </td>
 <td style="text-align:right;">
-0.010
+0.009
 </td>
 <td style="text-align:right;">
-0.902
+0.846
 </td>
 <td style="text-align:left;">
 </td>
@@ -8788,16 +7501,16 @@ Direct
 Total
 </td>
 <td style="text-align:right;">
-0.001
+0.002
 </td>
 <td style="text-align:right;">
 -0.004
 </td>
 <td style="text-align:right;">
-0.010
+0.009
 </td>
 <td style="text-align:right;">
-0.794
+0.734
 </td>
 <td style="text-align:left;">
 </td>
@@ -8807,16 +7520,16 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.055
+0.064
 </td>
 <td style="text-align:right;">
--2.286
+-2.958
 </td>
 <td style="text-align:right;">
-2.247
+3.427
 </td>
 <td style="text-align:right;">
-0.806
+0.790
 </td>
 <td style="text-align:left;">
 </td>
@@ -8831,100 +7544,6 @@ Proportion
 </tfoot>
 </table></li>
 </ul>
-<pre class="r"><code>rm(list=ls())
-if (!require(&quot;pacman&quot;)) install.packages(&quot;pacman&quot;) # instalar pacman
-pacman::p_load(dplyr,       # Manipulacion de datos 
-               haven,       # importar datos en .dta o .sav
-               sjmisc,      # descriptivos y frecuencias
-               sjPlot,      # tablas, plots y descriptivos
-               sjlabelled,
-               summarytools,# resumen de dataframe
-               knitr,       # tablas kable
-               kableExtra,  # tablas kable personalizadas
-               ggplot2,     # plots
-               corrplot,    # plot correlacion
-               tibble,
-               lavaan,
-               texreg 
-               )
-
-load(here::here(&quot;input/data/proc/study1.RData&quot;))
-data1 &lt;- study_1 %&gt;% 
-  dplyr::select(-educ,-edmad,-edpad) %&gt;% 
-  dplyr::filter(votpr17 !=2 &amp; votpleb !=2 &amp; votcons !=2) %&gt;%
-  dplyr::select(mujer:conv5a,votpr17:vot2vue,
-         educyear,edmadyear,edpadyear,edparavg,
-         pospolcen,pospolizq,pospolind,pospol 
-         ) %&gt;% 
-  dplyr::mutate(conv1a=as_numeric(conv1a),
-         conv3a=as_numeric(conv3a),
-         conv4a=as_numeric(conv4a),
-         conv5a=as_numeric(conv5a)) %&gt;% 
-  na.omit()
-
-# view_df(data1)
-
-# sjmisc::frq(data1$votpr17)
-# sjmisc::frq(data1$votpleb)
-# sjmisc::frq(data1$votcons)
-
-# Hypothesis___________________________________________________________________
-m1 &lt;- &quot;edparavg+educyear+conv1a+mujer+pospol&quot;#highschool
-m2 &lt;- &quot;edparavg+educyear+conv3a+mujer+pospol&quot;# 2sem 2020
-m3 &lt;- &quot;edparavg+educyear+conv4a+mujer+pospol&quot;# 1sem 2021
-m4 &lt;- &quot;edparavg+educyear+conv5a+mujer+pospol&quot;# 2sem 2021
-
-hipotesis &lt;- c(m1,m2,m3,m4)
-
-# Set the independent variables (IVs)
-ivs1&lt;- data1 %&gt;% dplyr::select(votpr17) %&gt;% names()        #highschool
-ivs2&lt;- data1 %&gt;% dplyr::select(votpleb) %&gt;% names()        # 2sem 2020
-ivs3&lt;- data1 %&gt;% dplyr::select(votcons:votgobe) %&gt;% names()# 1sem 2021
-ivs4&lt;- data1 %&gt;% dplyr::select(votdipu:vot2vue) %&gt;% names()# 2sem 2021
-
-ivs &lt;- c(ivs1,ivs2,ivs3,ivs4)
-
-# Create the object for each model
-models &lt;- list()
-for (i in ivs1) {
-models[[i]] &lt;- paste0(i,&quot;~&quot;,m1)  
-}
-
-for (i in ivs2) {
-models[[i]] &lt;- paste0(i,&quot;~&quot;,m2)  
-}
-
-for (i in ivs3) {
-models[[i]] &lt;- paste0(i,&quot;~&quot;,m3)  
-}
-
-for (i in ivs4) {
-models[[i]] &lt;- paste0(i,&quot;~&quot;,m4)  
-}
-
-# Estimate logit models
-fits &lt;- list()
-for (i in ivs) {
-  for (z in models[[i]]) {
-    fits[[z]] &lt;- glm(formula =z, data = data1,family = &quot;binomial&quot;)
-  }
-}
-fit1 &lt;- fits
-# change model names within list
-names(fit1) &lt;- paste0(ivs)
-
-# Tables_______________________________________________________________________
-omit &lt;- &quot;(Intercept)|(mujer)|(pospol)&quot;
-# detail for subsections:
-# https://stackoverflow.com/questions/69338331/r-markdown-create-section-headers-in-r-and-print-r-output-in-same-section
-
-caption &lt;- &quot;Voting behaviour, parental education and conversation&quot;
-htmlreg(l = fit1[names(fit1)[grepl(&quot;vot&quot;, names(fit1),&quot;\n&quot;)]],
-        omit.coef = omit,
-        caption = caption,
-        caption.above = T
-        # reorder.coef = reorderc
-        )</code></pre>
 <table class="texreg" style="margin: 10px auto;border-collapse: collapse;border-spacing: 0px;color: #000000;border-top: 2px solid #000000;">
 <caption>
 Voting behaviour, parental education and conversation
@@ -9517,178 +8136,6 @@ Num. obs.
 </tr>
 </tfoot>
 </table>
-<pre class="r"><code># Mediation analysis___________________________________________________________
-mededuc1 &lt;- &quot;edparavg+conv1a+mujer+pospol&quot;#highschool
-mededuc2 &lt;- &quot;edparavg+conv3a+mujer+pospol&quot;# 2sem 2020
-mededuc3 &lt;- &quot;edparavg+conv4a+mujer+pospol&quot;# 1sem 2021
-mededuc4 &lt;- &quot;edparavg+conv5a+mujer+pospol&quot;# 2sem 2021
-mededuc &lt;- c(mededuc1,mededuc2,mededuc3,mededuc4)
-
-medconv1 &lt;- &quot;edparavg+educyear+mujer+pospol&quot;#highschool
-medconv2 &lt;- &quot;edparavg+educyear+mujer+pospol&quot;# 2sem 2020
-medconv3 &lt;- &quot;edparavg+educyear+mujer+pospol&quot;# 1sem 2021
-medconv4 &lt;- &quot;edparavg+educyear+mujer+pospol&quot;# 2sem 2021
-medconv &lt;- c(medconv1,medconv2,medconv3,medconv4)
-
-ivs1 &lt;- c(&quot;educyear&quot;)
-ivs2 &lt;- c(&quot;conv1a&quot;,&quot;conv3a&quot;,&quot;conv4a&quot;,&quot;conv5a&quot;)
-
-# Create the object for each model
-lm.educ &lt;- list()
-for (i in ivs1) {
-lm.educ[[i]] &lt;- paste0(i,&quot;~&quot;,mededuc)
-}
-
-lm.conv &lt;- list()
-for (i in ivs2) {
-lm.conv[[i]] &lt;- paste0(i,&quot;~&quot;,medconv)
-}
-
-
-# Estimate OLS models: mediator~predictor
-fit_educ &lt;- list()
-for (i in ivs1) {
-  for (z in lm.educ[[i]]) {
-    fit_educ[[z]] &lt;- lm(formula =z, data = data1)
-  }
-}
-
-
-fit_conv &lt;- list()
-for (i in ivs2) {
-  for (z in lm.conv[[i]]) {
-    fit_conv[[z]] &lt;- lm(formula =z, data = data1)
-  }
-}
-
-# change model names within list
-names(fit_educ) &lt;- paste0(&quot;ed_&quot;,ivs2)
-names(fit_conv) &lt;- paste0(&quot;co_&quot;,ivs2)
-
-# Estimate mediation model_____________________________________________________
-
-############################.
-# mediated by Education    #
-############################.
-medieduc &lt;- list()
-for (i in c(&quot;votpr17&quot;)) {
-  for (z in c(&quot;ed_conv1a&quot;)) {
-medieduc[[i]]&lt;- mediation::mediate(fit_educ[[z]],fit1[[i]], 
-                                treat=&quot;edparavg&quot;, mediator=&quot;educyear&quot;)    
-  }
-}
-
-for (i in &quot;votpleb&quot;) {
-  for (z in &quot;ed_conv3a&quot;) {
-medieduc[[i]]&lt;- mediation::mediate(fit_educ[[z]],fit1[[i]], 
-                                treat=&quot;edparavg&quot;, mediator=&quot;educyear&quot;)    
-  }
-}
-
-
-for (i in c(&quot;votcons&quot;,&quot;votconv&quot;,&quot;votmuni&quot;,&quot;votgobe&quot;)) {
-  for (z in &quot;ed_conv4a&quot;) {
-medieduc[[i]]&lt;- mediation::mediate(fit_educ[[z]],fit1[[i]], 
-                                treat=&quot;edparavg&quot;, mediator=&quot;educyear&quot;)    
-  }
-}
-
-for (i in c(&quot;votdipu&quot;,&quot;vot1vue&quot;,&quot;vot2vue&quot;)) {
-  for (z in &quot;ed_conv5a&quot;) {
-medieduc[[i]]&lt;- mediation::mediate(fit_educ[[z]],fit1[[i]],  
-                                treat=&quot;edparavg&quot;, mediator=&quot;educyear&quot;)    
-  }
-}
-
-
-# extract the average mediation effects 
-label1 &lt;- 
-  stringr::str_remove_all(string = sjlabelled::get_label(study_1[,names(medieduc)]),
-                          pattern = &quot;Vote: &quot;)
-
-df_mededuc.ind &lt;- data.frame(
-  &quot;id&quot;=1:length(medieduc),
-  &quot;lab&quot;= label1,  
-  &quot;var&quot;=names(medieduc),
-  &quot;effect&quot;=&quot;Indirect&quot;,  
-  &quot;effect.avg&quot;=NA,
-  &quot;ci.lwr&quot;=NA,
-  &quot;ci.upr&quot;=NA,
-  &quot;pval&quot;=NA)
-
-for (i in 1:9) {
-  df_mededuc.ind$effect.avg[[i]] &lt;- medieduc[[i]][[&quot;d.avg&quot;]]
-  df_mededuc.ind$ci.lwr[[i]] &lt;- medieduc[[i]][[&quot;d.avg.ci&quot;]][1]
-  df_mededuc.ind$ci.upr[[i]] &lt;- medieduc[[i]][[&quot;d.avg.ci&quot;]][2]  
-  df_mededuc.ind$pval[[i]] &lt;- medieduc[[i]][[&quot;d.avg.p&quot;]]
-  }
-
-df_mededuc.dir &lt;- data.frame(
-  &quot;id&quot;=1:length(medieduc),
-  &quot;lab&quot;= label1,  
-  &quot;var&quot;=names(medieduc),
-  &quot;effect&quot;=rep(&quot;Direct&quot;,9),
-  &quot;effect.avg&quot;=NA,
-  &quot;ci.lwr&quot;=NA,
-  &quot;ci.upr&quot;=NA,
-  &quot;pval&quot;=NA)
-
-for (i in 1:9) {
-  df_mededuc.dir$effect.avg[[i]] &lt;- medieduc[[i]][[&quot;z.avg&quot;]]
-  df_mededuc.dir$ci.lwr[[i]] &lt;- medieduc[[i]][[&quot;z.avg.ci&quot;]][1]
-  df_mededuc.dir$ci.upr[[i]] &lt;- medieduc[[i]][[&quot;z.avg.ci&quot;]][2]  
-  df_mededuc.dir$pval[[i]] &lt;- medieduc[[i]][[&quot;z.avg.p&quot;]]
-  }
-
-
-df_mededuc.tot &lt;- data.frame(
-  &quot;id&quot;=1:length(medieduc),
-  &quot;lab&quot;= label1,  
-  &quot;var&quot;=names(medieduc),
-  &quot;effect&quot;=rep(&quot;Total&quot;,9),
-  &quot;effect.avg&quot;=NA,
-  &quot;ci.lwr&quot;=NA,
-  &quot;ci.upr&quot;=NA,
-  &quot;pval&quot;=NA)
-
-for (i in 1:9) {
-  df_mededuc.tot$effect.avg[[i]] &lt;- medieduc[[i]][[&quot;tau.coef&quot;]]
-  df_mededuc.tot$ci.lwr[[i]] &lt;- medieduc[[i]][[&quot;tau.ci&quot;]][1]
-  df_mededuc.tot$ci.upr[[i]] &lt;- medieduc[[i]][[&quot;tau.ci&quot;]][2]  
-  df_mededuc.tot$pval[[i]] &lt;- medieduc[[i]][[&quot;tau.p&quot;]]
-  }
-
-df_mededuc.prop &lt;- data.frame(
-  &quot;id&quot;=1:length(medieduc),
-  &quot;lab&quot;= label1,  
-  &quot;var&quot;=names(medieduc),
-  &quot;effect&quot;=rep(&quot;Proportion&quot;,9),
-  &quot;effect.avg&quot;=NA,
-  &quot;ci.lwr&quot;=NA,
-  &quot;ci.upr&quot;=NA,
-  &quot;pval&quot;=NA)
-
-for (i in 1:9) {
-  df_mededuc.prop$effect.avg[[i]] &lt;- medieduc[[i]][[&quot;n.avg&quot;]]
-  df_mededuc.prop$ci.lwr[[i]] &lt;- medieduc[[i]][[&quot;n.avg.ci&quot;]][1]
-  df_mededuc.prop$ci.upr[[i]] &lt;- medieduc[[i]][[&quot;n.avg.ci&quot;]][2]  
-  df_mededuc.prop$pval[[i]] &lt;- medieduc[[i]][[&quot;n.avg.p&quot;]]
-  }
-
-df_mededuc &lt;- bind_rows(df_mededuc.ind,df_mededuc.dir,df_mededuc.tot,df_mededuc.prop) %&gt;% 
-  arrange(id) %&gt;% 
-  mutate(sig=gtools::stars.pval(pval)) %&gt;% 
-  dplyr::select(-&quot;id&quot;,-&quot;var&quot;)
-
-
-
-colnames &lt;- c(&quot; &quot;,&quot;Type&quot;,&quot;Effect&quot;,&quot;Lower CI&quot;,&quot;Upper CI&quot;,&quot;p-value&quot;,&quot;Sig.&quot;)
-note &lt;- &quot;‘***’ p &lt; 0.001 ‘**’ p &lt; 0.01 ‘*’ p &lt; 0.05 ‘.’ p &lt; 0.1&quot;
-kable(df_mededuc,format = &quot;html&quot;,digits = 3,col.names = colnames, 
-      caption = &quot;Mediated effect of Parental Education by Education on Voting behaviour&quot;) %&gt;% 
-  kable_styling(full_width = F) %&gt;% 
-  collapse_rows(columns = 1) %&gt;% 
-  footnote(general = note,footnote_as_chunk = T)</code></pre>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;">
 <caption>
 <span id="tab:vot-edavg">Table 2.6: </span>Mediated effect of Parental Education by Education on Voting behaviour
@@ -9732,7 +8179,7 @@ Indirect
 0.004
 </td>
 <td style="text-align:right;">
-0.011
+0.010
 </td>
 <td style="text-align:right;">
 0.000
@@ -9755,7 +8202,7 @@ Direct
 0.024
 </td>
 <td style="text-align:right;">
-0.012
+0.014
 </td>
 <td style="text-align:left;">
 <ul>
@@ -9775,10 +8222,10 @@ Total
 0.031
 </td>
 <td style="text-align:right;">
-0.002
+0.000
 </td>
 <td style="text-align:left;">
-**
+***
 </td>
 </tr>
 <tr>
@@ -9786,19 +8233,19 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.332
+0.326
 </td>
 <td style="text-align:right;">
-0.167
+0.165
 </td>
 <td style="text-align:right;">
-0.735
+0.752
 </td>
 <td style="text-align:right;">
-0.002
+0.000
 </td>
 <td style="text-align:left;">
-**
+***
 </td>
 </tr>
 <tr>
@@ -9809,7 +8256,7 @@ Constitutional referendum (2020)
 Indirect
 </td>
 <td style="text-align:right;">
-0.004
+0.005
 </td>
 <td style="text-align:right;">
 0.002
@@ -9818,10 +8265,10 @@ Indirect
 0.008
 </td>
 <td style="text-align:right;">
-0.000
+0.002
 </td>
 <td style="text-align:left;">
-***
+**
 </td>
 </tr>
 <tr>
@@ -9835,10 +8282,10 @@ Direct
 -0.001
 </td>
 <td style="text-align:right;">
-0.021
+0.020
 </td>
 <td style="text-align:right;">
-0.090
+0.062
 </td>
 <td style="text-align:left;">
 .
@@ -9869,16 +8316,16 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.323
+0.324
 </td>
 <td style="text-align:right;">
-0.123
+0.113
 </td>
 <td style="text-align:right;">
-1.142
+1.087
 </td>
 <td style="text-align:right;">
-0.008
+0.010
 </td>
 <td style="text-align:left;">
 **
@@ -9898,7 +8345,7 @@ Indirect
 0.003
 </td>
 <td style="text-align:right;">
-0.010
+0.009
 </td>
 <td style="text-align:right;">
 0.000
@@ -9912,16 +8359,16 @@ Indirect
 Direct
 </td>
 <td style="text-align:right;">
-0.014
+0.015
 </td>
 <td style="text-align:right;">
-0.004
+0.005
 </td>
 <td style="text-align:right;">
 0.024
 </td>
 <td style="text-align:right;">
-0.008
+0.002
 </td>
 <td style="text-align:left;">
 **
@@ -9935,16 +8382,16 @@ Total
 0.021
 </td>
 <td style="text-align:right;">
-0.010
+0.011
 </td>
 <td style="text-align:right;">
 0.030
 </td>
 <td style="text-align:right;">
-0.002
+0.000
 </td>
 <td style="text-align:left;">
-**
+***
 </td>
 </tr>
 <tr>
@@ -9952,19 +8399,19 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.299
+0.305
 </td>
 <td style="text-align:right;">
-0.135
+0.147
 </td>
 <td style="text-align:right;">
-0.650
+0.589
 </td>
 <td style="text-align:right;">
-0.002
+0.000
 </td>
 <td style="text-align:left;">
-**
+***
 </td>
 </tr>
 <tr>
@@ -9978,7 +8425,7 @@ Indirect
 0.005
 </td>
 <td style="text-align:right;">
-0.002
+0.003
 </td>
 <td style="text-align:right;">
 0.008
@@ -9995,7 +8442,7 @@ Indirect
 Direct
 </td>
 <td style="text-align:right;">
-0.002
+0.003
 </td>
 <td style="text-align:right;">
 -0.006
@@ -10004,7 +8451,7 @@ Direct
 0.013
 </td>
 <td style="text-align:right;">
-0.656
+0.626
 </td>
 <td style="text-align:left;">
 </td>
@@ -10020,10 +8467,10 @@ Total
 -0.002
 </td>
 <td style="text-align:right;">
-0.018
+0.020
 </td>
 <td style="text-align:right;">
-0.114
+0.122
 </td>
 <td style="text-align:left;">
 </td>
@@ -10033,16 +8480,16 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.639
+0.611
 </td>
 <td style="text-align:right;">
--3.081
+-3.881
 </td>
 <td style="text-align:right;">
-6.739
+5.492
 </td>
 <td style="text-align:right;">
-0.114
+0.122
 </td>
 <td style="text-align:left;">
 </td>
@@ -10078,13 +8525,13 @@ Direct
 0.005
 </td>
 <td style="text-align:right;">
--0.005
+-0.004
 </td>
 <td style="text-align:right;">
 0.016
 </td>
 <td style="text-align:right;">
-0.420
+0.346
 </td>
 <td style="text-align:left;">
 </td>
@@ -10097,37 +8544,38 @@ Total
 0.010
 </td>
 <td style="text-align:right;">
-0.000
+0.001
 </td>
 <td style="text-align:right;">
 0.021
 </td>
 <td style="text-align:right;">
-0.054
+0.040
 </td>
 <td style="text-align:left;">
-.
-</td>
+<ul>
+<li></td>
 </tr>
-<tr>
+<tr></li>
+</ul>
 <td style="text-align:left;">
 Proportion
 </td>
 <td style="text-align:right;">
-0.534
+0.519
 </td>
 <td style="text-align:right;">
--0.891
+0.117
 </td>
 <td style="text-align:right;">
-2.620
+2.723
 </td>
 <td style="text-align:right;">
-0.054
+0.040
 </td>
 <td style="text-align:left;">
-.
-</td>
+<ul>
+<li></td>
 </tr>
 <tr>
 <td style="text-align:left;vertical-align: middle !important;" rowspan="4">
@@ -10140,7 +8588,7 @@ Indirect
 0.004
 </td>
 <td style="text-align:right;">
-0.002
+0.001
 </td>
 <td style="text-align:right;">
 0.007
@@ -10152,7 +8600,8 @@ Indirect
 **
 </td>
 </tr>
-<tr>
+<tr></li>
+</ul>
 <td style="text-align:left;">
 Direct
 </td>
@@ -10166,7 +8615,7 @@ Direct
 0.021
 </td>
 <td style="text-align:right;">
-0.012
+0.016
 </td>
 <td style="text-align:left;">
 <ul>
@@ -10181,16 +8630,16 @@ Total
 0.016
 </td>
 <td style="text-align:right;">
-0.007
+0.006
 </td>
 <td style="text-align:right;">
 0.024
 </td>
 <td style="text-align:right;">
-0.000
+0.002
 </td>
 <td style="text-align:left;">
-***
+**
 </td>
 </tr>
 <tr>
@@ -10198,16 +8647,16 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.245
+0.258
 </td>
 <td style="text-align:right;">
-0.085
+0.080
 </td>
 <td style="text-align:right;">
-0.636
+0.727
 </td>
 <td style="text-align:right;">
-0.002
+0.004
 </td>
 <td style="text-align:left;">
 **
@@ -10224,7 +8673,7 @@ Indirect
 0.005
 </td>
 <td style="text-align:right;">
-0.003
+0.002
 </td>
 <td style="text-align:right;">
 0.008
@@ -10247,10 +8696,10 @@ Direct
 -0.007
 </td>
 <td style="text-align:right;">
-0.011
+0.010
 </td>
 <td style="text-align:right;">
-0.942
+0.952
 </td>
 <td style="text-align:left;">
 </td>
@@ -10279,13 +8728,13 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.755
+0.743
 </td>
 <td style="text-align:right;">
--9.331
+-7.255
 </td>
 <td style="text-align:right;">
-8.666
+11.356
 </td>
 <td style="text-align:right;">
 0.292
@@ -10310,7 +8759,7 @@ Indirect
 0.005
 </td>
 <td style="text-align:right;">
-0.022
+0.028
 </td>
 <td style="text-align:left;">
 <ul>
@@ -10328,10 +8777,10 @@ Direct
 -0.007
 </td>
 <td style="text-align:right;">
-0.007
+0.006
 </td>
 <td style="text-align:right;">
-0.530
+0.498
 </td>
 <td style="text-align:left;">
 </td>
@@ -10347,10 +8796,10 @@ Total
 -0.005
 </td>
 <td style="text-align:right;">
-0.010
+0.009
 </td>
 <td style="text-align:right;">
-0.950
+0.906
 </td>
 <td style="text-align:left;">
 </td>
@@ -10360,16 +8809,16 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
--0.165
+-0.191
 </td>
 <td style="text-align:right;">
--7.892
+-11.478
 </td>
 <td style="text-align:right;">
-10.600
+6.101
 </td>
 <td style="text-align:right;">
-0.936
+0.918
 </td>
 <td style="text-align:left;">
 </td>
@@ -10391,7 +8840,7 @@ Indirect
 0.005
 </td>
 <td style="text-align:right;">
-0.004
+0.006
 </td>
 <td style="text-align:left;">
 **
@@ -10411,7 +8860,7 @@ Direct
 0.010
 </td>
 <td style="text-align:right;">
-0.836
+0.814
 </td>
 <td style="text-align:left;">
 </td>
@@ -10421,7 +8870,7 @@ Direct
 Total
 </td>
 <td style="text-align:right;">
-0.003
+0.002
 </td>
 <td style="text-align:right;">
 -0.004
@@ -10430,7 +8879,7 @@ Total
 0.013
 </td>
 <td style="text-align:right;">
-0.672
+0.706
 </td>
 <td style="text-align:left;">
 </td>
@@ -10440,16 +8889,16 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.417
+0.392
 </td>
 <td style="text-align:right;">
--11.688
+-9.120
 </td>
 <td style="text-align:right;">
-6.736
+6.887
 </td>
 <td style="text-align:right;">
-0.676
+0.708
 </td>
 <td style="text-align:left;">
 </td>
@@ -10464,120 +8913,6 @@ Proportion
 </tfoot>
 </table></li>
 </ul>
-<pre class="r"><code>############################.
-# mediated by conversation #
-############################.
-
-mediconv &lt;- list()
-for (i in c(&quot;votpr17&quot;)) {
-  for (z in c(&quot;co_conv1a&quot;)) {
-mediconv[[i]]&lt;- mediation::mediate(fit_conv[[z]],fit1[[i]], 
-                                treat=&quot;edparavg&quot;, mediator=&quot;conv1a&quot;)    
-  }
-}
-
-for (i in &quot;votpleb&quot;) {
-  for (z in &quot;co_conv3a&quot;) {
-mediconv[[i]]&lt;- mediation::mediate(fit_conv[[z]],fit1[[i]], 
-                                treat=&quot;edparavg&quot;, mediator=&quot;conv3a&quot;)    
-  }
-}
-
-
-for (i in c(&quot;votcons&quot;,&quot;votconv&quot;,&quot;votmuni&quot;,&quot;votgobe&quot;)) {
-  for (z in &quot;co_conv4a&quot;) {
-mediconv[[i]]&lt;- mediation::mediate(fit_conv[[z]],fit1[[i]],
-                                treat=&quot;edparavg&quot;, mediator=&quot;conv4a&quot;)    
-  }
-}
-
-for (i in c(&quot;votdipu&quot;,&quot;vot1vue&quot;,&quot;vot2vue&quot;)) {
-  for (z in &quot;co_conv5a&quot;) {
-mediconv[[i]]&lt;- mediation::mediate(fit_conv[[z]],fit1[[i]],
-                                treat=&quot;edparavg&quot;, mediator=&quot;conv5a&quot;)    
-  }
-}
-
-# extract the average mediation effects 
-df_medconv.ind &lt;- data.frame(
-  &quot;id&quot;=1:length(mediconv),
-  &quot;lab&quot;= label1,  
-  &quot;var&quot;=names(mediconv),
-  &quot;effect&quot;=&quot;Indirect&quot;,  
-  &quot;effect.avg&quot;=NA,
-  &quot;ci.lwr&quot;=NA,
-  &quot;ci.upr&quot;=NA,
-  &quot;pval&quot;=NA)
-
-for (i in 1:9) {
-  df_medconv.ind$effect.avg[[i]] &lt;- mediconv[[i]][[&quot;d.avg&quot;]]
-  df_medconv.ind$ci.lwr[[i]] &lt;- mediconv[[i]][[&quot;d.avg.ci&quot;]][1]
-  df_medconv.ind$ci.upr[[i]] &lt;- mediconv[[i]][[&quot;d.avg.ci&quot;]][2]  
-  df_medconv.ind$pval[[i]] &lt;- mediconv[[i]][[&quot;d.avg.p&quot;]]
-  }
-
-df_medconv.dir &lt;- data.frame(
-  &quot;id&quot;=1:length(mediconv),
-  &quot;lab&quot;= label1,  
-  &quot;var&quot;=names(mediconv),
-  &quot;effect&quot;=rep(&quot;Direct&quot;,9),
-  &quot;effect.avg&quot;=NA,
-  &quot;ci.lwr&quot;=NA,
-  &quot;ci.upr&quot;=NA,
-  &quot;pval&quot;=NA)
-
-for (i in 1:9) {
-  df_medconv.dir$effect.avg[[i]] &lt;- mediconv[[i]][[&quot;z.avg&quot;]]
-  df_medconv.dir$ci.lwr[[i]] &lt;- mediconv[[i]][[&quot;z.avg.ci&quot;]][1]
-  df_medconv.dir$ci.upr[[i]] &lt;- mediconv[[i]][[&quot;z.avg.ci&quot;]][2]  
-  df_medconv.dir$pval[[i]] &lt;- mediconv[[i]][[&quot;z.avg.p&quot;]]
-  }
-
-
-df_medconv.tot &lt;- data.frame(
-  &quot;id&quot;=1:length(medieduc),
-  &quot;lab&quot;= label1,  
-  &quot;var&quot;=names(medieduc),
-  &quot;effect&quot;=rep(&quot;Total&quot;,9),
-  &quot;effect.avg&quot;=NA,
-  &quot;ci.lwr&quot;=NA,
-  &quot;ci.upr&quot;=NA,
-  &quot;pval&quot;=NA)
-
-for (i in 1:9) {
-  df_medconv.tot$effect.avg[[i]] &lt;- mediconv[[i]][[&quot;tau.coef&quot;]]
-  df_medconv.tot$ci.lwr[[i]] &lt;- mediconv[[i]][[&quot;tau.ci&quot;]][1]
-  df_medconv.tot$ci.upr[[i]] &lt;- mediconv[[i]][[&quot;tau.ci&quot;]][2]  
-  df_medconv.tot$pval[[i]] &lt;- mediconv[[i]][[&quot;tau.p&quot;]]
-  }
-
-df_medconv.prop &lt;- data.frame(
-  &quot;id&quot;=1:length(medieduc),
-  &quot;lab&quot;= label1,  
-  &quot;var&quot;=names(medieduc),
-  &quot;effect&quot;=rep(&quot;Proportion&quot;,9),
-  &quot;effect.avg&quot;=NA,
-  &quot;ci.lwr&quot;=NA,
-  &quot;ci.upr&quot;=NA,
-  &quot;pval&quot;=NA)
-
-for (i in 1:9) {
-  df_medconv.prop$effect.avg[[i]] &lt;- mediconv[[i]][[&quot;n.avg&quot;]]
-  df_medconv.prop$ci.lwr[[i]] &lt;- mediconv[[i]][[&quot;n.avg.ci&quot;]][1]
-  df_medconv.prop$ci.upr[[i]] &lt;- mediconv[[i]][[&quot;n.avg.ci&quot;]][2]  
-  df_medconv.prop$pval[[i]] &lt;- mediconv[[i]][[&quot;n.avg.p&quot;]]
-  }
-
-df_medconv &lt;- bind_rows(df_medconv.ind,df_medconv.dir,df_medconv.tot,df_medconv.prop) %&gt;% 
-  arrange(id) %&gt;% 
-  mutate(sig=gtools::stars.pval(pval)) %&gt;% 
-  dplyr::select(-&quot;id&quot;,-&quot;var&quot;)
-
-kable(df_medconv,format = &quot;html&quot;,digits = 3, col.names = colnames,
-      caption = &quot;Mediated effect of Parental Education by Conversation on Voting behaviour&quot;) %&gt;% 
-  kable_styling(full_width = F) %&gt;% 
-  collapse_rows(columns = 1) %&gt;% 
-  footnote(general = note,footnote_as_chunk = T)  </code></pre>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;">
 <caption>
 <span id="tab:vot-edavg">Table 2.6: </span>Mediated effect of Parental Education by Conversation on Voting behaviour
@@ -10624,7 +8959,7 @@ Indirect
 0.003
 </td>
 <td style="text-align:right;">
-0.046
+0.044
 </td>
 <td style="text-align:left;">
 <ul>
@@ -10635,16 +8970,16 @@ Indirect
 Direct
 </td>
 <td style="text-align:right;">
-0.014
+0.013
 </td>
 <td style="text-align:right;">
 0.002
 </td>
 <td style="text-align:right;">
-0.026
+0.025
 </td>
 <td style="text-align:right;">
-0.022
+0.020
 </td>
 <td style="text-align:left;">
 <ul>
@@ -10662,31 +8997,30 @@ Total
 0.003
 </td>
 <td style="text-align:right;">
-0.027
+0.026
 </td>
 <td style="text-align:right;">
-0.012
+0.008
 </td>
 <td style="text-align:left;">
-<ul>
-<li></td>
+**
+</td>
 </tr>
-<tr></li>
-</ul>
+<tr>
 <td style="text-align:left;">
 Proportion
 </td>
 <td style="text-align:right;">
-0.085
+0.086
 </td>
 <td style="text-align:right;">
--0.001
+0.000
 </td>
 <td style="text-align:right;">
-0.397
+0.403
 </td>
 <td style="text-align:right;">
-0.058
+0.052
 </td>
 <td style="text-align:left;">
 .
@@ -10709,7 +9043,7 @@ Indirect
 0.004
 </td>
 <td style="text-align:right;">
-0.050
+0.044
 </td>
 <td style="text-align:left;">
 <ul>
@@ -10721,16 +9055,16 @@ Indirect
 Direct
 </td>
 <td style="text-align:right;">
-0.009
+0.010
 </td>
 <td style="text-align:right;">
--0.001
+0.000
 </td>
 <td style="text-align:right;">
-0.022
+0.021
 </td>
 <td style="text-align:right;">
-0.076
+0.064
 </td>
 <td style="text-align:left;">
 .
@@ -10741,16 +9075,16 @@ Direct
 Total
 </td>
 <td style="text-align:right;">
-0.011
+0.012
 </td>
 <td style="text-align:right;">
 0.001
 </td>
 <td style="text-align:right;">
-0.025
+0.023
 </td>
 <td style="text-align:right;">
-0.032
+0.018
 </td>
 <td style="text-align:left;">
 <ul>
@@ -10765,13 +9099,13 @@ Proportion
 0.179
 </td>
 <td style="text-align:right;">
--0.025
+-0.015
 </td>
 <td style="text-align:right;">
-0.974
+0.995
 </td>
 <td style="text-align:right;">
-0.074
+0.058
 </td>
 <td style="text-align:left;">
 .
@@ -10808,16 +9142,16 @@ Direct
 0.014
 </td>
 <td style="text-align:right;">
+0.003
+</td>
+<td style="text-align:right;">
+0.024
+</td>
+<td style="text-align:right;">
 0.004
 </td>
-<td style="text-align:right;">
-0.025
-</td>
-<td style="text-align:right;">
-0.000
-</td>
 <td style="text-align:left;">
-***
+**
 </td>
 </tr>
 <tr>
@@ -10825,10 +9159,10 @@ Direct
 Total
 </td>
 <td style="text-align:right;">
-0.018
+0.017
 </td>
 <td style="text-align:right;">
-0.007
+0.006
 </td>
 <td style="text-align:right;">
 0.028
@@ -10845,13 +9179,13 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.182
+0.188
 </td>
 <td style="text-align:right;">
-0.069
+0.070
 </td>
 <td style="text-align:right;">
-0.475
+0.489
 </td>
 <td style="text-align:right;">
 0.002
@@ -10877,10 +9211,10 @@ Indirect
 0.006
 </td>
 <td style="text-align:right;">
-0.000
+0.002
 </td>
 <td style="text-align:left;">
-***
+**
 </td>
 </tr>
 <tr>
@@ -10894,10 +9228,10 @@ Direct
 -0.006
 </td>
 <td style="text-align:right;">
-0.013
+0.014
 </td>
 <td style="text-align:right;">
-0.668
+0.660
 </td>
 <td style="text-align:left;">
 </td>
@@ -10910,13 +9244,13 @@ Total
 0.006
 </td>
 <td style="text-align:right;">
--0.003
+-0.004
 </td>
 <td style="text-align:right;">
 0.017
 </td>
 <td style="text-align:right;">
-0.278
+0.282
 </td>
 <td style="text-align:left;">
 </td>
@@ -10926,16 +9260,16 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.425
+0.443
 </td>
 <td style="text-align:right;">
--5.943
+-5.423
 </td>
 <td style="text-align:right;">
-8.151
+6.972
 </td>
 <td style="text-align:right;">
-0.278
+0.284
 </td>
 <td style="text-align:left;">
 </td>
@@ -10954,13 +9288,13 @@ Indirect
 0.001
 </td>
 <td style="text-align:right;">
-0.006
+0.005
 </td>
 <td style="text-align:right;">
-0.000
+0.002
 </td>
 <td style="text-align:left;">
-***
+**
 </td>
 </tr>
 <tr>
@@ -10971,13 +9305,13 @@ Direct
 0.005
 </td>
 <td style="text-align:right;">
--0.004
+-0.005
 </td>
 <td style="text-align:right;">
 0.016
 </td>
 <td style="text-align:right;">
-0.394
+0.408
 </td>
 <td style="text-align:left;">
 </td>
@@ -10993,10 +9327,10 @@ Total
 -0.002
 </td>
 <td style="text-align:right;">
-0.020
+0.019
 </td>
 <td style="text-align:right;">
-0.156
+0.152
 </td>
 <td style="text-align:left;">
 </td>
@@ -11006,16 +9340,16 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.355
+0.359
 </td>
 <td style="text-align:right;">
--3.624
+-2.504
 </td>
 <td style="text-align:right;">
-2.453
+3.358
 </td>
 <td style="text-align:right;">
-0.156
+0.150
 </td>
 <td style="text-align:left;">
 </td>
@@ -11051,74 +9385,10 @@ Direct
 0.012
 </td>
 <td style="text-align:right;">
-0.002
-</td>
-<td style="text-align:right;">
-0.020
-</td>
-<td style="text-align:right;">
-0.016
-</td>
-<td style="text-align:left;">
-<ul>
-<li></td>
-</tr>
-<tr></li>
-</ul>
-<td style="text-align:left;">
-Total
-</td>
-<td style="text-align:right;">
-0.016
-</td>
-<td style="text-align:right;">
-0.006
-</td>
-<td style="text-align:right;">
-0.024
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:left;">
-***
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Proportion
-</td>
-<td style="text-align:right;">
-0.224
-</td>
-<td style="text-align:right;">
-0.088
-</td>
-<td style="text-align:right;">
-0.616
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:left;">
-***
-</td>
-</tr>
-<tr>
-<td style="text-align:left;vertical-align: middle !important;" rowspan="4">
-Parliamentary elections (2021)
-</td>
-<td style="text-align:left;">
-Indirect
-</td>
-<td style="text-align:right;">
 0.001
 </td>
 <td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
-0.003
+0.021
 </td>
 <td style="text-align:right;">
 0.030
@@ -11130,40 +9400,22 @@ Indirect
 <tr></li>
 </ul>
 <td style="text-align:left;">
-Direct
-</td>
-<td style="text-align:right;">
-0.001
-</td>
-<td style="text-align:right;">
--0.006
-</td>
-<td style="text-align:right;">
-0.011
-</td>
-<td style="text-align:right;">
-0.998
-</td>
-<td style="text-align:left;">
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 Total
+</td>
+<td style="text-align:right;">
+0.015
+</td>
+<td style="text-align:right;">
+0.004
+</td>
+<td style="text-align:right;">
+0.024
 </td>
 <td style="text-align:right;">
 0.002
 </td>
-<td style="text-align:right;">
--0.005
-</td>
-<td style="text-align:right;">
-0.012
-</td>
-<td style="text-align:right;">
-0.744
-</td>
 <td style="text-align:left;">
+**
 </td>
 </tr>
 <tr>
@@ -11171,104 +9423,24 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.187
+0.228
 </td>
 <td style="text-align:right;">
--3.793
+0.084
 </td>
 <td style="text-align:right;">
-4.071
+0.686
 </td>
 <td style="text-align:right;">
-0.730
+0.002
 </td>
 <td style="text-align:left;">
+**
 </td>
 </tr>
 <tr>
 <td style="text-align:left;vertical-align: middle !important;" rowspan="4">
-Presidential elections - first round (2020)
-</td>
-<td style="text-align:left;">
-Indirect
-</td>
-<td style="text-align:right;">
-0.001
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
-0.003
-</td>
-<td style="text-align:right;">
-0.018
-</td>
-<td style="text-align:left;">
-<ul>
-<li></td>
-</tr>
-<tr></li>
-</ul>
-<td style="text-align:left;">
-Direct
-</td>
-<td style="text-align:right;">
--0.002
-</td>
-<td style="text-align:right;">
--0.007
-</td>
-<td style="text-align:right;">
-0.007
-</td>
-<td style="text-align:right;">
-0.532
-</td>
-<td style="text-align:left;">
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Total
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
--0.006
-</td>
-<td style="text-align:right;">
-0.009
-</td>
-<td style="text-align:right;">
-0.768
-</td>
-<td style="text-align:left;">
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Proportion
-</td>
-<td style="text-align:right;">
--0.161
-</td>
-<td style="text-align:right;">
--6.107
-</td>
-<td style="text-align:right;">
-3.768
-</td>
-<td style="text-align:right;">
-0.774
-</td>
-<td style="text-align:left;">
-</td>
-</tr>
-<tr>
-<td style="text-align:left;vertical-align: middle !important;" rowspan="4">
-Presidential elections - second round (2020)
+Parliamentary elections (2021)
 </td>
 <td style="text-align:left;">
 Indirect
@@ -11295,6 +9467,168 @@ Indirect
 Direct
 </td>
 <td style="text-align:right;">
+0.001
+</td>
+<td style="text-align:right;">
+-0.006
+</td>
+<td style="text-align:right;">
+0.010
+</td>
+<td style="text-align:right;">
+0.986
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Total
+</td>
+<td style="text-align:right;">
+0.002
+</td>
+<td style="text-align:right;">
+-0.005
+</td>
+<td style="text-align:right;">
+0.012
+</td>
+<td style="text-align:right;">
+0.726
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Proportion
+</td>
+<td style="text-align:right;">
+0.229
+</td>
+<td style="text-align:right;">
+-4.416
+</td>
+<td style="text-align:right;">
+6.528
+</td>
+<td style="text-align:right;">
+0.716
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: middle !important;" rowspan="4">
+Presidential elections - first round (2020)
+</td>
+<td style="text-align:left;">
+Indirect
+</td>
+<td style="text-align:right;">
+0.001
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.003
+</td>
+<td style="text-align:right;">
+0.014
+</td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+</tr>
+<tr></li>
+</ul>
+<td style="text-align:left;">
+Direct
+</td>
+<td style="text-align:right;">
+-0.002
+</td>
+<td style="text-align:right;">
+-0.007
+</td>
+<td style="text-align:right;">
+0.007
+</td>
+<td style="text-align:right;">
+0.524
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Total
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+-0.006
+</td>
+<td style="text-align:right;">
+0.010
+</td>
+<td style="text-align:right;">
+0.774
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Proportion
+</td>
+<td style="text-align:right;">
+-0.166
+</td>
+<td style="text-align:right;">
+-4.866
+</td>
+<td style="text-align:right;">
+5.999
+</td>
+<td style="text-align:right;">
+0.784
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: middle !important;" rowspan="4">
+Presidential elections - second round (2020)
+</td>
+<td style="text-align:left;">
+Indirect
+</td>
+<td style="text-align:right;">
+0.001
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.003
+</td>
+<td style="text-align:right;">
+0.038
+</td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+</tr>
+<tr></li>
+</ul>
+<td style="text-align:left;">
+Direct
+</td>
+<td style="text-align:right;">
 0.000
 </td>
 <td style="text-align:right;">
@@ -11304,7 +9638,7 @@ Direct
 0.009
 </td>
 <td style="text-align:right;">
-0.818
+0.864
 </td>
 <td style="text-align:left;">
 </td>
@@ -11317,13 +9651,13 @@ Total
 0.001
 </td>
 <td style="text-align:right;">
--0.005
+-0.004
 </td>
 <td style="text-align:right;">
-0.011
+0.010
 </td>
 <td style="text-align:right;">
-0.934
+0.918
 </td>
 <td style="text-align:left;">
 </td>
@@ -11333,16 +9667,16 @@ Total
 Proportion
 </td>
 <td style="text-align:right;">
-0.108
+0.113
 </td>
 <td style="text-align:right;">
--6.471
+-5.439
 </td>
 <td style="text-align:right;">
-5.333
+5.545
 </td>
 <td style="text-align:right;">
-0.924
+0.920
 </td>
 <td style="text-align:left;">
 </td>
@@ -11396,11 +9730,6 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
-<script>
-$(document).ready(function () {
-  window.initializeCodeFolding("hide" === "show");
-});
-</script>
 
 <script>
 $(document).ready(function ()  {
@@ -11415,7 +9744,7 @@ $(document).ready(function ()  {
 
     // establish options
     var options = {
-      selectors: "h1,h2",
+      selectors: "h1,h2,h3",
       theme: "bootstrap3",
       context: '.toc-content',
       hashGenerator: function (text) {
