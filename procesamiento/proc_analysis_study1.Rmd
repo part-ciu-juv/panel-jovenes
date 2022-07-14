@@ -1,6 +1,6 @@
 ---
-title: "Data preparation - Study 1"
-author: "Julio Iturra"
+title: "Data analysis - Study 1"
+# author: "Julio Iturra"
 date: "`r format(Sys.time(), '%A %d %B %Y %X')`"
 output:
   bookdown::html_document2:
