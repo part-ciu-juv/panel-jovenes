@@ -115,7 +115,10 @@ pacman::p_load(dplyr,       # Manipulacion de datos
                ggplot2,     # plots
                corrplot,    # plot correlacion
                survey,
-               tibble
+               tibble,
+               car,
+               here,
+               fastDummies
                )
 rm(list=ls())
 load(here::here("input/data/proc/df_wide.RData"))
@@ -126,7 +129,8 @@ load(here::here("input/data/proc/df_wide.RData"))
 
 study_1 <- 
 df_wide %>% 
-  select(
+  select(idencuestado,
+         folio_encuestado,
     educ="cs_educ_w01",
     edmad="nse_madre_w01",
     edpad="nse_padre_w01",
@@ -288,6 +292,12 @@ study_1$edparavg <-  (study_1$edpadyear+study_1$edmadyear)/2
 study_1$edparavg <- sjlabelled::set_label(study_1$edparavg,"Years of Education (parents)")
 sjmisc::frq(study_1$edparavg)
 
+#Education (highest)
+
+
+study_1$edhigh <- pmax(study_1$edpadyear, study_1$edmadyear,na.rm = T)
+study_1$edhigh <- sjlabelled::set_label(study_1$edhigh,"Years of Education (Parent highest)")
+sjmisc::frq(study_1$edhigh)
 
  # Partipation (all moments in life cycle)
 vars <- study_1 %>% select(firm1a:segu5a) %>% names()
@@ -411,10 +421,84 @@ cormat$correlations
 round(cormat$tests,5)
 corrplot::corrplot.mixed(cormat$correlations)
 
-# sjPlot::view_df(study_1,show.prc = T,show.type = T,show.frq = T,show.na = T)
-# save(study_1,file = here::here("input/data/proc/study1.RData"))
+sjPlot::view_df(study_1,show.prc = T,show.type = T,show.frq = T,show.na = T)
+save(study_1,file = here::here("input/data/proc/study1.RData"))
 ```
 
+```{r}
+if (!require("pacman")) install.packages("pacman") # instalar pacman
+pacman::p_load(dplyr,       # Manipulacion de datos 
+               haven,       # importar datos en .dta o .sav
+               sjmisc,      # descriptivos y frecuencias
+               sjPlot,      # tablas, plots y descriptivos
+               sjlabelled,
+               summarytools,# resumen de dataframe
+               knitr,       # tablas kable
+               kableExtra,  # tablas kable personalizadas
+               ggplot2,     # plots
+               corrplot,    # plot correlacion
+               survey,
+               tibble,
+               car,
+               here,
+               fastDummies,
+               panelr
+               )
+rm(list=ls())
+load(here::here("input/data/proc/study1.RData"))
+
+data_panel <-
+  study_1 %>% dplyr::select(
+    folio_encuestado,
+    ends_with("a"),
+    vot_t1=votpr17,
+    vot_t2=votpleb,
+    vot_t3=votcons,
+    vot_t4=votconv,
+    vot_t5=votmuni,
+    vot_t6=votgobe,
+    vot_t7=votdipu,
+    vot_t8=vot1vue,
+    vot_t9=vot2vue
+  )
+
+names(data_panel) <- 
+stringr::str_replace_all(
+  names(data_panel),
+  c(
+    "1a" = "_t1",
+    "2a" = "_t2",
+    "3a" = "_t3",
+    "4a" = "_t4",
+    "5a" = "_t5",
+    "6a" = "_t6",
+    "7a" = "_t7",
+    "8a" = "_t8",
+    "9a" = "_t9"
+  )
+)
+
+data_long <- long_panel(data = data_panel, #base de datos formato wide
+                         prefix = "_t", #caracteres antes de la etiqueta de cada ola
+                         begin = 1, #etiqueta de la primera ola
+                         end = 9, #etiqueta de la última ola
+                         label_location = "end", #indica donde se localiza la etiqueta asociada a la ola 
+                         id = "folio_encuestado", #indica identificador individual
+                         wave = "momento") #nombre que tomará la variable que indica periodo. 
+study_1_long <- 
+data_long %>% left_join(x = .,
+                        y = dplyr::select(study_1,
+                                          folio_encuestado,
+                                          edhigh,
+                                          educyear,
+                                          psu,
+                                          mujer,
+                                          pospol,
+                                          conv_t1=conv1a))
+
+sjPlot::view_df(study_1_long,show.prc = T,show.type = T,show.frq = T,show.na = T)
+save(study_1_long,file = here::here("input/data/proc/study1_long.RData"))
+```
 
 
 
