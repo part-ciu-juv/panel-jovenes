@@ -14,12 +14,12 @@ editor_options:
 
 # Setup
 
-<!-- * Cambiar: mayor nivel educacional de cada padre reemplazar, si no hay 1, quedarse con  el que haya -->
+* Presentar modelos por pasos
 
-<!-- * psu como mediador -->
+* 1 tabla disrrputiva con 4 modelos
+* 1 tabla online
 
-<!-- * solo con conversacion 1 en voto para ver el efecto longitudinal -->
-
+* Sacar Gobernadores y Constituent Conventionals and municipal elections (2021)
 
 
 ```{r include=FALSE}
@@ -72,7 +72,6 @@ data1 <- study_1 %>%
 ```
 
 # Models
-
 
 ## Disruptive & Online 
 
@@ -429,15 +428,20 @@ m2 <- "edhigh+educyear+conv3a+mujer+pospol"# 2sem 2020
 m3 <- "edhigh+educyear+conv4a+mujer+pospol"# 1sem 2021
 m4 <- "edhigh+educyear+conv5a+mujer+pospol"# 2sem 2021
 
-hipotesis <- c(m1,m2,m3,m4)
+hipotesis <- c(m1,
+               # m2,
+               m3,
+               m4)
 
 # Set the independent variables (IVs)
 ivs1<- data1 %>% dplyr::select(votpr17) %>% names()        #highschool
 ivs2<- data1 %>% dplyr::select(votpleb) %>% names()        # 2sem 2020
-ivs3<- data1 %>% dplyr::select(votcons:votgobe) %>% names()# 1sem 2021
+ivs3<- data1 %>% dplyr::select(votconv:votmuni) %>% names()# 1sem 2021
 ivs4<- data1 %>% dplyr::select(votdipu:vot2vue) %>% names()# 2sem 2021
 
-ivs <- c(ivs1,ivs2,ivs3,ivs4)
+ivs <- c(ivs1,
+         ivs2,
+         ivs3,ivs4)
 
 # Create the object for each model
 models <- list()
@@ -446,7 +450,7 @@ models[[i]] <- paste0(i,"~",m1)
 }
 
 for (i in ivs2) {
-models[[i]] <- paste0(i,"~",m2)  
+models[[i]] <- paste0(i,"~",m2)
 }
 
 for (i in ivs3) {
@@ -474,7 +478,7 @@ omit <- "(Intercept)|(mujer)|(pospol)"
 # https://stackoverflow.com/questions/69338331/r-markdown-create-section-headers-in-r-and-print-r-output-in-same-section
 
 caption <- "Voting behaviour, parental education and conversation"
-htmlreg(l = fit1[names(fit1)[grepl("vot", names(fit1),"\n")]],
+knitreg(l = fit1[names(fit1)[grepl("vot", names(fit1),"\n")]],
         omit.coef = omit,
         caption = caption,
         caption.above = T
@@ -550,7 +554,7 @@ medieduc[[i]]<- mediation::mediate(fit_educ[[z]],fit1[[i]],
 }
 
 
-for (i in c("votcons","votconv","votmuni","votgobe")) {
+for (i in c("votconv","votmuni")) {
   for (z in "ed_conv4a") {
 medieduc[[i]]<- mediation::mediate(fit_educ[[z]],fit1[[i]], 
                                 treat="edhigh", mediator="educyear")    
@@ -580,7 +584,7 @@ df_mededuc.ind <- data.frame(
   "ci.upr"=NA,
   "pval"=NA)
 
-for (i in 1:9) {
+for (i in 1:length(medieduc)) {
   df_mededuc.ind$effect.avg[[i]] <- medieduc[[i]][["d.avg"]]
   df_mededuc.ind$ci.lwr[[i]] <- medieduc[[i]][["d.avg.ci"]][1]
   df_mededuc.ind$ci.upr[[i]] <- medieduc[[i]][["d.avg.ci"]][2]  
@@ -591,13 +595,13 @@ df_mededuc.dir <- data.frame(
   "id"=1:length(medieduc),
   "lab"= label1,  
   "var"=names(medieduc),
-  "effect"=rep("Direct",9),
+  "effect"=rep("Direct",max(length(medieduc))),
   "effect.avg"=NA,
   "ci.lwr"=NA,
   "ci.upr"=NA,
   "pval"=NA)
 
-for (i in 1:9) {
+for (i in 1:length(medieduc)) {
   df_mededuc.dir$effect.avg[[i]] <- medieduc[[i]][["z.avg"]]
   df_mededuc.dir$ci.lwr[[i]] <- medieduc[[i]][["z.avg.ci"]][1]
   df_mededuc.dir$ci.upr[[i]] <- medieduc[[i]][["z.avg.ci"]][2]  
@@ -609,13 +613,13 @@ df_mededuc.tot <- data.frame(
   "id"=1:length(medieduc),
   "lab"= label1,  
   "var"=names(medieduc),
-  "effect"=rep("Total",9),
+  "effect"=rep("Total",max(length(medieduc))),
   "effect.avg"=NA,
   "ci.lwr"=NA,
   "ci.upr"=NA,
   "pval"=NA)
 
-for (i in 1:9) {
+for (i in 1:length(medieduc)) {
   df_mededuc.tot$effect.avg[[i]] <- medieduc[[i]][["tau.coef"]]
   df_mededuc.tot$ci.lwr[[i]] <- medieduc[[i]][["tau.ci"]][1]
   df_mededuc.tot$ci.upr[[i]] <- medieduc[[i]][["tau.ci"]][2]  
@@ -626,13 +630,13 @@ df_mededuc.prop <- data.frame(
   "id"=1:length(medieduc),
   "lab"= label1,  
   "var"=names(medieduc),
-  "effect"=rep("Proportion",9),
+  "effect"=rep("Proportion",max(length(medieduc))),
   "effect.avg"=NA,
   "ci.lwr"=NA,
   "ci.upr"=NA,
   "pval"=NA)
 
-for (i in 1:9) {
+for (i in 1:length(medieduc)) {
   df_mededuc.prop$effect.avg[[i]] <- medieduc[[i]][["n.avg"]]
   df_mededuc.prop$ci.lwr[[i]] <- medieduc[[i]][["n.avg.ci"]][1]
   df_mededuc.prop$ci.upr[[i]] <- medieduc[[i]][["n.avg.ci"]][2]  
@@ -674,7 +678,7 @@ mediconv[[i]]<- mediation::mediate(fit_conv[[z]],fit1[[i]],
 }
 
 
-for (i in c("votcons","votconv","votmuni","votgobe")) {
+for (i in c("votconv","votmuni")) {
   for (z in "co_conv4a") {
 mediconv[[i]]<- mediation::mediate(fit_conv[[z]],fit1[[i]],
                                 treat="edhigh", mediator="conv4a")    
@@ -699,7 +703,7 @@ df_medconv.ind <- data.frame(
   "ci.upr"=NA,
   "pval"=NA)
 
-for (i in 1:9) {
+for (i in 1:(length(medieduc))) {
   df_medconv.ind$effect.avg[[i]] <- mediconv[[i]][["d.avg"]]
   df_medconv.ind$ci.lwr[[i]] <- mediconv[[i]][["d.avg.ci"]][1]
   df_medconv.ind$ci.upr[[i]] <- mediconv[[i]][["d.avg.ci"]][2]  
@@ -710,13 +714,13 @@ df_medconv.dir <- data.frame(
   "id"=1:length(mediconv),
   "lab"= label1,  
   "var"=names(mediconv),
-  "effect"=rep("Direct",9),
+  "effect"=rep("Direct",max(length(medieduc))),
   "effect.avg"=NA,
   "ci.lwr"=NA,
   "ci.upr"=NA,
   "pval"=NA)
 
-for (i in 1:9) {
+for (i in 1:length(medieduc)) {
   df_medconv.dir$effect.avg[[i]] <- mediconv[[i]][["z.avg"]]
   df_medconv.dir$ci.lwr[[i]] <- mediconv[[i]][["z.avg.ci"]][1]
   df_medconv.dir$ci.upr[[i]] <- mediconv[[i]][["z.avg.ci"]][2]  
@@ -728,13 +732,13 @@ df_medconv.tot <- data.frame(
   "id"=1:length(medieduc),
   "lab"= label1,  
   "var"=names(medieduc),
-  "effect"=rep("Total",9),
+  "effect"=rep("Total",max(length(medieduc))),
   "effect.avg"=NA,
   "ci.lwr"=NA,
   "ci.upr"=NA,
   "pval"=NA)
 
-for (i in 1:9) {
+for (i in 1:length(medieduc)) {
   df_medconv.tot$effect.avg[[i]] <- mediconv[[i]][["tau.coef"]]
   df_medconv.tot$ci.lwr[[i]] <- mediconv[[i]][["tau.ci"]][1]
   df_medconv.tot$ci.upr[[i]] <- mediconv[[i]][["tau.ci"]][2]  
@@ -745,13 +749,13 @@ df_medconv.prop <- data.frame(
   "id"=1:length(medieduc),
   "lab"= label1,  
   "var"=names(medieduc),
-  "effect"=rep("Proportion",9),
+  "effect"=rep("Proportion",max(length(medieduc))),
   "effect.avg"=NA,
   "ci.lwr"=NA,
   "ci.upr"=NA,
   "pval"=NA)
 
-for (i in 1:9) {
+for (i in 1:length(medieduc)) {
   df_medconv.prop$effect.avg[[i]] <- mediconv[[i]][["n.avg"]]
   df_medconv.prop$ci.lwr[[i]] <- mediconv[[i]][["n.avg.ci"]][1]
   df_medconv.prop$ci.upr[[i]] <- mediconv[[i]][["n.avg.ci"]][2]  
@@ -815,15 +819,20 @@ m2 <- "edhigh+psu+conv3a+mujer+pospol"# 2sem 2020
 m3 <- "edhigh+psu+conv4a+mujer+pospol"# 1sem 2021
 m4 <- "edhigh+psu+conv5a+mujer+pospol"# 2sem 2021
 
-hipotesis <- c(m1,m2,m3,m4)
+hipotesis <- c(m1,
+               # m2,
+               m3,
+               m4)
 
 # Set the independent variables (IVs)
 ivs1<- data1 %>% dplyr::select(votpr17) %>% names()        #highschool
 ivs2<- data1 %>% dplyr::select(votpleb) %>% names()        # 2sem 2020
-ivs3<- data1 %>% dplyr::select(votcons:votgobe) %>% names()# 1sem 2021
+ivs3<- data1 %>% dplyr::select(votconv:votmuni) %>% names()# 1sem 2021
 ivs4<- data1 %>% dplyr::select(votdipu:vot2vue) %>% names()# 2sem 2021
 
-ivs <- c(ivs1,ivs2,ivs3,ivs4)
+ivs <- c(ivs1,
+         ivs2,
+         ivs3,ivs4)
 
 # Create the object for each model
 models <- list()
@@ -832,7 +841,7 @@ models[[i]] <- paste0(i,"~",m1)
 }
 
 for (i in ivs2) {
-models[[i]] <- paste0(i,"~",m2)  
+models[[i]] <- paste0(i,"~",m2)
 }
 
 for (i in ivs3) {
@@ -936,7 +945,7 @@ medieduc[[i]]<- mediation::mediate(fit_educ[[z]],fit1[[i]],
 }
 
 
-for (i in c("votcons","votconv","votmuni","votgobe")) {
+for (i in c("votconv","votmuni")) {
   for (z in "ed_conv4a") {
 medieduc[[i]]<- mediation::mediate(fit_educ[[z]],fit1[[i]], 
                                 treat="edhigh", mediator="psu")    
@@ -966,7 +975,7 @@ df_mededuc.ind <- data.frame(
   "ci.upr"=NA,
   "pval"=NA)
 
-for (i in 1:9) {
+for (i in 1:length(medieduc)) {
   df_mededuc.ind$effect.avg[[i]] <- medieduc[[i]][["d.avg"]]
   df_mededuc.ind$ci.lwr[[i]] <- medieduc[[i]][["d.avg.ci"]][1]
   df_mededuc.ind$ci.upr[[i]] <- medieduc[[i]][["d.avg.ci"]][2]  
@@ -977,13 +986,13 @@ df_mededuc.dir <- data.frame(
   "id"=1:length(medieduc),
   "lab"= label1,  
   "var"=names(medieduc),
-  "effect"=rep("Direct",9),
+  "effect"=rep("Direct",max(length(medieduc))),
   "effect.avg"=NA,
   "ci.lwr"=NA,
   "ci.upr"=NA,
   "pval"=NA)
 
-for (i in 1:9) {
+for (i in 1:length(medieduc)) {
   df_mededuc.dir$effect.avg[[i]] <- medieduc[[i]][["z.avg"]]
   df_mededuc.dir$ci.lwr[[i]] <- medieduc[[i]][["z.avg.ci"]][1]
   df_mededuc.dir$ci.upr[[i]] <- medieduc[[i]][["z.avg.ci"]][2]  
@@ -995,13 +1004,13 @@ df_mededuc.tot <- data.frame(
   "id"=1:length(medieduc),
   "lab"= label1,  
   "var"=names(medieduc),
-  "effect"=rep("Total",9),
+  "effect"=rep("Total",max(length(medieduc))),
   "effect.avg"=NA,
   "ci.lwr"=NA,
   "ci.upr"=NA,
   "pval"=NA)
 
-for (i in 1:9) {
+for (i in 1:length(medieduc)) {
   df_mededuc.tot$effect.avg[[i]] <- medieduc[[i]][["tau.coef"]]
   df_mededuc.tot$ci.lwr[[i]] <- medieduc[[i]][["tau.ci"]][1]
   df_mededuc.tot$ci.upr[[i]] <- medieduc[[i]][["tau.ci"]][2]  
@@ -1012,13 +1021,13 @@ df_mededuc.prop <- data.frame(
   "id"=1:length(medieduc),
   "lab"= label1,  
   "var"=names(medieduc),
-  "effect"=rep("Proportion",9),
+  "effect"=rep("Proportion",max(length(medieduc))),
   "effect.avg"=NA,
   "ci.lwr"=NA,
   "ci.upr"=NA,
   "pval"=NA)
 
-for (i in 1:9) {
+for (i in 1:length(medieduc)) {
   df_mededuc.prop$effect.avg[[i]] <- medieduc[[i]][["n.avg"]]
   df_mededuc.prop$ci.lwr[[i]] <- medieduc[[i]][["n.avg.ci"]][1]
   df_mededuc.prop$ci.upr[[i]] <- medieduc[[i]][["n.avg.ci"]][2]  
@@ -1035,7 +1044,7 @@ df_mededuc <- bind_rows(df_mededuc.ind,df_mededuc.dir,df_mededuc.tot,df_mededuc.
 colnames <- c(" ","Type","Effect","Lower CI","Upper CI","p-value","Sig.")
 note <- "‘***’ p < 0.001 ‘**’ p < 0.01 ‘*’ p < 0.05 ‘.’ p < 0.1"
 kable(df_mededuc,format = "html",digits = 3,col.names = colnames, 
-      caption = "Mediated effect of Parental Education by PSU scores on Voting behaviour") %>% 
+      caption = "Mediated effect of Parental Education by Education on Voting behaviour") %>% 
   kable_styling(full_width = F) %>% 
   collapse_rows(columns = 1) %>% 
   footnote(general = note,footnote_as_chunk = T)
@@ -1060,7 +1069,7 @@ mediconv[[i]]<- mediation::mediate(fit_conv[[z]],fit1[[i]],
 }
 
 
-for (i in c("votcons","votconv","votmuni","votgobe")) {
+for (i in c("votconv","votmuni")) {
   for (z in "co_conv4a") {
 mediconv[[i]]<- mediation::mediate(fit_conv[[z]],fit1[[i]],
                                 treat="edhigh", mediator="conv4a")    
@@ -1085,7 +1094,7 @@ df_medconv.ind <- data.frame(
   "ci.upr"=NA,
   "pval"=NA)
 
-for (i in 1:9) {
+for (i in 1:(length(medieduc))) {
   df_medconv.ind$effect.avg[[i]] <- mediconv[[i]][["d.avg"]]
   df_medconv.ind$ci.lwr[[i]] <- mediconv[[i]][["d.avg.ci"]][1]
   df_medconv.ind$ci.upr[[i]] <- mediconv[[i]][["d.avg.ci"]][2]  
@@ -1096,13 +1105,13 @@ df_medconv.dir <- data.frame(
   "id"=1:length(mediconv),
   "lab"= label1,  
   "var"=names(mediconv),
-  "effect"=rep("Direct",9),
+  "effect"=rep("Direct",max(length(medieduc))),
   "effect.avg"=NA,
   "ci.lwr"=NA,
   "ci.upr"=NA,
   "pval"=NA)
 
-for (i in 1:9) {
+for (i in 1:length(medieduc)) {
   df_medconv.dir$effect.avg[[i]] <- mediconv[[i]][["z.avg"]]
   df_medconv.dir$ci.lwr[[i]] <- mediconv[[i]][["z.avg.ci"]][1]
   df_medconv.dir$ci.upr[[i]] <- mediconv[[i]][["z.avg.ci"]][2]  
@@ -1114,13 +1123,13 @@ df_medconv.tot <- data.frame(
   "id"=1:length(medieduc),
   "lab"= label1,  
   "var"=names(medieduc),
-  "effect"=rep("Total",9),
+  "effect"=rep("Total",max(length(medieduc))),
   "effect.avg"=NA,
   "ci.lwr"=NA,
   "ci.upr"=NA,
   "pval"=NA)
 
-for (i in 1:9) {
+for (i in 1:length(medieduc)) {
   df_medconv.tot$effect.avg[[i]] <- mediconv[[i]][["tau.coef"]]
   df_medconv.tot$ci.lwr[[i]] <- mediconv[[i]][["tau.ci"]][1]
   df_medconv.tot$ci.upr[[i]] <- mediconv[[i]][["tau.ci"]][2]  
@@ -1131,13 +1140,13 @@ df_medconv.prop <- data.frame(
   "id"=1:length(medieduc),
   "lab"= label1,  
   "var"=names(medieduc),
-  "effect"=rep("Proportion",9),
+  "effect"=rep("Proportion",max(length(medieduc))),
   "effect.avg"=NA,
   "ci.lwr"=NA,
   "ci.upr"=NA,
   "pval"=NA)
 
-for (i in 1:9) {
+for (i in 1:length(medieduc)) {
   df_medconv.prop$effect.avg[[i]] <- mediconv[[i]][["n.avg"]]
   df_medconv.prop$ci.lwr[[i]] <- mediconv[[i]][["n.avg.ci"]][1]
   df_medconv.prop$ci.upr[[i]] <- mediconv[[i]][["n.avg.ci"]][2]  
@@ -1208,7 +1217,7 @@ hipotesis <- c(m1
 # Set the independent variables (IVs)
 ivs1<- data1 %>% dplyr::select(votpr17) %>% names()        #highschool
 ivs2<- data1 %>% dplyr::select(votpleb) %>% names()        # 2sem 2020
-ivs3<- data1 %>% dplyr::select(votcons:votgobe) %>% names()# 1sem 2021
+ivs3<- data1 %>% dplyr::select(votconv:votmuni) %>% names()# 1sem 2021
 ivs4<- data1 %>% dplyr::select(votdipu:vot2vue) %>% names()# 2sem 2021
 
 ivs <- c(ivs1,ivs2,ivs3,ivs4)
@@ -1255,294 +1264,9 @@ knitreg(l = fit1[names(fit1)[grepl("vot", names(fit1),"\n")]],
         # reorder.coef = reorderc
         )
 
-# Mediation analysis___________________________________________________________
-# mededuc1 <- "edhigh+conv1a+mujer+pospol"#highschool
-# mededuc2 <- "edhigh+conv3a+mujer+pospol"# 2sem 2020
-# mededuc3 <- "edhigh+conv4a+mujer+pospol"# 1sem 2021
-# mededuc4 <- "edhigh+conv5a+mujer+pospol"# 2sem 2021
-# mededuc <- c(mededuc1,mededuc2,mededuc3,mededuc4)
-# 
-# medconv1 <- "edhigh+educyear+mujer+pospol"#highschool
-# medconv2 <- "edhigh+educyear+mujer+pospol"# 2sem 2020
-# medconv3 <- "edhigh+educyear+mujer+pospol"# 1sem 2021
-# medconv4 <- "edhigh+educyear+mujer+pospol"# 2sem 2021
-# medconv <- c(medconv1,medconv2,medconv3,medconv4)
-# 
-# ivs1 <- c("educyear")
-# ivs2 <- c("conv1a","conv3a","conv4a","conv5a")
-# 
-# # Create the object for each model
-# lm.educ <- list()
-# for (i in ivs1) {
-# lm.educ[[i]] <- paste0(i,"~",mededuc)
-# }
-# 
-# lm.conv <- list()
-# for (i in ivs2) {
-# lm.conv[[i]] <- paste0(i,"~",medconv)
-# }
-# 
-# 
-# # Estimate OLS models: mediator~predictor
-# fit_educ <- list()
-# for (i in ivs1) {
-#   for (z in lm.educ[[i]]) {
-#     fit_educ[[z]] <- lm(formula =z, data = data1)
-#   }
-# }
-# 
-# 
-# fit_conv <- list()
-# for (i in ivs2) {
-#   for (z in lm.conv[[i]]) {
-#     fit_conv[[z]] <- lm(formula =z, data = data1)
-#   }
-# }
-# 
-# # change model names within list
-# names(fit_educ) <- paste0("ed_",ivs2)
-# names(fit_conv) <- paste0("co_",ivs2)
-# 
-# # Estimate mediation model_____________________________________________________
-# 
-# ############################.
-# # mediated by Education    #
-# ############################.
-# medieduc <- list()
-# for (i in c("votpr17")) {
-#   for (z in c("ed_conv1a")) {
-# medieduc[[i]]<- mediation::mediate(fit_educ[[z]],fit1[[i]], 
-#                                 treat="edhigh", mediator="educyear")    
-#   }
-# }
-# 
-# for (i in "votpleb") {
-#   for (z in "ed_conv3a") {
-# medieduc[[i]]<- mediation::mediate(fit_educ[[z]],fit1[[i]], 
-#                                 treat="edhigh", mediator="educyear")    
-#   }
-# }
-# 
-# 
-# for (i in c("votcons","votconv","votmuni","votgobe")) {
-#   for (z in "ed_conv4a") {
-# medieduc[[i]]<- mediation::mediate(fit_educ[[z]],fit1[[i]], 
-#                                 treat="edhigh", mediator="educyear")    
-#   }
-# }
-# 
-# for (i in c("votdipu","vot1vue","vot2vue")) {
-#   for (z in "ed_conv5a") {
-# medieduc[[i]]<- mediation::mediate(fit_educ[[z]],fit1[[i]],  
-#                                 treat="edhigh", mediator="educyear")    
-#   }
-# }
-# 
-# 
-# # extract the average mediation effects 
-# label1 <- 
-#   stringr::str_remove_all(string = sjlabelled::get_label(study_1[,names(medieduc)]),
-#                           pattern = "Vote: ")
-# 
-# df_mededuc.ind <- data.frame(
-#   "id"=1:length(medieduc),
-#   "lab"= label1,  
-#   "var"=names(medieduc),
-#   "effect"="Indirect",  
-#   "effect.avg"=NA,
-#   "ci.lwr"=NA,
-#   "ci.upr"=NA,
-#   "pval"=NA)
-# 
-# for (i in 1:9) {
-#   df_mededuc.ind$effect.avg[[i]] <- medieduc[[i]][["d.avg"]]
-#   df_mededuc.ind$ci.lwr[[i]] <- medieduc[[i]][["d.avg.ci"]][1]
-#   df_mededuc.ind$ci.upr[[i]] <- medieduc[[i]][["d.avg.ci"]][2]  
-#   df_mededuc.ind$pval[[i]] <- medieduc[[i]][["d.avg.p"]]
-#   }
-# 
-# df_mededuc.dir <- data.frame(
-#   "id"=1:length(medieduc),
-#   "lab"= label1,  
-#   "var"=names(medieduc),
-#   "effect"=rep("Direct",9),
-#   "effect.avg"=NA,
-#   "ci.lwr"=NA,
-#   "ci.upr"=NA,
-#   "pval"=NA)
-# 
-# for (i in 1:9) {
-#   df_mededuc.dir$effect.avg[[i]] <- medieduc[[i]][["z.avg"]]
-#   df_mededuc.dir$ci.lwr[[i]] <- medieduc[[i]][["z.avg.ci"]][1]
-#   df_mededuc.dir$ci.upr[[i]] <- medieduc[[i]][["z.avg.ci"]][2]  
-#   df_mededuc.dir$pval[[i]] <- medieduc[[i]][["z.avg.p"]]
-#   }
-# 
-# 
-# df_mededuc.tot <- data.frame(
-#   "id"=1:length(medieduc),
-#   "lab"= label1,  
-#   "var"=names(medieduc),
-#   "effect"=rep("Total",9),
-#   "effect.avg"=NA,
-#   "ci.lwr"=NA,
-#   "ci.upr"=NA,
-#   "pval"=NA)
-# 
-# for (i in 1:9) {
-#   df_mededuc.tot$effect.avg[[i]] <- medieduc[[i]][["tau.coef"]]
-#   df_mededuc.tot$ci.lwr[[i]] <- medieduc[[i]][["tau.ci"]][1]
-#   df_mededuc.tot$ci.upr[[i]] <- medieduc[[i]][["tau.ci"]][2]  
-#   df_mededuc.tot$pval[[i]] <- medieduc[[i]][["tau.p"]]
-#   }
-# 
-# df_mededuc.prop <- data.frame(
-#   "id"=1:length(medieduc),
-#   "lab"= label1,  
-#   "var"=names(medieduc),
-#   "effect"=rep("Proportion",9),
-#   "effect.avg"=NA,
-#   "ci.lwr"=NA,
-#   "ci.upr"=NA,
-#   "pval"=NA)
-# 
-# for (i in 1:9) {
-#   df_mededuc.prop$effect.avg[[i]] <- medieduc[[i]][["n.avg"]]
-#   df_mededuc.prop$ci.lwr[[i]] <- medieduc[[i]][["n.avg.ci"]][1]
-#   df_mededuc.prop$ci.upr[[i]] <- medieduc[[i]][["n.avg.ci"]][2]  
-#   df_mededuc.prop$pval[[i]] <- medieduc[[i]][["n.avg.p"]]
-#   }
-# 
-# df_mededuc <- bind_rows(df_mededuc.ind,df_mededuc.dir,df_mededuc.tot,df_mededuc.prop) %>% 
-#   arrange(id) %>% 
-#   mutate(sig=gtools::stars.pval(pval)) %>% 
-#   dplyr::select(-"id",-"var")
-# 
-# 
-# 
-# colnames <- c(" ","Type","Effect","Lower CI","Upper CI","p-value","Sig.")
-# note <- "‘***’ p < 0.001 ‘**’ p < 0.01 ‘*’ p < 0.05 ‘.’ p < 0.1"
-# kable(df_mededuc,format = "html",digits = 3,col.names = colnames, 
-#       caption = "Mediated effect of Parental Education by Education on Voting behaviour") %>% 
-#   kable_styling(full_width = F) %>% 
-#   collapse_rows(columns = 1) %>% 
-#   footnote(general = note,footnote_as_chunk = T)
-# 
-# ############################.
-# # mediated by conversation #
-# ############################.
-# 
-# mediconv <- list()
-# for (i in c("votpr17")) {
-#   for (z in c("co_conv1a")) {
-# mediconv[[i]]<- mediation::mediate(fit_conv[[z]],fit1[[i]], 
-#                                 treat="edhigh", mediator="conv1a")    
-#   }
-# }
-# 
-# for (i in "votpleb") {
-#   for (z in "co_conv3a") {
-# mediconv[[i]]<- mediation::mediate(fit_conv[[z]],fit1[[i]], 
-#                                 treat="edhigh", mediator="conv3a")    
-#   }
-# }
-# 
-# 
-# for (i in c("votcons","votconv","votmuni","votgobe")) {
-#   for (z in "co_conv4a") {
-# mediconv[[i]]<- mediation::mediate(fit_conv[[z]],fit1[[i]],
-#                                 treat="edhigh", mediator="conv4a")    
-#   }
-# }
-# 
-# for (i in c("votdipu","vot1vue","vot2vue")) {
-#   for (z in "co_conv5a") {
-# mediconv[[i]]<- mediation::mediate(fit_conv[[z]],fit1[[i]],
-#                                 treat="edhigh", mediator="conv5a")    
-#   }
-# }
-# 
-# # extract the average mediation effects 
-# df_medconv.ind <- data.frame(
-#   "id"=1:length(mediconv),
-#   "lab"= label1,  
-#   "var"=names(mediconv),
-#   "effect"="Indirect",  
-#   "effect.avg"=NA,
-#   "ci.lwr"=NA,
-#   "ci.upr"=NA,
-#   "pval"=NA)
-# 
-# for (i in 1:9) {
-#   df_medconv.ind$effect.avg[[i]] <- mediconv[[i]][["d.avg"]]
-#   df_medconv.ind$ci.lwr[[i]] <- mediconv[[i]][["d.avg.ci"]][1]
-#   df_medconv.ind$ci.upr[[i]] <- mediconv[[i]][["d.avg.ci"]][2]  
-#   df_medconv.ind$pval[[i]] <- mediconv[[i]][["d.avg.p"]]
-#   }
-# 
-# df_medconv.dir <- data.frame(
-#   "id"=1:length(mediconv),
-#   "lab"= label1,  
-#   "var"=names(mediconv),
-#   "effect"=rep("Direct",9),
-#   "effect.avg"=NA,
-#   "ci.lwr"=NA,
-#   "ci.upr"=NA,
-#   "pval"=NA)
-# 
-# for (i in 1:9) {
-#   df_medconv.dir$effect.avg[[i]] <- mediconv[[i]][["z.avg"]]
-#   df_medconv.dir$ci.lwr[[i]] <- mediconv[[i]][["z.avg.ci"]][1]
-#   df_medconv.dir$ci.upr[[i]] <- mediconv[[i]][["z.avg.ci"]][2]  
-#   df_medconv.dir$pval[[i]] <- mediconv[[i]][["z.avg.p"]]
-#   }
-# 
-# 
-# df_medconv.tot <- data.frame(
-#   "id"=1:length(medieduc),
-#   "lab"= label1,  
-#   "var"=names(medieduc),
-#   "effect"=rep("Total",9),
-#   "effect.avg"=NA,
-#   "ci.lwr"=NA,
-#   "ci.upr"=NA,
-#   "pval"=NA)
-# 
-# for (i in 1:9) {
-#   df_medconv.tot$effect.avg[[i]] <- mediconv[[i]][["tau.coef"]]
-#   df_medconv.tot$ci.lwr[[i]] <- mediconv[[i]][["tau.ci"]][1]
-#   df_medconv.tot$ci.upr[[i]] <- mediconv[[i]][["tau.ci"]][2]  
-#   df_medconv.tot$pval[[i]] <- mediconv[[i]][["tau.p"]]
-#   }
-# 
-# df_medconv.prop <- data.frame(
-#   "id"=1:length(medieduc),
-#   "lab"= label1,  
-#   "var"=names(medieduc),
-#   "effect"=rep("Proportion",9),
-#   "effect.avg"=NA,
-#   "ci.lwr"=NA,
-#   "ci.upr"=NA,
-#   "pval"=NA)
-# 
-# for (i in 1:9) {
-#   df_medconv.prop$effect.avg[[i]] <- mediconv[[i]][["n.avg"]]
-#   df_medconv.prop$ci.lwr[[i]] <- mediconv[[i]][["n.avg.ci"]][1]
-#   df_medconv.prop$ci.upr[[i]] <- mediconv[[i]][["n.avg.ci"]][2]  
-#   df_medconv.prop$pval[[i]] <- mediconv[[i]][["n.avg.p"]]
-#   }
-# 
-# df_medconv <- bind_rows(df_medconv.ind,df_medconv.dir,df_medconv.tot,df_medconv.prop) %>% 
-#   arrange(id) %>% 
-#   mutate(sig=gtools::stars.pval(pval)) %>% 
-#   dplyr::select(-"id",-"var")
-# 
-# kable(df_medconv,format = "html",digits = 3, col.names = colnames,
-#       caption = "Mediated effect of Parental Education by Conversation on Voting behaviour") %>% 
-#   kable_styling(full_width = F) %>% 
-#   collapse_rows(columns = 1) %>% 
-#   footnote(general = note,footnote_as_chunk = T)  
 ```
+
+### longitudinal
 
 ```{r vot-mult, results='asis'}
 rm(list=ls())
@@ -1560,22 +1284,53 @@ pacman::p_load(dplyr,       # Manipulacion de datos
                tibble,
                lavaan,
                texreg,
-               mediation
+               mediation,
+               estimatr,
+               bife
                )
 
 load(here::here("input/data/proc/study1_long.RData"))
+#votcons = 3
+#votcons = 6
+
 data1<- 
 study_1_long %>% 
-  dplyr::select(folio_encuestado,vot,conv,edhigh:conv_t1) %>%
-  dplyr::filter(vot !=2) %>%  
+  dplyr::select(folio_encuestado,momento,vot,edhigh:conv_t1) %>%
+  dplyr::filter(vot !=2,momento !=3,momento !=6) %>%  
   mutate(conv_t1=as.numeric(conv_t1),
-         conv=as.numeric(conv)) 
+         # conv=as.numeric(conv)
+         ) %>% 
+  na.omit()
+# dim(data1)
+
+# Models-----------------------------------------------------------------------
+votonull <- 
+lme4::glmer(vot~1+(1|folio_encuestado),
+            data = data1,family = "binomial")
+# 9.75/(3.29+9.75)
+# sjstats::icc(votonull)[[1]]
+# pdata <- panelr::panel_data(data1, id = folio_encuestado, wave = momento)
+# model <- panelr::wbm(vot ~  edhigh+educyear+conv_t1+mujer+pospol, data = pdata,use.wave = T, family = binomial,model = "random")
+# summary(model)
+
 voto <- 
-lme4::glmer(vot~edhigh+educyear+conv+mujer+pospol+(1|folio_encuestado),
-            data = data1,family = "binomial",nAGQ = 9)
+lme4::glmer(vot~edhigh+educyear+conv_t1+mujer+pospol+momento+(1|folio_encuestado),
+            data = data1,family = "binomial")
+voto_re_t <- 
+lme4::glmer(vot~edhigh+educyear+conv_t1+mujer+pospol+momento+(1+momento|folio_encuestado),
+            data = data1,family = "binomial")
+# summary(voto)
 
-knitreg(voto)
-
+# Table ------------------------------------------------------------------------
+votos <- list(votonull,voto,voto_re_t)
+caption <- "Multilevel longitudinal logistic regression for voting"
+knitreg(votos,
+        include.ci = FALSE,
+        omit.coef = c("(pospol)|(mujer)"),
+        caption.above = T,caption = caption,
+          # custom.gof.rows = list("ICC"=c(sjstats::icc(votonull)[[1]],
+          # sjstats::icc(voto)[[2]])),
+        )
 ```
 
 

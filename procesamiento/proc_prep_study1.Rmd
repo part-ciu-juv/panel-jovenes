@@ -129,7 +129,7 @@ load(here::here("input/data/proc/df_wide.RData"))
 
 study_1 <- 
 df_wide %>% 
-  select(idencuestado,
+  dplyr::select(idencuestado,
          folio_encuestado,
     educ="cs_educ_w01",
     edmad="nse_madre_w01",
@@ -237,7 +237,10 @@ df_wide %>%
 # recode y labels_______________________________________________________________
 
 # PSU
-study_1$psu <- set_label(study_1$psu,"University Selection Test (PSU)")
+study_1$psu <- set_label(study_1$psu,"University Selection Test (PSU/10)")
+sjmisc::frq(study_1$psu)
+study_1$psu <- study_1$psu/10
+sjmisc::frq(study_1$psu)
 
 # Educaction categorical
 sjmisc::frq(study_1$educ)
@@ -300,7 +303,7 @@ study_1$edhigh <- sjlabelled::set_label(study_1$edhigh,"Years of Education (Pare
 sjmisc::frq(study_1$edhigh)
 
  # Partipation (all moments in life cycle)
-vars <- study_1 %>% select(firm1a:segu5a) %>% names()
+vars <- study_1 %>% dplyr::select(firm1a:segu5a) %>% names()
 study_1[,vars]<- lapply(study_1[,vars], ordered)
 valab <- c("Never","Almost never","Sometimes","Frequently")
 
@@ -332,7 +335,7 @@ study_1[,vars]  <-
 
 # Partipation: voting in elections
 ## Question with age limit
-varsvote <- study_1 %>% select(votpr17,votpleb,votcons) %>% names()
+varsvote <- study_1 %>% dplyr::select(votpr17,votpleb,votcons) %>% names()
 study_1[,varsvote]<- lapply(study_1[,varsvote], ordered)
 valab <- c("No","Yes","Did not have the age")
 p2<- c(
@@ -348,7 +351,7 @@ study_1[,varsvote]  <-
                         labels = valab)
 # study_1[,varsvote] %>% view_df()
 ## Question without age limit
-varsvote <- study_1 %>% select(votconv:vot2vue) %>% names()
+varsvote <- study_1 %>% dplyr::select(votconv:vot2vue) %>% names()
 study_1[,varsvote]<- lapply(study_1[,varsvote], ordered)
 valab <- c("No","Yes")
 p2<- c(
@@ -372,7 +375,7 @@ study_1[,varsvote] %>% view_df()
 # Socialization: 
 # Conversation with parents about political issues
 # Participate in manifestations with one of your parents
-vars2 <- study_1 %>% select(conv1a:marc5a) %>% names()
+vars2 <- study_1 %>% dplyr::select(conv1a:marc5a) %>% names()
 study_1[,vars2]<- lapply(study_1[,vars2], ordered)
 
 valab <- c("Never","Almost never","Sometimes","Frequently")
@@ -411,15 +414,15 @@ study_1$pospol <- factor(study_1$pospol,levels = 1:4,
 study_1$pospol <- sjlabelled::set_label(study_1$pospol,"Political position")
 sjmisc::frq(study_1$pospol)
 
-study_1 %>% select(starts_with("pospol")) %>% sjmisc::frq()
+study_1 %>% dplyr::select(starts_with("pospol")) %>% sjmisc::frq()
 
-df <- study_1 %>% select(psu,educyear,edmadyear,edpadyear,starts_with("onli")) %>% na.omit()
+df <- study_1 %>% dplyr::select(psu,educyear,edmadyear,edpadyear,starts_with("onli")) %>% na.omit()
 # skimr::skim(df)
 
-cormat<- polycor::hetcor(data = df)
-cormat$correlations
-round(cormat$tests,5)
-corrplot::corrplot.mixed(cormat$correlations)
+# cormat<- polycor::hetcor(data = df)
+# cormat$correlations
+# round(cormat$tests,5)
+# corrplot::corrplot.mixed(cormat$correlations)
 
 sjPlot::view_df(study_1,show.prc = T,show.type = T,show.frq = T,show.na = T)
 save(study_1,file = here::here("input/data/proc/study1.RData"))
@@ -448,7 +451,8 @@ rm(list=ls())
 load(here::here("input/data/proc/study1.RData"))
 
 data_panel <-
-  study_1 %>% dplyr::select(
+ study_1 %>% 
+  dplyr::select(
     folio_encuestado,
     ends_with("a"),
     vot_t1=votpr17,
@@ -496,7 +500,7 @@ data_long %>% left_join(x = .,
                                           pospol,
                                           conv_t1=conv1a))
 
-sjPlot::view_df(study_1_long,show.prc = T,show.type = T,show.frq = T,show.na = T)
+# sjPlot::view_df(study_1_long,show.prc = T,show.type = T,show.frq = T,show.na = T)
 save(study_1_long,file = here::here("input/data/proc/study1_long.RData"))
 ```
 
