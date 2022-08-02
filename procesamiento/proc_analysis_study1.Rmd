@@ -14,12 +14,9 @@ editor_options:
 
 # Setup
 
-* Presentar modelos por pasos
-
-* 1 tabla disrrputiva con 4 modelos
-* 1 tabla online
-
-* Sacar Gobernadores y Constituent Conventionals and municipal elections (2021)
+* Controlar por edad individual y padres (edad, edadpad)
+* Presentar modelos por pasos (edhigh, educyear, conv)
+* Mediacion multinivel 
 
 
 ```{r include=FALSE}
@@ -211,20 +208,28 @@ coef <- c("Conversation" ,
 
 col <- c(" ",paste0("Model ",1:length(fits)))
 tabdis$V1 <- coef
+tab_dis_educ <- 
 kable(tabdis,format = "html",
       booktabs=T,
       row.names = F,
       caption = "Disruptive political participation, parental education and conversation",
       col.names = col) %>% 
   kable_styling(full_width = F)
+tab_dis_educ
+
 tabonl$V1 <- coef
+tab_onl_educ <- 
 kable(tabonl,format = "html",
       booktabs=T,
       row.names = F,
       caption = "Online political participation, parental education and conversation",
       col.names = col) %>% 
   kable_styling(full_width = F) %>% 
-  row_spec(7,hline_after = T)
+  row_spec(7,hline_after = T) 
+tab_onl_educ
+tables1 <- list(tab_dis_educ,tab_onl_educ)
+save(tables1,
+     file = here::here("output/tables/tab_educ.RData"))
 ```
 
 ```{r part-edhigh-psu, results='asis'}
@@ -363,6 +368,7 @@ coef <- c("Conversation" ,
 
 col <- c(" ",paste0("Model ",1:length(fits)))
 tabdis$V1 <- coef
+tab_dis_psu <- 
 kable(tabdis,format = "html",
       booktabs=T,
       row.names = F,
@@ -370,7 +376,9 @@ kable(tabdis,format = "html",
       col.names = col
       ) %>% 
   kable_styling(full_width = F)
+tab_dis_psu
 tabonl$V1 <- coef
+tab_onl_psu <- 
 kable(tabonl,format = "html",
       booktabs=T,
       row.names = F,
@@ -379,6 +387,10 @@ kable(tabonl,format = "html",
       ) %>% 
   kable_styling(full_width = F) %>% 
   row_spec(7,hline_after = T)
+tab_onl_psu
+tables2 <- list(tab_dis_psu,tab_onl_psu)
+save(tables2,
+     file = here::here("output/tables/tab_psu.RData"))
 ```
 
 ## Voting behaviour 
@@ -476,6 +488,9 @@ names(fit1) <- paste0(ivs)
 omit <- "(Intercept)|(mujer)|(pospol)"
 # detail for subsections:
 # https://stackoverflow.com/questions/69338331/r-markdown-create-section-headers-in-r-and-print-r-output-in-same-section
+
+save(fit1,
+     file = here::here("output/tables/tab__logit_vote_educ.RData"))
 
 caption <- "Voting behaviour, parental education and conversation"
 knitreg(l = fit1[names(fit1)[grepl("vot", names(fit1),"\n")]],
@@ -1331,6 +1346,23 @@ knitreg(votos,
           # custom.gof.rows = list("ICC"=c(sjstats::icc(votonull)[[1]],
           # sjstats::icc(voto)[[2]])),
         )
+
+logit2prob <- function(logit){
+  odds <- exp(logit)
+  prob <- odds / (1 + odds)
+  return(prob)
+}
+
+# logit2prob(lme4::fixef(votonull))
+# logit2prob(lme4::fixef(voto))
+
+set.seed(1234)
+plot_model(model = voto,type = "re",sort.est = "sort.all",
+           grid = F,
+           transform = NULL,
+           axis.labels = c(1:1010))
+# plot_model(model = voto,type = "pred",terms = "edhigh")
+# plot_model(model = voto,type = "pred",terms = "educyear")
 ```
 
 

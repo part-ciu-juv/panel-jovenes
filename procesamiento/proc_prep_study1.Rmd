@@ -102,6 +102,11 @@ save(df_wide, file = "input/data/proc/df_wide.RData")
 * Momento 4a: 1er semestre 2021
 * Momento 5a: 2do semestre 2021
 
+Controles:
+* edad madre: fam_edad_m_w01
+* edad madre: fam_edad_p_w01
+* edad jovenes: cs_edad_w01
+
 ```{r}
 if (!require("pacman")) install.packages("pacman") # instalar pacman
 pacman::p_load(dplyr,       # Manipulacion de datos 
@@ -359,8 +364,8 @@ p2<- c(
   "Vote: Municipal elections (2021)",
   "Vote: Regional Governor elections (2021)",
   "Vote: Parliamentary elections (2021)",
-  "Vote: Presidential elections - first round (2020)",
-  "Vote: Presidential elections - second round (2020)")
+  "Vote: Presidential elections - first round (2021)",
+  "Vote: Presidential elections - second round (2021)")
 etiquetas <- p2
 
 study_1[,varsvote]  <-
