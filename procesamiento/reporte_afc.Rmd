@@ -1,0 +1,502 @@
+---
+title: "Análisis Factorial Confirmatorio (reducido ola 3)"
+output: 
+  html_document:
+    #css: "https://jciturras.github.io/ayudantia-sol3051/style.css"    
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+```
+
+```{r, include=FALSE}
+pacman::p_load(sjPlot, sjlabelled,readr, summarytools, haven, dplyr,kableExtra,readxl, ggplot2,ggtext,lavaan)
+```
+
+```{r, include=FALSE}
+load(here::here("input/data/proc/df_wide.RData"))
+```
+
+```{r desc3y4, echo=FALSE, fig.dim=c(10,10)}
+part_pol_3y4 = df_wide %>% dplyr::select(
+  part_pol_firma_w01,
+  part_pol_marcha_pas_w01,
+  part_pol_marcha_dis_w01,
+  part_pol_bloqueo_w01,
+  part_pol_rayar_w01,
+  part_pol_toma_w01,
+  part_pol_online_w01,
+  part_online_post_w01,
+  part_online_com_w01,
+  part_online_seg_w01
+)
+
+# get variable labels
+varlabels_3y4<- part_pol_3y4 %>% get_label()
+# set part of the label for replacement
+a <- "Durante el periodo en que cursaba 3° y 4° Medio realizó algunas de las siguientes actividades dentro o fuera del liceo "
+b <- "Durante el periodo en que cursaba 3° y 4° Medio con que frecuencia realizaba las siguientes actividades  " 
+z <- "w01"
+#replace string in labels
+varlabels_3y4<- 
+varlabels_3y4 %>% 
+stringr::str_replace_all(.,"[[:punct:]]", "") %>% 
+  stringr::str_replace_all(.,a,"") %>% 
+    stringr::str_replace_all(.,b,"") %>%
+      stringr::str_replace_all(.,z,"")
+#set new labels
+part_pol_3y4 <- set_label(part_pol_3y4,varlabels_3y4)
+# Plot
+sjPlot::plot_likert(part_pol_3y4,
+                    title = "Participación política 3°y 4°Medio",
+                    reverse.scale = T,
+                    values = "sum.outside",
+                    sort.frq = "pos.asc"
+                    ) +
+  theme(legend.position="bottom")
+```
+
+```{r descest, echo=FALSE, fig.dim=c(10,10)}
+part_pol_est = df_wide %>% dplyr::select(
+  part_pol_firma_21_w01,
+  part_pol_marc_pac_21_w01,
+  part_pol_marc_dis_21_w01,
+  part_pol_bloq_21_w01,
+  part_pol_rayar_21_w01,
+  part_pol_toma_21_w01,
+  part_pol_online_info_21_w01,
+  part_pol_online_post_21_w01,
+  part_pol_online_com_21_w01,
+  part_pol_online_seg_21_w01
+)
+
+# get variable labels
+varlabels_est<- part_pol_est %>% get_label()
+# set part of the label for replacement
+c <- "Pensando en el periodo del estallido social entre octubre de 2019 y enero de 2020 realizó alguna de las siguientes actividades "
+d <- "Pensando en el periodo del estallido social entre octubre de 2019 y enero de 2020 con que frecuencia realizó las siguientes actividades  "   
+#replace string in labels
+varlabels_est<- 
+varlabels_est %>% 
+stringr::str_replace_all(.,"[[:punct:]]", "") %>% 
+  stringr::str_replace_all(.,c,"") %>% 
+    stringr::str_replace_all(.,d,"") %>% 
+      stringr::str_replace_all(.,z,"") 
+#set new labels
+part_pol_est <- set_label(part_pol_est,varlabels_est)
+# Plot
+sjPlot::plot_likert(part_pol_est,
+                    title = "Participación política estallido social",
+                    reverse.scale = T,
+                    values = "sum.outside",
+                    sort.frq = "pos.asc"
+                    ) +
+  theme(legend.position="bottom")
+```
+
+```{r desc20, echo=FALSE, fig.dim=c(10,10)}
+part_pol_20 = df_wide %>% dplyr::select(
+  part_pol_firma_20_w01,
+  part_pol_marc_pac_20_w01,
+  part_pol_marc_dis_20_w01,
+  part_pol_bloq_20_w01,
+  part_pol_rayar_20_w01,
+  part_pol_toma_20_w01,
+  part_pol_online_info_20_w01,
+  part_pol_online_post_20_w01,
+  part_pol_online_com_20_w01,
+  part_pol_online_seg_20_w01
+)
+
+# get variable labels
+varlabels_20<- part_pol_20 %>% get_label()
+# set part of the label for replacement
+e <- "Ahora pensando en el año 2020 entre marzo y diciembre de 2020 realizó alguna de las siguientes actividades "
+f <- "Ahora pensando en el año 2020 entre marzo y diciembre de 2020 con que frecuencia realizó las siguientes actividades  "   
+#replace string in labels
+varlabels_20<- 
+varlabels_20 %>% 
+stringr::str_replace_all(.,"[[:punct:]]", "") %>% 
+  stringr::str_replace_all(.,e,"") %>% 
+    stringr::str_replace_all(.,f,"") %>% 
+      stringr::str_replace_all(.,z,"") 
+#set new labels
+part_pol_20 <- set_label(part_pol_20,varlabels_20)
+# Plot
+sjPlot::plot_likert(part_pol_20,
+                    title = "Participación política durante 2020",
+                    reverse.scale = T,
+                    values = "sum.outside",
+                    sort.frq = "pos.asc"
+                    ) +
+  theme(legend.position="bottom")
+```
+
+```{r desc21a, echo=FALSE, fig.dim=c(10,10)}
+part_pol_21.1 = df_wide %>% dplyr::select(
+  part_pol_firma_w02,
+  part_pol_marc_pac_w02,
+  part_pol_marc_dis_w02,
+  part_pol_bloq_w02,
+  part_pol_rayar_w02,
+  part_pol_toma_w02,
+  part_pol_online_info_w02,
+  part_pol_online_post_w02,
+  part_pol_online_com_w02,
+  part_pol_online_seg_w02
+)
+
+# get variable labels
+varlabels_21.1<- part_pol_21.1 %>% get_label()
+# set part of the label for replacement
+g <- "Considerando los últimos meses el primer semestre de 2021 con qué frecuencia realizó las siguientes actividades "
+  
+#replace string in labels
+varlabels_21.1<- 
+varlabels_21.1 %>% 
+stringr::str_replace_all(.,"[[:punct:]]", "") %>% 
+  stringr::str_replace_all(.,g,"")
+#set new labels
+part_pol_21.1 <- set_label(part_pol_21.1,varlabels_21.1)
+# Plot
+sjPlot::plot_likert(part_pol_21.1,
+                    title = "Participación política 2021 primer semestre",
+                    reverse.scale = T,
+                    values = "sum.outside",
+                    sort.frq = "pos.asc"
+                    ) +
+  theme(legend.position="bottom")
+```
+
+```{r desc21b, echo=FALSE, fig.dim=c(10,10)}
+part_pol_21.2 = df_wide %>% dplyr::select(
+  part_pol_firma_21b_w03,
+  part_pol_marc_pac_21b_w03,
+  part_pol_marc_dis_21b_w03,
+  part_pol_bloq_21b_w03,
+  part_pol_rayar_21b_w03,
+  part_pol_toma_21b_w03,
+  part_pol_online_info_21b_w03,
+  part_pol_online_post_21b_w03,
+  part_pol_online_com_21b_w03,
+  part_pol_online_seg_21b_w03
+)
+
+# get variable labels
+varlabels_21.2<- part_pol_21.2 %>% get_label()
+# set part of the label for replacement
+h <- "Considerando los últimos meses el segundo semestre de 2021 entre agosto y diciembre con qué frecuencia realizó las siguientes actividades "
+ 
+#replace string in labels
+varlabels_21.2<- 
+varlabels_21.2 %>% 
+stringr::str_replace_all(.,"[[:punct:]]", "") %>% 
+  stringr::str_replace_all(.,h,"") %>% 
+    stringr::str_replace_all(.,z,"")
+#set new labels
+part_pol_21.2 <- set_label(part_pol_21.2,varlabels_21.2)
+# Plot
+sjPlot::plot_likert(part_pol_21.2,
+                    title = "Participación política 2021 segundo semestre",
+                    reverse.scale = T,
+                    values = "sum.outside",
+                    sort.frq = "pos.asc"
+                    ) +
+  theme(legend.position="bottom")
+```
+
+El modelo tridimensional propuesto originalmente está conformado por las variables latentes de activismo disruptivo, que está compuesto por: participar en marchas con disturbios, pintar o rayar paredes con demandas y consignas, participar en bloqueo de calles o carretera y participar en la toma de un edificio o institución; activismo online que está compuesto por: usar internet para buscar información sobre temas sociales y/o políticos, seguir personas en redes sociales por su contenido sobre temas sociales y políticos, postear imágenes o mensajes acerca de temas sociales y/o políticos en internet y compartir o comentar en el posteo de otra persona acerca de temas sociales y/o políticos; y activismo no disruptivo, que está compuesto por las preguntas acerca de participar en marchas o protestas pacíficas y firmar peticiones presencialmente o por internet. A pesar de que este fue planteado originalmente. En cambio, el modelo bidimensional está compuesto por las variables latentes de activismo disruptivo y activismo online, quitando del modelo las variables de activismo no disrruptivo. Para identificar el modelo más adecuado se contrastaron ambos modelos empleando un Análisis Factorial Confirmatorio (AFC), y se comparó usando una prueba de chi-cuadrado apoyado de manera complementaria por el Comaprative Fit Index (CFI), el Tucker Lewis Index (TLI) y el Root Mean Squared Error Approximation (RMSEA). Además, esto se apoya con un análisis correlacional para verificar si los ítems correspondientes a cada variable tienen relación entre sí.
+
+```{r corr3y4, echo=FALSE, fig.dim=c(10,10)}
+#Matriz de correlación
+corMat_3y4 <-
+  part_pol_3y4 %>%
+  dplyr::select(
+    part_pol_firma_w01,
+    part_pol_marcha_pas_w01,
+    part_pol_marcha_dis_w01,
+    part_pol_bloqueo_w01,
+    part_pol_rayar_w01,
+    part_pol_toma_w01,
+    part_pol_online_w01,
+    part_online_post_w01,
+    part_online_com_w01,
+    part_online_seg_w01
+  ) %>%
+  lavaan::lavCor(., ordered = names(.))
+diag(corMat_3y4) = NA #set diagonal values to NA
+# Set Row names of the matrix
+rownames(corMat_3y4) <- c(
+  "A. Firma",
+  "B. Marcha pacífica",
+  "C. Marcha disrruptiva",
+  "D. Bloqueo",
+  "E. Rayar",
+  "F. Tomas",
+  "G. Informarse online",
+  "H. Posteo online",
+  "I. Comentar online",
+  "J. Seguir online"
+  )
+#set Column names of the matrix
+colnames(corMat_3y4) <- c("(A)",
+                        "(B)",
+                        "(C)",
+                        "(D)",
+                        "(E)",
+                        "(F)",
+                        "(G)",
+                        "(H)",
+                        "(I)",
+                        "(J)"
+                        )
+#Plot the matrix using corrplot
+corrplot::corrplot(
+  corMat_3y4,
+  method = "color",
+  addCoef.col = "#000390",
+  type = "upper",
+  tl.col = "black",
+  col = colorRampPalette(c("white", "#0068DC"))(12),
+  bg = "white",
+  na.label = "-"
+)
+# dev.off()
+
+```
+
+```{r correst,echo=FALSE, fig.dim=c(10,10)}
+#Matriz de correlación
+corMat_est <-
+  part_pol_est %>%
+  dplyr::select(
+    part_pol_firma_21_w01,
+    part_pol_marc_pac_21_w01,
+    part_pol_marc_dis_21_w01,
+    part_pol_bloq_21_w01,
+    part_pol_rayar_21_w01,
+    part_pol_toma_21_w01,
+    part_pol_online_info_21_w01,
+    part_pol_online_post_21_w01,
+    part_pol_online_com_21_w01,
+    part_pol_online_seg_21_w01
+  ) %>% 
+  lavaan::lavCor(., ordered = names(.))
+diag(corMat_est) = NA #set diagonal values to NA
+# Set Row names of the matrix
+rownames(corMat_est) <- c(
+  "A. Firma",
+  "B. Marcha pacífica",
+  "C. Marcha disrruptiva",
+  "D. Bloqueo",
+  "E. Rayar",
+  "F. Tomas",
+  "G. Informarse online",
+  "H. Posteo online",
+  "I. Comentar online",
+  "J. Seguir online"
+)
+#set Column names of the matrix
+colnames(corMat_est) <- c("(A)",
+                          "(B)",
+                          "(C)",
+                          "(D)",
+                          "(E)",
+                          "(F)",
+                          "(G)",
+                          "(H)",
+                          "(I)",
+                          "(J)")
+#Plot the matrix using corrplot
+corrplot::corrplot(
+  corMat_est,
+  method = "color",
+  addCoef.col = "#000390",
+  type = "upper",
+  tl.col = "black",
+  col = colorRampPalette(c("white", "#0068DC"))(12),
+  bg = "white",
+  na.label = "-"
+)
+# dev.off()
+
+```
+
+```{r corr20, echo=FALSE, fig.dim=c(10,10)}
+#Matriz de correlación
+corMat_20 <-
+  part_pol_20 %>%
+  dplyr::select(
+    part_pol_firma_20_w01,
+    part_pol_marc_pac_20_w01,
+    part_pol_marc_dis_20_w01,
+    part_pol_bloq_20_w01,
+    part_pol_rayar_20_w01,
+    part_pol_toma_20_w01,
+    part_pol_online_info_20_w01,
+    part_pol_online_post_20_w01,
+    part_pol_online_com_20_w01,
+    part_pol_online_seg_20_w01
+  ) %>% 
+  lavaan::lavCor(., ordered = names(.))
+diag(corMat_20) = NA #set diagonal values to NA
+# Set Row names of the matrix
+rownames(corMat_20) <- c(
+  "A. Firma",
+  "B. Marcha pacífica",
+  "C. Marcha disrruptiva",
+  "D. Bloqueo",
+  "E. Rayar",
+  "F. Tomas",
+  "G. Informarse online",
+  "H. Posteo online",
+  "I. Comentar online",
+  "J. Seguir online"
+)
+#set Column names of the matrix
+colnames(corMat_20) <- c("(A)",
+                         "(B)",
+                         "(C)",
+                         "(D)",
+                         "(E)",
+                         "(F)",
+                         "(G)",
+                         "(H)",
+                         "(I)",
+                         "(J)")
+#Plot the matrix using corrplot
+corrplot::corrplot(
+  corMat_20,
+  method = "color",
+  addCoef.col = "#000390",
+  type = "upper",
+  tl.col = "black",
+  col = colorRampPalette(c("white", "#0068DC"))(12),
+  bg = "white",
+  na.label = "-"
+)
+# dev.off()
+
+```
+
+```{r corr21a, echo=FALSE, fig.dim=c(10,10)}
+#Matriz de correlación
+corMat_21.1 <-
+  part_pol_21.1 %>%
+  dplyr::select(
+    part_pol_firma_w02,
+    part_pol_marc_pac_w02,
+    part_pol_marc_dis_w02,
+    part_pol_bloq_w02,
+    part_pol_rayar_w02,
+    part_pol_toma_w02,
+    part_pol_online_info_w02,
+    part_pol_online_post_w02,
+    part_pol_online_com_w02,
+    part_pol_online_seg_w02
+  ) %>% 
+  lavaan::lavCor(., ordered = names(.))
+diag(corMat_21.1) = NA #set diagonal values to NA
+# Set Row names of the matrix
+rownames(corMat_21.1) <- c(
+  "A. Firma",
+  "B. Marcha pacífica",
+  "C. Marcha disrruptiva",
+  "D. Bloqueo",
+  "E. Rayar",
+  "F. Tomas",
+  "G. Informarse online",
+  "H. Posteo online",
+  "I. Comentar online",
+  "J. Seguir online"
+)
+#set Column names of the matrix
+colnames(corMat_21.1) <- c("(A)",
+                           "(B)",
+                           "(C)",
+                           "(D)",
+                           "(E)",
+                           "(F)",
+                           "(G)",
+                           "(H)",
+                           "(I)",
+                           "(J)")
+#Plot the matrix using corrplot
+corrplot::corrplot(
+  corMat_21.1,
+  method = "color",
+  addCoef.col = "#000390",
+  type = "upper",
+  tl.col = "black",
+  col = colorRampPalette(c("white", "#0068DC"))(12),
+  bg = "white",
+  na.label = "-"
+)
+# dev.off()
+
+```
+
+```{r corr21b, echo=FALSE, fig.dim=c(10,10)}
+#Matriz de correlación
+corMat_21.2 <-
+  part_pol_21.2 %>%
+  dplyr::select(
+    part_pol_firma_21b_w03,
+    part_pol_marc_pac_21b_w03,
+    part_pol_marc_dis_21b_w03,
+    part_pol_bloq_21b_w03,
+    part_pol_rayar_21b_w03,
+    part_pol_toma_21b_w03,
+    part_pol_online_info_21b_w03,
+    part_pol_online_post_21b_w03,
+    part_pol_online_com_21b_w03,
+    part_pol_online_seg_21b_w03
+  ) %>% 
+  lavaan::lavCor(., ordered = names(.))
+diag(corMat_21.2) = NA #set diagonal values to NA
+# Set Row names of the matrix
+rownames(corMat_21.2) <- c(
+  "A. Firma",
+  "B. Marcha pacífica",
+  "C. Marcha disrruptiva",
+  "D. Bloqueo",
+  "E. Rayar",
+  "F. Tomas",
+  "G. Informarse online",
+  "H. Posteo online",
+  "I. Comentar online",
+  "J. Seguir online"
+)
+#set Column names of the matrix
+colnames(corMat_21.2) <- c("(A)",
+                           "(B)",
+                           "(C)",
+                           "(D)",
+                           "(E)",
+                           "(F)",
+                           "(G)",
+                           "(H)",
+                           "(I)",
+                           "(J)")
+#Plot the matrix using corrplot
+corrplot::corrplot(
+  corMat_21.2,
+  method = "color",
+  addCoef.col = "#000390",
+  type = "upper",
+  tl.col = "black",
+  col = colorRampPalette(c("white", "#0068DC"))(12),
+  bg = "white",
+  na.label = "-"
+)
+# dev.off()
+
+```
+
+En las Figuras se muestran las correlaciones policóricas de los indicadores para cada una de las tres variables latentes: participación disruptiva, participación no disruptiva y participación online. Durante los 5 momentos analizados: 3º y 4º medio, estallido social, durante 2020, primer semestre 2021 y segundo semestre 2021, los datos indican altas correlaciones para los items de  las variables de participación disruptiva, es decir, los indicadores de “marcha disruptiva”,  “bloqueo”, “rayar” y “tomas”, de igual forma se da en los indicadores de participación online, es decir, “informarse online”, “posteo online”, “comentar online” y “seguir online”. Lo que difiere con participación no disruptiva, correspondiente a los ítems de “firma” y “marcha pacífica”, los que correlacionaron en todos los tiempos con un indice menor, siendo el mas alto r = .58, encontrando incluso correlaciones mas altas de estas con indicadores de otras variables latentes, como es el caso de marcha pacífica con marcha disruptiva ( r = .8, p < 0.1) durante 3º y 4º medio. 
+
+Siguiendo los criterios convencionales para evaluar la bondad de ajuste del modelo de medición, se muestra que el modelo tridimensional no posee un ajuste aceptable para los momentos de Estallido Social (χ2(gl) = 952.01(32), CFI = .99, TLI = .99, RMSEA = .10), durante el 2020 (χ2(gl) = 920.71(32), CFI = .99, TLI = .99, RMSEA = .10) y durante el primer semestre de 2021 (χ2(gl) = 359.77(32), CFI = 1, TLI = .99, RMSEA = .08), en cuanto al indicador de parsimonia RMSEA; mientras que durante 3° y 4° medio (χ2(gl) = 372.15(32), CFI = 1, TLI = .99, RMSEA = .06) y el segundo semestre de 2021 (χ2(gl) = 131.32(32), CFI = 1, TLI = 1, RMSEA = .05), los indicadores son aceptables.
+Asimismo, en los modelos bidimensionales de Estallido social (χ2(gl) = 452.15(19), CFI = .99, TLI = .99, RMSEA = .09), durante el 2020 (χ2(gl) = 352.43(19), CFI = 1, TLI = 1, RMSEA = .08) y durante el primer semestre de 2021 (χ2(gl) = 161.42(19), CFI = 1, TLI = 1, RMSEA = .07), siguen sin poseer un ajuste deseable en el indicador de parsimonia RMSEA, no obstante se presenta una mejora en todos los indicadores, al igual que durante 3° y 4° medio (χ2(gl) = 103.18(19), CFI = 1, TLI = 1, RMSEA = .04) y durante el segundo semestre de 2021 (χ2(gl) = 47.14(19), CFI = 1, TLI = 1, RMSEA = .04). Si bien estos indicadores ya eran considerados aceptables en estos dos modelos, con un modelo bidimensional mejoraron.
+Por esta razón se decidió utilizar el modelo bidimensional y descartar los ítems de activisimo no disrruptivo.
