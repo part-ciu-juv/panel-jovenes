@@ -3691,6 +3691,11 @@ ggsave(elec_segvuelta_21_edpad, file = "../output/graphs/elec_segvuelta_21_edpad
 ![](../output/graphs/elec_segvuelta_21_edpad.jpg)
 
 ## Frecuencia de conversación con los padres sobre temas sociales y/o políticos en 3ro y 4to medio
+
+En esta sección se presentan los resultados descriptivos de la relación entre la frecuencia de conversación con los padres sobre temas sociales y/o políticos **durante tercero y cuarto medio** y la participación en distintas votaciones.
+
+En términos generales, es posible visualizar que no hay un patrón claro de la relación entre ambas variables. En otras palabras, los resultados expuestos en los gráficos no evidencian una relación consistente entre la frecuencia de conversación con los padres sobre temas sociales y/o políticos **durante tercero y cuarto medio** y la participación en elecciones. Sin embargo, al comparar las dos categorías extremas, se ve que quienes señalan nunca haber conversado sobre estas temáticas tienen una mayor proporción de personas que declaran no haber votado y que entre quienes declararon conversar frecuentemente sobre estas temáticas hay una mayor proporción de personas que señala sí haber votado.
+
 ### Elecciones presidenciales 2017
 ```{r}
 ### variable voto_pres_17
@@ -4095,6 +4100,11 @@ ggsave(elec_segvuelta_21_conv_pad_3y4, file = "../output/graphs/elec_segvuelta_2
 ![](../output/graphs/elec_segvuelta_21_conv_pad_3y4.jpg)
 
 ## Frecuencia de conversación con los padres sobre temas sociales y/o políticos en el estallido social
+
+En esta sección se presentan los resultados descriptivos de la relación entre la frecuencia de conversación con los padres sobre temas sociales y/o políticos **durante el estallido social** y la participación en distintas votaciones.
+
+En términos generales, es posible visualizar una relación directa entre la frecuencia de conversación con los padres sobre estas temáticas **durante el estallido social** y la participación en todas las elecciones sobre las que se consultó. 
+
 ### Elecciones presidenciales 2017
 ```{r}
 ### variable voto_pres_17
@@ -4500,6 +4510,11 @@ ggsave(elec_segvuelta_21_conv_pad_3y4, file = "../output/graphs/elec_segvuelta_2
 ![](../output/graphs/elec_segvuelta_21_conv_pad_est_19.jpg)
 
 ## Frecuencia de conversación con los padres sobre temas sociales y/o políticos el 2020
+
+En esta sección se presentan los resultados descriptivos de la relación entre la frecuencia de conversación con los padres sobre temas sociales y/o políticos **durante el 2020** y la participación en distintas votaciones.
+
+En términos generales, es posible visualizar una relación directa entre la frecuencia de conversación con los padres sobre estas temáticas **durante el 2020** y la participación en todas las elecciones sobre las que se consultó. 
+
 ### Elecciones presidenciales 2017
 
 ```{r}
@@ -4911,6 +4926,11 @@ ggsave(elec_segvuelta_21_conv_pad_3y4, file = "../output/graphs/elec_segvuelta_2
 ![](../output/graphs/elec_segvuelta_21_conv_pad_20.jpg)
 
 ## Frecuencia de conversación con los padres sobre temas sociales y/o políticos el primer semestre del 2021
+
+En esta sección se presentan los resultados descriptivos de la relación entre la frecuencia de conversación con los padres sobre temas sociales y/o políticos **durante el primer semestre del 2021** y la participación en distintas votaciones.
+
+En términos generales, es posible visualizar que no hay un patrón claro de la relación entre ambas variables. En otras palabras, los resultados expuestos en los gráficos no evidencian una relación consistente entre la frecuencia de conversación con los padres sobre temas sociales y/o políticos **durante el primer semestre del 2021** y la participación en elecciones. Sin embargo, al comparar las dos categorías extremas, se ve que quienes señalan nunca haber conversado sobre estas temáticas tienen una mayor proporción de personas que declaran no haber votado y que entre quienes declararon conversar frecuentemente sobre estas temáticas hay una mayor proporción de personas que señala sí haber votado.
+
 ### Elecciones presidenciales 2017
 
 ```{r}
@@ -5322,6 +5342,11 @@ ggsave(elec_segvuelta_21_conv_pad_3y4, file = "../output/graphs/elec_segvuelta_2
 ![](../output/graphs/elec_segvuelta_21_conv_pad_21a.jpg)
 
 ## Frecuencia de conversación con los padres sobre temas sociales y/o políticos el segundo semestre del 2021
+
+En esta sección se presentan los resultados descriptivos de la relación entre la frecuencia de conversación con los padres sobre temas sociales y/o políticos **durante el segundo semestre del 2021** y la participación en distintas votaciones.
+
+En términos generales, es posible visualizar una relación directa entre la frecuencia de conversación con los padres sobre estas temáticas **durante el segundo semestre del 2021** y la participación en todas las elecciones sobre las que se consultó. 
+
 ### Elecciones presidenciales 2017
 ```{r}
 ### variable voto_pres_17
