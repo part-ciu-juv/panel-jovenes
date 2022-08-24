@@ -500,3 +500,250 @@ En las Figuras se muestran las correlaciones policóricas de los indicadores par
 Siguiendo los criterios convencionales para evaluar la bondad de ajuste del modelo de medición, se muestra que el modelo tridimensional no posee un ajuste aceptable para los momentos de Estallido Social (χ2(gl) = 952.01(32), CFI = .99, TLI = .99, RMSEA = .10), durante el 2020 (χ2(gl) = 920.71(32), CFI = .99, TLI = .99, RMSEA = .10) y durante el primer semestre de 2021 (χ2(gl) = 359.77(32), CFI = 1, TLI = .99, RMSEA = .08), en cuanto al indicador de parsimonia RMSEA; mientras que durante 3° y 4° medio (χ2(gl) = 372.15(32), CFI = 1, TLI = .99, RMSEA = .06) y el segundo semestre de 2021 (χ2(gl) = 131.32(32), CFI = 1, TLI = 1, RMSEA = .05), los indicadores son aceptables.
 Asimismo, en los modelos bidimensionales de Estallido social (χ2(gl) = 452.15(19), CFI = .99, TLI = .99, RMSEA = .09), durante el 2020 (χ2(gl) = 352.43(19), CFI = 1, TLI = 1, RMSEA = .08) y durante el primer semestre de 2021 (χ2(gl) = 161.42(19), CFI = 1, TLI = 1, RMSEA = .07), siguen sin poseer un ajuste deseable en el indicador de parsimonia RMSEA, no obstante se presenta una mejora en todos los indicadores, al igual que durante 3° y 4° medio (χ2(gl) = 103.18(19), CFI = 1, TLI = 1, RMSEA = .04) y durante el segundo semestre de 2021 (χ2(gl) = 47.14(19), CFI = 1, TLI = 1, RMSEA = .04). Si bien estos indicadores ya eran considerados aceptables en estos dos modelos, con un modelo bidimensional mejoraron.
 Por esta razón se decidió utilizar el modelo bidimensional y descartar los ítems de activisimo no disrruptivo.
+
+
+###invarianza 
+
+### Modelo de medición: invarianza longitudinal configural
+```{r,results='asis'}
+# Especificación del modelo
+afc_invar_conf <- '
+## 3° y 4°
+act_disrup_w1 =~ part_pol_marcha_dis_w01 + part_pol_bloqueo_w01 + part_pol_rayar_w01 + part_pol_toma_w01
+act_online_w1 =~ part_pol_online_w01 + part_online_post_w01 + part_online_com_w01 + part_online_seg_w01
+
+## Estallido
+act_disrup_w2 =~ part_pol_marc_dis_21_w01 + part_pol_bloq_21_w01 + part_pol_rayar_21_w01 + part_pol_toma_21_w01
+act_online_w2 =~ part_pol_online_info_21_w01 + part_pol_online_post_21_w01 + part_pol_online_com_21_w01 + part_pol_online_seg_21_w01
+
+## 2020 
+act_disrup_w3 =~ part_pol_marc_dis_20_w01 + part_pol_bloq_20_w01 + part_pol_rayar_20_w01 + part_pol_toma_20_w01
+act_online_w3 =~ part_pol_online_info_20_w01 + part_pol_online_post_20_w01 + part_pol_online_com_20_w01 + part_pol_online_seg_20_w01
+
+## 2021 primer semestre
+act_disrup_w4 =~ part_pol_marc_dis_w02 + part_pol_bloq_w02 + part_pol_rayar_w02 + part_pol_toma_w02
+act_online_w4 =~ part_pol_online_info_w02 + part_pol_online_post_w02 + part_pol_online_com_w02 + part_pol_online_seg_w02
+
+## 2021 segundo semestre 
+act_disrup_w5 =~ part_pol_marc_dis_21b_w03 + part_pol_bloq_21b_w03 + part_pol_rayar_21b_w03 + part_pol_toma_21b_w03
+act_online_w5 =~ part_pol_online_info_21b_w03 + part_pol_online_post_21b_w03 + part_pol_online_com_21b_w03 + part_pol_online_seg_21b_w03
+
+## Covarianzas
+part_pol_marcha_dis_w01 ~~ part_pol_marc_dis_21_w01
+
+part_pol_bloqueo_w01 ~~ part_pol_bloq_21_w01
+
+part_pol_rayar_w01 ~~ part_pol_rayar_21_w01
+
+part_pol_toma_w01 ~~ part_pol_toma_21_w01
+
+part_pol_online_w01 ~~ part_pol_online_info_21_w01
+
+part_online_post_w01 ~~ part_pol_online_post_21_w01
+
+part_online_com_w01 ~~ part_pol_online_com_21_w01
+
+part_online_seg_w01 ~~ part_pol_online_seg_21_w01
+
+
+part_pol_marc_dis_21_w01 ~~ part_pol_marc_dis_20_w01 
+
+part_pol_bloq_21_w01 ~~ part_pol_bloq_20_w01 
+
+part_pol_rayar_21_w01 ~~ part_pol_rayar_20_w01 
+
+part_pol_toma_21_w01 ~~ part_pol_toma_20_w01 
+
+part_pol_online_info_21_w01 ~~ part_pol_online_info_20_w01 
+
+part_pol_online_post_21_w01 ~~ part_pol_online_post_20_w01 
+
+part_pol_online_com_21_w01 ~~ part_pol_online_com_20_w01 
+
+part_pol_online_seg_21_w01 ~~ part_pol_online_seg_20_w01
+
+
+part_pol_marc_dis_20_w01 ~~ part_pol_marc_dis_w02 
+
+part_pol_bloq_20_w01 ~~ part_pol_bloq_w02 
+
+part_pol_rayar_20_w01 ~~ part_pol_rayar_w02 
+
+part_pol_toma_20_w01 ~~ part_pol_toma_w02
+
+part_pol_online_info_20_w01 ~~ part_pol_online_info_w02 
+
+part_pol_online_post_20_w01 ~~ part_pol_online_post_w02 
+
+part_pol_online_com_20_w01 ~~ part_pol_online_com_w02 
+
+part_pol_online_seg_20_w01 ~~ part_pol_online_seg_w02
+
+
+part_pol_marc_dis_w02 ~~ part_pol_marc_dis_21b_w03 
+
+part_pol_bloq_w02 ~~ part_pol_bloq_21b_w03 
+
+part_pol_rayar_w02 ~~ part_pol_rayar_21b_w03 
+
+part_pol_toma_w02 ~~ part_pol_toma_21b_w03
+
+part_pol_online_info_w02 ~~ part_pol_online_info_21b_w03 
+
+part_pol_online_post_w02 ~~ part_pol_online_post_21b_w03
+
+part_pol_online_com_w02 ~~ part_pol_online_com_21b_w03
+part_pol_online_seg_w02 ~~ part_pol_online_seg_21b_w03
+
+'
+
+# Estimación del modelo
+fit_invar_conf <- lavaan::cfa(afc_invar_conf, data = df_wide, ordered = T,
+                     std.lv = TRUE , #factor loadings standarized
+                     )
+ lavaan::summary(fit_invar_conf, fit.measures = T, standardized = T)
+# lavaan::fitMeasures(fit_invar, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea"))
+
+# create table report
+semTable::semTable(
+  fit_invar_conf ,columns =c("estse"),
+  paramSets = c("loadings") ,
+fits = c("chisq", "df", "pvalue", "cfi", "tli", "rmsea") ,
+type = "html")
+
+
+```
+
+### Modelo de medición: invarianza longitudinal métrico o débil
+```{r,results='asis'}
+# Especificación del modelo
+afc_invar_metric <- '
+## 3° y 4°
+act_disrup_w1 =~ marcha*part_pol_marcha_dis_w01 + bloqueo*part_pol_bloqueo_w01 + rayar*part_pol_rayar_w01 + toma*part_pol_toma_w01
+act_online_w1 =~ info*part_pol_online_w01 + post*part_online_post_w01 + comp*part_online_com_w01 + seguir*part_online_seg_w01
+
+## Estallido
+act_disrup_w2 =~ marcha*part_pol_marc_dis_21_w01 + bloqueo*part_pol_bloq_21_w01 + rayar*part_pol_rayar_21_w01 + toma*part_pol_toma_21_w01
+act_online_w2 =~ info*part_pol_online_info_21_w01 + post*part_pol_online_post_21_w01 + comp*part_pol_online_com_21_w01 + seguir*part_pol_online_seg_21_w01
+
+## 2020 
+act_disrup_w3 =~ marcha*part_pol_marc_dis_20_w01 + bloqueo*part_pol_bloq_20_w01 + rayar*part_pol_rayar_20_w01 + toma*part_pol_toma_20_w01
+act_online_w3 =~ info*part_pol_online_info_20_w01 + post*part_pol_online_post_20_w01 + comp*part_pol_online_com_20_w01 + seguir*part_pol_online_seg_20_w01
+
+## 2021 primer semestre
+act_disrup_w4 =~ marcha*part_pol_marc_dis_w02 + bloqueo*part_pol_bloq_w02 + rayar*part_pol_rayar_w02 + toma*part_pol_toma_w02
+act_online_w4 =~ info*part_pol_online_info_w02 + post*part_pol_online_post_w02 + comp*part_pol_online_com_w02 + seguir*part_pol_online_seg_w02
+
+## 2021 segundo semestre 
+act_disrup_w5 =~ marcha*part_pol_marc_dis_21b_w03 + bloqueo*part_pol_bloq_21b_w03 + rayar*part_pol_rayar_21b_w03 + toma*part_pol_toma_21b_w03
+act_online_w5 =~ info*part_pol_online_info_21b_w03 + post*part_pol_online_post_21b_w03 + comp*part_pol_online_com_21b_w03 + seguir*part_pol_online_seg_21b_w03
+
+## Covarianzas
+part_pol_marcha_dis_w01 ~~ part_pol_marc_dis_21_w01
+
+part_pol_bloqueo_w01 ~~ part_pol_bloq_21_w01
+
+part_pol_rayar_w01 ~~ part_pol_rayar_21_w01
+
+part_pol_toma_w01 ~~ part_pol_toma_21_w01
+
+part_pol_online_w01 ~~ part_pol_online_info_21_w01
+
+part_online_post_w01 ~~ part_pol_online_post_21_w01
+
+part_online_com_w01 ~~ part_pol_online_com_21_w01
+
+part_online_seg_w01 ~~ part_pol_online_seg_21_w01
+
+
+part_pol_marc_dis_21_w01 ~~ part_pol_marc_dis_20_w01 
+
+part_pol_bloq_21_w01 ~~ part_pol_bloq_20_w01 
+
+part_pol_rayar_21_w01 ~~ part_pol_rayar_20_w01 
+
+part_pol_toma_21_w01 ~~ part_pol_toma_20_w01 
+
+part_pol_online_info_21_w01 ~~ part_pol_online_info_20_w01 
+
+part_pol_online_post_21_w01 ~~ part_pol_online_post_20_w01 
+
+part_pol_online_com_21_w01 ~~ part_pol_online_com_20_w01 
+
+part_pol_online_seg_21_w01 ~~ part_pol_online_seg_20_w01
+
+
+part_pol_marc_dis_20_w01 ~~ part_pol_marc_dis_w02 
+
+part_pol_bloq_20_w01 ~~ part_pol_bloq_w02 
+
+part_pol_rayar_20_w01 ~~ part_pol_rayar_w02 
+
+part_pol_toma_20_w01 ~~ part_pol_toma_w02
+
+part_pol_online_info_20_w01 ~~ part_pol_online_info_w02 
+
+part_pol_online_post_20_w01 ~~ part_pol_online_post_w02 
+
+part_pol_online_com_20_w01 ~~ part_pol_online_com_w02 
+
+part_pol_online_seg_20_w01 ~~ part_pol_online_seg_w02
+
+
+part_pol_marc_dis_w02 ~~ part_pol_marc_dis_21b_w03 
+
+part_pol_bloq_w02 ~~ part_pol_bloq_21b_w03 
+
+part_pol_rayar_w02 ~~ part_pol_rayar_21b_w03 
+
+part_pol_toma_w02 ~~ part_pol_toma_21b_w03
+
+part_pol_online_info_w02 ~~ part_pol_online_info_21b_w03 
+
+part_pol_online_post_w02 ~~ part_pol_online_post_21b_w03
+
+part_pol_online_com_w02 ~~ part_pol_online_com_21b_w03
+part_pol_online_seg_w02 ~~ part_pol_online_seg_21b_w03
+
+'
+
+# Estimación del modelo
+fit_invar_metric <- lavaan::cfa(afc_invar_metric, data = df_wide, ordered = T,
+                     std.lv = TRUE , #factor loadings standarized
+                     )
+ lavaan::summary(fit_invar_metric, fit.measures = T, standardized = T)
+# lavaan::fitMeasures(fit_invar, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea"))
+
+# create table report
+semTable::semTable(
+  fit_invar_metric ,columns =c("estse"),
+  paramSets = c("loadings") ,
+fits = c("chisq", "df", "pvalue", "cfi", "tli", "rmsea") ,
+type = "html")
+
+```
+
+## Fit invariance
+```{r, results='asis'}
+#tabla ajuste general
+fit_invar <- list(fit_invar_conf, fit_invar_metric)
+
+semTable::semTable(
+  fit_invar ,
+  columns = c("estse"),
+  paramSets = c("loadings") ,
+  varLabels = NULL,
+  groups = NULL,
+  type = "html",
+  table.float = FALSE,
+  caption = NULL,
+  label = NULL,
+  longtable = FALSE,
+  print.results = TRUE,
+  centering = "siunitx",
+  alpha = c(0.05, 0.01, 0.001)
+)
+
+```
+
+
