@@ -47,7 +47,9 @@ left_join(ola1,
 by = "folio_encuestado")
 ```
 
-En el presente documento se exponen los resultados correspondientes a un análisis descriptivo bivariado entre diferentes variables relativas a la participación política (dos tipos de participación activista y votar en elecciones) y cuatro variables que se espera que se relacionen con estos proxys de participación: la dependencia administrativa del establecimiento donde estudió los últimos dos años de enseñanza media, el máximo nivel educativo de la madre, el máximo nivel educativo del padre y la frecuencia de conversación sobre temas sociales y políticos con los padres.
+En el presente documento se exponen los resultados correspondientes a un análisis descriptivo bivariado entre diferentes variables relativas a la participación política (tres tipos de participación activista y votar en elecciones) y cuatro variables que se espera que se relacionen con estos proxys de participación: la dependencia administrativa del establecimiento donde estudió los últimos dos años de enseñanza media, el máximo nivel educativo de la madre, el máximo nivel educativo del padre y la frecuencia de conversación sobre temas sociales y políticos con los padres.
+
+Adicionalmente, se presentan los resultados de un análisis descriptivo bivariado entre la frecuencia de conversación sobre temas sociales y políticos con los padres y las otras tres variables que se espera que se relacionen con los tipos de participación analizados (más específicamente, la dependencia administrativa del establecimiento donde estudió los últimos dos años de enseñanza media, el máximo nivel educativo de la madre y el máximo nivel educativo del padre).
 
 # Participación activista
 
@@ -409,7 +411,6 @@ En términos generales, no es posible visualizar un patrón claro de la relació
 data_wide$part_act_dis_3y4 <- as.numeric(data_wide$part_pol_marcha_dis + data_wide$part_pol_bloqueo + data_wide$part_pol_rayar.y + data_wide$part_pol_toma.y)/4
 ```
 
-
 ```{r}
 # Creación de bbdd
 data_ed_bas = data_wide %>%  filter(nse_madre==1 | nse_madre==2 | nse_madre==3) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
@@ -611,10 +612,10 @@ table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_dis_21_1s, na.rm=T),
 #               psych::describe(data_ed_uni$part_act_dis_21_1s, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
-pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_dis_21_1s,y=data_ed_bas$weight_w01,na.rm=TRUE)
-pond2 <- stats::weighted.mean(x=data_ed_med$part_act_dis_21_1s,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_dis_21_1s,y=data_ed_ter$weight_w01,na.rm=TRUE)
-#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_dis_21_1s,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_dis_21_1s,y=data_ed_bas$weight_w02,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_ed_med$part_act_dis_21_1s,y=data_ed_med$weight_w02,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_dis_21_1s,y=data_ed_ter$weight_w02,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_dis_21_1s,y=data_ed_uni$weight_w02,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
@@ -672,10 +673,10 @@ table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_dis_21_2s, na.rm=T),
 #               psych::describe(data_ed_uni$part_act_dis_21_2s, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
-pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_dis_21_2s,y=data_ed_bas$weight_w01,na.rm=TRUE)
-pond2 <- stats::weighted.mean(x=data_ed_med$part_act_dis_21_2s,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_dis_21_2s,y=data_ed_ter$weight_w01,na.rm=TRUE)
-#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_dis_21_2s,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_dis_21_2s,y=data_ed_bas$weight_w03,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_ed_med$part_act_dis_21_2s,y=data_ed_med$weight_w03,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_dis_21_2s,y=data_ed_ter$weight_w03,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_dis_21_2s,y=data_ed_uni$weight_w03,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
@@ -927,10 +928,10 @@ table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_dis_21_1s, na.rm=T),
 #               psych::describe(data_ed_uni$part_act_dis_21_1s, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
-pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_dis_21_1s,y=data_ed_bas$weight_w01,na.rm=TRUE)
-pond2 <- stats::weighted.mean(x=data_ed_med$part_act_dis_21_1s,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_dis_21_1s,y=data_ed_ter$weight_w01,na.rm=TRUE)
-#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_dis_21_1s,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_dis_21_1s,y=data_ed_bas$weight_w02,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_ed_med$part_act_dis_21_1s,y=data_ed_med$weight_w02,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_dis_21_1s,y=data_ed_ter$weight_w02,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_dis_21_1s,y=data_ed_uni$weight_w02,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
@@ -989,10 +990,10 @@ table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_dis_21_2s, na.rm=T),
 #               psych::describe(data_ed_uni$part_act_dis_21_2s, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
-pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_dis_21_2s,y=data_ed_bas$weight_w01,na.rm=TRUE)
-pond2 <- stats::weighted.mean(x=data_ed_med$part_act_dis_21_2s,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_dis_21_2s,y=data_ed_ter$weight_w01,na.rm=TRUE)
-#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_dis_21_2s,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_dis_21_2s,y=data_ed_bas$weight_w03,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_ed_med$part_act_dis_21_2s,y=data_ed_med$weight_w03,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_dis_21_2s,y=data_ed_ter$weight_w03,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_dis_21_2s,y=data_ed_uni$weight_w03,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
@@ -1228,10 +1229,10 @@ table_preposh1<- rbind(psych::describe(data_nunca$part_act_dis_21_1s, na.rm=T),
                psych::describe(data_frecuent$part_act_dis_21_1s, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
-pond1 <- stats::weighted.mean(x=data_nunca$part_act_dis_21_1s,y=data_nunca$weight_w01,na.rm=TRUE)
-pond2 <- stats::weighted.mean(x=data_casi_nunca$part_act_dis_21_1s,y=data_casi_nunca$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_a_veces$part_act_dis_21_1s,y=data_a_veces$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_frecuent$part_act_dis_21_1s,y=data_frecuent$weight_w01,na.rm=TRUE)
+pond1 <- stats::weighted.mean(x=data_nunca$part_act_dis_21_1s,y=data_nunca$weight_w02,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_casi_nunca$part_act_dis_21_1s,y=data_casi_nunca$weight_w02,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_a_veces$part_act_dis_21_1s,y=data_a_veces$weight_w02,na.rm=TRUE)
+pond4 <- stats::weighted.mean(x=data_frecuent$part_act_dis_21_1s,y=data_frecuent$weight_w02,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
@@ -1286,10 +1287,10 @@ table_preposh1<- rbind(psych::describe(data_nunca$part_act_dis_21_2s, na.rm=T),
                psych::describe(data_frecuent$part_act_dis_21_2s, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
-pond1 <- stats::weighted.mean(x=data_nunca$part_act_dis_21_2s,y=data_nunca$weight_w01,na.rm=TRUE)
-pond2 <- stats::weighted.mean(x=data_casi_nunca$part_act_dis_21_2s,y=data_casi_nunca$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_a_veces$part_act_dis_21_2s,y=data_a_veces$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_frecuent$part_act_dis_21_2s,y=data_frecuent$weight_w01,na.rm=TRUE)
+pond1 <- stats::weighted.mean(x=data_nunca$part_act_dis_21_2s,y=data_nunca$weight_w03,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_casi_nunca$part_act_dis_21_2s,y=data_casi_nunca$weight_w03,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_a_veces$part_act_dis_21_2s,y=data_a_veces$weight_w03,na.rm=TRUE)
+pond4 <- stats::weighted.mean(x=data_frecuent$part_act_dis_21_2s,y=data_frecuent$weight_w03,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
@@ -1322,6 +1323,1277 @@ ggsave(part_act_dis_21_2s_colegio, file = "../output/graphs/part_act_dis_21_2s_c
 
 ![](../output/graphs/part_act_dis_21_2s_colegio_conv_padres.png)
 
+## Activismo no disruptivo
+
+Para medir el activismo no disruptivo se utilizó el siguiente indicador:
+
++ Participar en una marcha o manifestación pacífica
+
+Para los análisis se calcula el promedio de participación activista no disruptiva manteniendo la escala original de valores (1 a 4).
+
+En el gráfico a continuación se presenta el puntaje promedio de participación activista no disruptiva en cada uno de los momentos sobre los que se consultó. Como se puede ver, la participación activista no disruptiva en general alcanza niveles medios (todos los promedios se encuentran entre 1.5 y 2.4). Los niveles más altos de participación no disruptiva corresponden al periodo en que el encuestado estudió la enseñanza media y al periodo del estallido social.
+
+```{r}
+### Crear variable participación política durante 3ro y 4to medio
+data_wide$part_act_no_dis_3y4 <- as.numeric(data_wide$part_pol_marcha_pas)
+
+### Crear variable participación política durante estallido social
+data_wide$part_act_no_dis_es <- as.numeric(data_wide$part_pol_marc_pac_21)
+
+### Crear variable participación política durante el 2020
+data_wide$part_act_no_dis_20 = as.numeric(data_wide$part_pol_marc_pac_20)
+
+### Crear variable participación política durante el primer semestre de 2021
+data_wide$part_act_no_dis_21_1s = as.numeric(data_wide$part_pol_marc_pac)
+
+### Crear variable participación política durante el segundo semestre de 2021
+data_wide$part_act_no_dis_21_2s = as.numeric(data_wide$part_pol_marc_pac_21b)
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_wide$part_act_no_dis_3y4, na.rm=T),
+               psych::describe(data_wide$part_act_no_dis_es, na.rm=T),
+               psych::describe(data_wide$part_act_no_dis_20, na.rm=T),
+               psych::describe(data_wide$part_act_no_dis_21_1s, na.rm=T),
+               psych::describe(data_wide$part_act_no_dis_21_2s, na.rm=T))
+
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+pond1 <- stats::weighted.mean(x=data_wide$part_act_no_dis_3y4,y=data_wide$weight_w01,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_wide$part_act_no_dis_es,y=data_wide$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_wide$part_act_no_dis_20,y=data_wide$weight_w01,na.rm=TRUE)
+pond4 <- stats::weighted.mean(x=data_wide$part_act_no_dis_21_1s,y=data_wide$weight_w02,na.rm=TRUE)
+pond5 <- stats::weighted.mean(x=data_wide$part_act_no_dis_21_2s,y=data_wide$weight_w03,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+table_preposh1[4,2]<-pond4
+table_preposh1[5,2]<-pond5
+
+table_preposh1$dep <- c("1. Durante 3ro y 4to medio", "2. Durante el estallido social", "3. Durante el 2020", "4. Durante el 1er sem. de 2021", "5. Durante el 2do sem. de 2021")
+
+part_act_no_dis <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+     ylab('Puntaje promedio en participación activista 
+no disruptiva (escala de 1 a 4)') + xlab(' ') + 
+     theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Participación activista no disruptiva") + ylim(0,4)
+#part_act_dis
+ggsave(part_act_no_dis, file = "../output/graphs/part_act_no_dis.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+```
+![](../output/graphs/part_act_no_dis.png)
+
+### Dependencia administrativa establecimiento
+
+En esta sección se presentan los resultados descriptivos de la relación entre la dependencia administrativa del establecimiento en que el encuestado estudió sus dos últimos años de enseñanza media y su participación activista no disruptiva.
+
+En términos generales, es posible visualizar que no hay un patrón claro de la relación entre ambas variables. En otras palabras, los resultados expuestos en los gráficos no evidencian una relación consistente entre la dependencia administrativa del establecimiento y la participación no disruptiva. Sin embargo, se muestra una relación entre haber asistido a un establecimiento municipal y haber participado en una marcha pacífica durante 3ro y 4to medio.
+
+#### **Participación política durante 3ro y 4to medio**
+```{r}
+### Crear variable
+#data_wide$part_act_no_dis_3y4 <- as.numeric(data_wide$part_pol_firma.y + data_wide$part_pol_marcha_pas)/2
+data_wide$part_act_no_dis_3y4 <- as.numeric(data_wide$part_pol_marcha_pas)
+```
+
+```{r}
+# Creación de bbdd
+data_mun = data_wide %>%  filter(edm_admi==1) %>% as.data.frame() #Municipal
+data_sub = data_wide %>%  filter(edm_admi==2) %>% as.data.frame() #Particular Subvencionado
+data_priv = data_wide %>%  filter(edm_admi==3) %>% as.data.frame() #Particular pagado
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_mun$part_act_no_dis_3y4, na.rm=T),
+               psych::describe(data_sub$part_act_no_dis_3y4, na.rm=T),psych::describe(data_priv$part_act_no_dis_3y4, na.rm=T))
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+pond1 <- stats::weighted.mean(x=data_mun$part_act_no_dis_3y4,y=data_mun$weight_w01,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_sub$part_act_no_dis_3y4,y=data_sub$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_priv$part_act_no_dis_3y4,y=data_priv$weight_w01,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+
+table_preposh1$dep <- c("Municipal","Particular Subvencionado","Particular Privado")
+
+part_act_no_dis_3y4_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+     ylab('Puntaje promedio en participación activista 
+no disruptiva (escala de 1 a 4)') + xlab(' ') + 
+     theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Participación activista no disruptiva por 
+tipo de dependencia administrativa de la escuela") + ylim(0,4)
+#part_act_no_dis_3y4_colegio
+ggsave(part_act_no_dis_3y4_colegio, file = "../output/graphs/part_act_no_dis_3y4_colegio_dep.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+
+```
+
+![](../output/graphs/part_act_no_dis_3y4_colegio_dep.png)
+
+#### **Participación política durante estallido social**
+
+```{r}
+### Crear variable
+#data_wide$part_act_no_dis_es <- as.numeric(data_wide$part_pol_firma_21 + data_wide$part_pol_marc_pac_21)/2
+data_wide$part_act_no_dis_es <- as.numeric(data_wide$part_pol_marc_pac_21)
+```
+
+```{r}
+# Creación de bbdd
+data_mun = data_wide %>%  filter(edm_admi==1) %>% as.data.frame() #Municipal
+data_sub = data_wide %>%  filter(edm_admi==2) %>% as.data.frame() #Particular Subvencionado
+data_priv = data_wide %>%  filter(edm_admi==3) %>% as.data.frame() #Particular pagado
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_mun$part_act_no_dis_es, na.rm=T),
+               psych::describe(data_sub$part_act_no_dis_es, na.rm=T),psych::describe(data_priv$part_act_no_dis_es, na.rm=T))
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+
+pond1 <- stats::weighted.mean(x=data_mun$part_act_no_dis_es,y=data_mun$weight_w01,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_sub$part_act_no_dis_es,y=data_sub$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_priv$part_act_no_dis_es,y=data_priv$weight_w01,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+
+table_preposh1$dep <- c("Municipal","Particular Subvencionado","Particular Privado")
+
+part_act_no_dis_es_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+     ylab('Puntaje promedio en participación activista 
+no disruptiva (escala de 1 a 4)') + xlab(' ') + 
+  theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Participación activista no disruptiva por 
+tipo de dependencia administrativa de la escuela") + ylim(0,4)
+#part_act_no_dis_es_colegio
+ggsave(part_act_no_dis_es_colegio, file = "../output/graphs/part_act_no_dis_es_colegio_dep.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+
+```
+![](../output/graphs/part_act_no_dis_es_colegio_dep.png)
+
+#### **Participación política durante el 2020**
+
+```{r}
+### Crear variable
+#data_wide$part_act_no_dis_20 = as.numeric(data_wide$part_pol_firma_20 + data_wide$part_pol_marc_pac_20)/2
+data_wide$part_act_no_dis_20 = as.numeric(data_wide$part_pol_marc_pac_20)
+```
+
+```{r}
+# Creación de bbdd
+data_mun = data_wide %>%  filter(edm_admi==1) %>% as.data.frame() #Municipal
+data_sub = data_wide %>%  filter(edm_admi==2) %>% as.data.frame() #Particular Subvencionado
+data_priv = data_wide %>%  filter(edm_admi==3) %>% as.data.frame() #Particular pagado
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_mun$part_act_no_dis_20, na.rm=T),
+               psych::describe(data_sub$part_act_no_dis_20, na.rm=T),psych::describe(data_priv$part_act_no_dis_20, na.rm=T))
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+
+pond1 <- stats::weighted.mean(x=data_mun$part_act_no_dis_20,y=data_mun$weight_w01,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_sub$part_act_no_dis_20,y=data_sub$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_priv$part_act_no_dis_20,y=data_priv$weight_w01,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+
+table_preposh1$dep <- c("Municipal","Particular Subvencionado","Particular Privado")
+
+part_act_no_dis_20_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+          ylab('Puntaje promedio en participación activista 
+no disruptiva (escala de 1 a 4)') + xlab(' ') +  
+     theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Participación activista no disruptiva por 
+tipo de dependencia administrativa de la escuela") + ylim(0,4)
+#part_act_no_dis_20_colegio
+ggsave(part_act_no_dis_20_colegio, file = "../output/graphs/part_act_no_dis_20_colegio_dep.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+```
+
+![](../output/graphs/part_act_no_dis_20_colegio_dep.png)
+
+#### **Participación política durante el primer semestre de 2021**
+
+```{r}
+#### Crear variable
+#data_wide$part_act_no_dis_21_1s = as.numeric(data_wide$part_pol_firma.x + data_wide$part_pol_marc_pac)/2
+data_wide$part_act_no_dis_21_1s = as.numeric(data_wide$part_pol_marc_pac)
+```
+
+```{r}
+# Creación de bbdd
+data_mun = data_wide %>%  filter(edm_admi==1) %>% as.data.frame() #Municipal
+data_sub = data_wide %>%  filter(edm_admi==2) %>% as.data.frame() #Particular Subvencionado
+data_priv = data_wide %>%  filter(edm_admi==3) %>% as.data.frame() #Particular pagado
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_mun$part_act_no_dis_21_1s, na.rm=T),
+               psych::describe(data_sub$part_act_no_dis_21_1s, na.rm=T),psych::describe(data_priv$part_act_no_dis_21_1s, na.rm=T))
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+
+pond1 <- stats::weighted.mean(x=data_mun$part_act_no_dis_21_1s,y=data_mun$weight_w02,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_sub$part_act_no_dis_21_1s,y=data_sub$weight_w02,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_priv$part_act_no_dis_21_1s,y=data_priv$weight_w02,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+
+table_preposh1$dep <- c("Municipal","Particular Subvencionado","Particular Privado")
+
+part_act_no_dis_21_1s_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+     ylab('Puntaje promedio en participación activista 
+no disruptiva (escala de 1 a 4)') + xlab(' ') + 
+     theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Participación activista no disruptiva por 
+tipo de dependencia administrativa de la escuela") + ylim(0,4)
+#part_act_no_dis_21_1s_colegio
+ggsave(part_act_no_dis_21_1s_colegio, file = "../output/graphs/part_act_no_dis_21_1s_colegio_dep.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+```
+
+![](../output/graphs/part_act_no_dis_21_1s_colegio_dep.png)
+
+#### **Participación política durante el segundo semestre de 2021**
+
+```{r}
+#### Crear variable
+#data_wide$part_act_no_dis_21_2s = as.numeric(data_wide$part_pol_firma_21b + data_wide$part_pol_marc_pac_21b)/2
+data_wide$part_act_no_dis_21_2s = as.numeric(data_wide$part_pol_marc_pac_21b)
+```
+
+```{r}
+# Creación de bbdd
+data_mun = data_wide %>%  filter(edm_admi==1) %>% as.data.frame() #Municipal
+data_sub = data_wide %>%  filter(edm_admi==2) %>% as.data.frame() #Particular Subvencionado
+data_priv = data_wide %>%  filter(edm_admi==3) %>% as.data.frame() #Particular pagado
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_mun$part_act_no_dis_21_2s, na.rm=T),
+               psych::describe(data_sub$part_act_no_dis_21_2s, na.rm=T),psych::describe(data_priv$part_act_no_dis_21_2s, na.rm=T))
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+
+pond1 <- stats::weighted.mean(x=data_mun$part_act_no_dis_21_2s,y=data_mun$weight_w03,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_sub$part_act_no_dis_21_2s,y=data_sub$weight_w03,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_priv$part_act_no_dis_21_2s,y=data_priv$weight_w03,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+
+table_preposh1$dep <- c("Municipal","Particular Subvencionado","Particular Privado")
+
+part_act_no_dis_21_2s_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+     ylab('Puntaje promedio en participación activista 
+no disruptiva (escala de 1 a 4)') + xlab(' ') + 
+     theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Participación activista no disruptiva por 
+tipo de dependencia administrativa de la escuela") + ylim(0,4)
+#part_act_no_dis_21_2s_colegio
+ggsave(part_act_no_dis_21_2s_colegio, file = "../output/graphs/part_act_no_dis_21_2s_colegio_dep.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+```
+![](../output/graphs/part_act_no_dis_21_2s_colegio_dep.png)
+
+
+### Máximo nivel educativo de la madre
+
+En esta sección se presentan los resultados descriptivos de la relación entre el máximo nivel educativo de la madre y la participación activista no disruptiva del encuestado.
+
+En términos generales, no es posible visualizar un patrón claro de la relación entre ambas variables. En otras palabras, los resultados expuestos en los gráficos no evidencian una relación consistente entre el nivel educativo de la madre y la participación no disruptiva. Sin embargo, se ve una relación entre que la madre tenga educación media o terciaria y haber participado en una marcha pacífica durante el estallido social, así como también entre que la madre tenga educación básica y menos y haber participado en una marcha pacífica durante el primer semestre de 2021.
+
+#### **Participación política durante 3ro y 4to medio**
+
+```{r}
+### Crear variable
+data_wide$part_act_no_dis_3y4 <- as.numeric(data_wide$part_pol_firma.y + data_wide$part_pol_marcha_pas)/2
+```
+
+```{r}
+# Creación de bbdd
+data_ed_bas = data_wide %>%  filter(nse_madre==1 | nse_madre==2 | nse_madre==3) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
+data_ed_med = data_wide %>%  filter(nse_madre==4 | nse_madre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
+data_ed_ter = data_wide %>%  filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_no_dis_3y4, na.rm=T),
+               psych::describe(data_ed_med$part_act_no_dis_3y4, na.rm=T),
+               psych::describe(data_ed_ter$part_act_no_dis_3y4, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_no_dis_3y4, na.rm=T))
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+
+pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_no_dis_3y4,y=data_ed_bas$weight_w01,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_ed_med$part_act_no_dis_3y4,y=data_ed_med$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_no_dis_3y4,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_no_dis_3y4,y=data_ed_uni$weight_w01,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+#table_preposh1[4,2]<-pond4
+
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
+
+part_act_no_dis_3y4_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+     ylab('Puntaje promedio en participación activista 
+no disruptiva (escala de 1 a 4)') + xlab(' ') + 
+  theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Participación activista no disruptiva por 
+nivel educativo de la madre") + ylim(0,4)
+#part_act_no_dis_3y4_colegio
+ggsave(part_act_no_dis_3y4_colegio, file = "../output/graphs/part_act_no_dis_3y4_colegio_ed_madre.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+
+```
+
+![](../output/graphs/part_act_no_dis_3y4_colegio_ed_madre.png)
+
+#### **Participación política durante estallido social**
+
+```{r}
+### Crear variable
+data_wide$part_act_no_dis_es <- as.numeric(data_wide$part_pol_firma_21 + data_wide$part_pol_marc_pac_21)/2
+```
+
+```{r}
+# Creación de bbdd
+data_ed_bas = data_wide %>%  filter(nse_madre==1 | nse_madre==2 | nse_madre==3) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
+data_ed_med = data_wide %>%  filter(nse_madre==4 | nse_madre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
+data_ed_ter = data_wide %>%  filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_no_dis_es, na.rm=T),
+               psych::describe(data_ed_med$part_act_no_dis_es, na.rm=T),
+               psych::describe(data_ed_ter$part_act_no_dis_es, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_no_dis_es, na.rm=T))
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+
+pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_no_dis_es,y=data_ed_bas$weight_w01,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_ed_med$part_act_no_dis_es,y=data_ed_med$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_no_dis_es,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_no_dis_es,y=data_ed_uni$weight_w01,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+#table_preposh1[4,2]<-pond4
+
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
+
+part_act_no_dis_es_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+     ylab('Puntaje promedio en participación activista 
+no disruptiva (escala de 1 a 4)') + xlab(' ') + 
+  theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Participación activista no disruptiva por 
+nivel educativo de la madre") + ylim(0,4)
+#part_act_no_dis_es_colegio
+ggsave(part_act_no_dis_es_colegio, file = "../output/graphs/part_act_no_dis_es_colegio_ed_madre.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+
+```
+![](../output/graphs/part_act_no_dis_es_colegio_ed_madre.png)
+
+#### **Participación política durante el 2020**
+
+```{r}
+### Crear variable
+data_wide$part_act_no_dis_20 = as.numeric(data_wide$part_pol_firma_20 + data_wide$part_pol_marc_pac_20)/2
+```
+
+```{r}
+# Creación de bbdd
+data_ed_bas = data_wide %>%  filter(nse_madre==1 | nse_madre==2 | nse_madre==3) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
+data_ed_med = data_wide %>%  filter(nse_madre==4 | nse_madre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
+data_ed_ter = data_wide %>%  filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_no_dis_20, na.rm=T),
+               psych::describe(data_ed_med$part_act_no_dis_20, na.rm=T),
+               psych::describe(data_ed_ter$part_act_no_dis_20, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_no_dis_20, na.rm=T))
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+
+pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_no_dis_20,y=data_ed_bas$weight_w01,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_ed_med$part_act_no_dis_20,y=data_ed_med$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_no_dis_20,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_no_dis_20,y=data_ed_uni$weight_w01,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+#table_preposh1[4,2]<-pond4
+
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
+
+part_act_no_dis_20_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+     ylab('Puntaje promedio en participación activista 
+no disruptiva (escala de 1 a 4)') + xlab(' ') + 
+  theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Participación activista no disruptiva por 
+nivel educativo de la madre") + ylim(0,4)
+#part_act_no_dis_20_colegio
+ggsave(part_act_no_dis_20_colegio, file = "../output/graphs/part_act_no_dis_20_colegio_ed_madre.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+```
+
+![](../output/graphs/part_act_no_dis_20_colegio_ed_madre.png)
+
+#### **Participación política durante el primer semestre de 2021**
+
+```{r}
+#### Crear variable
+data_wide$part_act_no_dis_21_1s = as.numeric(data_wide$part_pol_firma.x + data_wide$part_pol_marc_pac)/2
+```
+
+```{r}
+# Creación de bbdd
+data_ed_bas = data_wide %>%  filter(nse_madre==1 | nse_madre==2 | nse_madre==3) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
+data_ed_med = data_wide %>%  filter(nse_madre==4 | nse_madre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
+data_ed_ter = data_wide %>%  filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_no_dis_21_1s, na.rm=T),
+               psych::describe(data_ed_med$part_act_no_dis_21_1s, na.rm=T),
+               psych::describe(data_ed_ter$part_act_no_dis_21_1s, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_no_dis_21_1s, na.rm=T))
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+
+pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_no_dis_21_1s,y=data_ed_bas$weight_w02,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_ed_med$part_act_no_dis_21_1s,y=data_ed_med$weight_w02,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_no_dis_21_1s,y=data_ed_ter$weight_w02,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_no_dis_21_1s,y=data_ed_uni$weight_w02,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+#table_preposh1[4,2]<-pond4
+
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
+
+part_act_no_dis_21_1s_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+     ylab('Puntaje promedio en participación activista 
+no disruptiva (escala de 1 a 4)') + xlab(' ') + 
+  theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Participación activista no disruptiva por 
+nivel educativo de la madre") + ylim(0,4)
+#part_act_no_dis_21_1s_colegio
+ggsave(part_act_no_dis_21_1s_colegio, file = "../output/graphs/part_act_no_dis_21_1s_colegio_ed_madre.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+```
+
+![](../output/graphs/part_act_no_dis_21_1s_colegio_ed_madre.png)
+
+#### **Participación política durante el segundo semestre de 2021**
+
+```{r}
+#### Crear variable
+data_wide$part_act_no_dis_21_2s = as.numeric(data_wide$part_pol_firma_21b + data_wide$part_pol_marc_pac_21b)/2
+```
+
+```{r}
+# Creación de bbdd
+data_ed_bas = data_wide %>%  filter(nse_madre==1 | nse_madre==2 | nse_madre==3) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
+data_ed_med = data_wide %>%  filter(nse_madre==4 | nse_madre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
+data_ed_ter = data_wide %>%  filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_madre==6 | nse_madre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_no_dis_21_2s, na.rm=T),
+               psych::describe(data_ed_med$part_act_no_dis_21_2s, na.rm=T),
+               psych::describe(data_ed_ter$part_act_no_dis_21_2s, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_no_dis_21_2s, na.rm=T))
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+
+pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_no_dis_21_2s,y=data_ed_bas$weight_w03,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_ed_med$part_act_no_dis_21_2s,y=data_ed_med$weight_w03,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_no_dis_21_2s,y=data_ed_ter$weight_w03,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_no_dis_21_2s,y=data_ed_uni$weight_w03,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+#table_preposh1[4,2]<-pond4
+
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
+
+part_act_no_dis_21_2s_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+     ylab('Puntaje promedio en participación activista 
+no disruptiva (escala de 1 a 4)') + xlab(' ') + 
+  theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Participación activista no disruptiva por 
+nivel educativo de la madre") + ylim(0,4)
+#part_act_no_dis_21_2s_colegio
+ggsave(part_act_no_dis_21_2s_colegio, file = "../output/graphs/part_act_no_dis_21_2s_colegio_ed_madre.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+```
+![](../output/graphs/part_act_no_dis_21_2s_colegio_ed_madre.png)
+
+
+### Máximo nivel educativo del padre
+
+En esta sección se presentan los resultados descriptivos de la relación entre el máximo nivel educativo del padre y la participación activista no disruptiva del encuestado.
+
+En términos generales, no es posible visualizar un patrón claro de la relación entre ambas variables. En otras palabras, los resultados expuestos en los gráficos no evidencian una relación consistente entre el nivel educativo del padre y la participación no disruptiva. Sin embargo, se ve una relación entre que el padre tenga educación básica o menos y haber participado en una marcha pacífica durante tercero y cuarto medio, así como también entre que el padre tenga educación media o terciaria y haber participado en una marcha pacífica durante el estallido social.
+
+#### **Participación política durante 3ro y 4to medio**
+
+```{r}
+### Crear variable
+data_wide$part_act_no_dis_3y4 <- as.numeric(data_wide$part_pol_firma.y + data_wide$part_pol_marcha_pas)/2
+```
+
+```{r}
+# Creación de bbdd
+data_ed_bas = data_wide %>%  filter(nse_padre==1 | nse_padre==2 | nse_padre==3) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
+data_ed_med = data_wide %>%  filter(nse_padre==4 | nse_padre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
+data_ed_ter = data_wide %>%  filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_no_dis_3y4, na.rm=T),
+               psych::describe(data_ed_med$part_act_no_dis_3y4, na.rm=T),
+               psych::describe(data_ed_ter$part_act_no_dis_3y4, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_no_dis_3y4, na.rm=T))
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+
+pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_no_dis_3y4,y=data_ed_bas$weight_w01,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_ed_med$part_act_no_dis_3y4,y=data_ed_med$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_no_dis_3y4,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_no_dis_3y4,y=data_ed_uni$weight_w01,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+#table_preposh1[4,2]<-pond4
+
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
+
+part_act_no_dis_3y4_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+     ylab('Puntaje promedio en participación activista 
+no disruptiva (escala de 1 a 4)') + xlab(' ') + 
+  theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Participación activista no disruptiva por 
+nivel educativo de la padre") + ylim(0,4)
+#part_act_no_dis_3y4_colegio
+ggsave(part_act_no_dis_3y4_colegio, file = "../output/graphs/part_act_no_dis_3y4_colegio_ed_padre.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+
+```
+
+![](../output/graphs/part_act_no_dis_3y4_colegio_ed_padre.png)
+
+#### **Participación política durante estallido social**
+
+```{r}
+### Crear variable
+data_wide$part_act_no_dis_es <- as.numeric(data_wide$part_pol_firma_21 + data_wide$part_pol_marc_pac_21)/2
+```
+
+```{r}
+# Creación de bbdd
+data_ed_bas = data_wide %>%  filter(nse_padre==1 | nse_padre==2 | nse_padre==3) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
+data_ed_med = data_wide %>%  filter(nse_padre==4 | nse_padre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
+data_ed_ter = data_wide %>%  filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_no_dis_es, na.rm=T),
+               psych::describe(data_ed_med$part_act_no_dis_es, na.rm=T),
+               psych::describe(data_ed_ter$part_act_no_dis_es, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_no_dis_es, na.rm=T))
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+
+pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_no_dis_es,y=data_ed_bas$weight_w01,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_ed_med$part_act_no_dis_es,y=data_ed_med$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_no_dis_es,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_no_dis_es,y=data_ed_uni$weight_w01,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+#table_preposh1[4,2]<-pond4
+
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
+
+part_act_no_dis_es_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+     ylab('Puntaje promedio en participación activista 
+no disruptiva (escala de 1 a 4)') + xlab(' ') + 
+  theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Participación activista no disruptiva por 
+nivel educativo de la padre") + ylim(0,4)
+#part_act_no_dis_es_colegio
+ggsave(part_act_no_dis_es_colegio, file = "../output/graphs/part_act_no_dis_es_colegio_ed_padre.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+
+```
+![](../output/graphs/part_act_no_dis_es_colegio_ed_padre.png)
+
+#### **Participación política durante el 2020**
+
+```{r}
+### Crear variable
+data_wide$part_act_no_dis_20 = as.numeric(data_wide$part_pol_firma_20 + data_wide$part_pol_marc_pac_20)/2
+```
+
+```{r}
+# Creación de bbdd
+data_ed_bas = data_wide %>%  filter(nse_padre==1 | nse_padre==2 | nse_padre==3) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
+data_ed_med = data_wide %>%  filter(nse_padre==4 | nse_padre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
+data_ed_ter = data_wide %>%  filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_no_dis_20, na.rm=T),
+               psych::describe(data_ed_med$part_act_no_dis_20, na.rm=T),
+               psych::describe(data_ed_ter$part_act_no_dis_20, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_no_dis_20, na.rm=T))
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+
+pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_no_dis_20,y=data_ed_bas$weight_w01,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_ed_med$part_act_no_dis_20,y=data_ed_med$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_no_dis_20,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_no_dis_20,y=data_ed_uni$weight_w01,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+#table_preposh1[4,2]<-pond4
+
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
+
+part_act_no_dis_20_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+     ylab('Puntaje promedio en participación activista 
+no disruptiva (escala de 1 a 4)') + xlab(' ') + 
+  theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Participación activista no disruptiva por 
+nivel educativo de la padre") + ylim(0,4)
+#part_act_no_dis_20_colegio
+ggsave(part_act_no_dis_20_colegio, file = "../output/graphs/part_act_no_dis_20_colegio_ed_padre.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+```
+
+![](../output/graphs/part_act_no_dis_20_colegio_ed_padre.png)
+
+#### **Participación política durante el primer semestre de 2021**
+
+```{r}
+#### Crear variable
+data_wide$part_act_no_dis_21_1s = as.numeric(data_wide$part_pol_firma.x + data_wide$part_pol_marc_pac)/2
+```
+
+```{r}
+# Creación de bbdd
+data_ed_bas = data_wide %>%  filter(nse_padre==1 | nse_padre==2 | nse_padre==3) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
+data_ed_med = data_wide %>%  filter(nse_padre==4 | nse_padre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
+data_ed_ter = data_wide %>%  filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_no_dis_21_1s, na.rm=T),
+               psych::describe(data_ed_med$part_act_no_dis_21_1s, na.rm=T),
+               psych::describe(data_ed_ter$part_act_no_dis_21_1s, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_no_dis_21_1s, na.rm=T))
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+
+pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_no_dis_21_1s,y=data_ed_bas$weight_w02,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_ed_med$part_act_no_dis_21_1s,y=data_ed_med$weight_w02,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_no_dis_21_1s,y=data_ed_ter$weight_w02,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_no_dis_21_1s,y=data_ed_uni$weight_w02,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+#table_preposh1[4,2]<-pond4
+
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
+
+part_act_no_dis_21_1s_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+     ylab('Puntaje promedio en participación activista 
+no disruptiva (escala de 1 a 4)') + xlab(' ') + 
+  theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Participación activista no disruptiva por 
+nivel educativo de la padre") + ylim(0,4)
+#part_act_no_dis_21_1s_colegio
+ggsave(part_act_no_dis_21_1s_colegio, file = "../output/graphs/part_act_no_dis_21_1s_colegio_ed_padre.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+```
+
+![](../output/graphs/part_act_no_dis_21_1s_colegio_ed_padre.png)
+
+#### **Participación política durante el segundo semestre de 2021**
+
+```{r}
+#### Crear variable
+data_wide$part_act_no_dis_21_2s = as.numeric(data_wide$part_pol_firma_21b + data_wide$part_pol_marc_pac_21b)/2
+```
+
+```{r}
+# Creación de bbdd
+data_ed_bas = data_wide %>%  filter(nse_padre==1 | nse_padre==2 | nse_padre==3) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
+data_ed_med = data_wide %>%  filter(nse_padre==4 | nse_padre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
+data_ed_ter = data_wide %>%  filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+#data_ed_tec = data_wide %>%  filter(nse_padre==6 | nse_padre==7) %>% as.data.frame() # técnico superior incompleto (6) o completo (7)
+#data_ed_uni = data_wide %>%  filter(nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_no_dis_21_2s, na.rm=T),
+               psych::describe(data_ed_med$part_act_no_dis_21_2s, na.rm=T),
+               psych::describe(data_ed_ter$part_act_no_dis_21_2s, na.rm=T))#,
+#               psych::describe(data_ed_uni$part_act_no_dis_21_2s, na.rm=T))
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+
+pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_no_dis_21_2s,y=data_ed_bas$weight_w03,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_ed_med$part_act_no_dis_21_2s,y=data_ed_med$weight_w03,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_no_dis_21_2s,y=data_ed_ter$weight_w03,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_no_dis_21_2s,y=data_ed_uni$weight_w03,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+#table_preposh1[4,2]<-pond4
+
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
+
+part_act_no_dis_21_2s_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+     ylab('Puntaje promedio en participación activista 
+no disruptiva (escala de 1 a 4)') + xlab(' ') + 
+  theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Participación activista no disruptiva por 
+nivel educativo de la padre") + ylim(0,4)
+#part_act_no_dis_21_2s_colegio
+ggsave(part_act_no_dis_21_2s_colegio, file = "../output/graphs/part_act_no_dis_21_2s_colegio_ed_padre.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+```
+![](../output/graphs/part_act_no_dis_21_2s_colegio_ed_padre.png)
+
+### Frecuencia de conversación con los padres sobre temas sociales y/o políticos
+
+En esta sección se presentan los resultados descriptivos de la relación entre la frecuencia de conversación con los padres sobre temas sociales y/o políticos en cada uno de los momentos sobre los que se consultó y la participación activista no disruptiva del encuestado.
+
+En términos generales, es posible visualizar una relación entre la frecuencia de conversación con los padres sobre estas temáticas y realizar prácticas de activismo no disruptivo en todos los momentos sobre los que se consultó.
+
+#### **Participación política durante 3ro y 4to medio**
+
+```{r}
+### Crear variable
+data_wide$part_act_no_dis_3y4 <- as.numeric(data_wide$part_pol_firma.y + data_wide$part_pol_marcha_pas)/2
+```
+
+```{r}
+# Creación de bbdd
+data_nunca = data_wide %>%  filter(conv_padr_poli==1) %>% as.data.frame() # Nunca
+data_casi_nunca = data_wide %>%  filter(conv_padr_poli==2) %>% as.data.frame() # Casi nunca
+data_a_veces = data_wide %>%  filter(conv_padr_poli==3) %>% as.data.frame() # A veces
+data_frecuent = data_wide %>%  filter(conv_padr_poli==4) %>% as.data.frame() # Frecuentemente
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_nunca$part_act_no_dis_3y4, na.rm=T),
+               psych::describe(data_casi_nunca$part_act_no_dis_3y4, na.rm=T),
+               psych::describe(data_a_veces$part_act_no_dis_3y4, na.rm=T),
+               psych::describe(data_frecuent$part_act_no_dis_3y4, na.rm=T))
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+
+pond1 <- stats::weighted.mean(x=data_nunca$part_act_no_dis_3y4,y=data_nunca$weight_w01,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_casi_nunca$part_act_no_dis_3y4,y=data_casi_nunca$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_a_veces$part_act_no_dis_3y4,y=data_a_veces$weight_w01,na.rm=TRUE)
+pond4 <- stats::weighted.mean(x=data_frecuent$part_act_no_dis_3y4,y=data_frecuent$weight_w01,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+table_preposh1[4,2]<-pond4
+
+table_preposh1$dep <- c("1. Nunca","2. Casi nunca","3. A veces", "4. Frecuentemente")
+
+part_act_no_dis_3y4_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+     ylab('Puntaje promedio en participación activista 
+no disruptiva (escala de 1 a 4)') + xlab(' ') + 
+  theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Participación activista no disruptiva por 
+conversación con los padres sobre temas políticos y/o sociales") + ylim(0,4)
+#part_act_no_dis_3y4_colegio
+ggsave(part_act_no_dis_3y4_colegio, file = "../output/graphs/part_act_no_dis_3y4_colegio_conv_padres.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+
+```
+
+![](../output/graphs/part_act_no_dis_3y4_colegio_conv_padres.png)
+
+#### **Participación política durante estallido social**
+
+```{r}
+### Crear variable
+data_wide$part_act_no_dis_es <- as.numeric(data_wide$part_pol_firma_21 + data_wide$part_pol_marc_pac_21)/2
+```
+
+```{r}
+# Creación de bbdd
+data_nunca = data_wide %>%  filter(conv_padres_21==1) %>% as.data.frame() # Nunca
+data_casi_nunca = data_wide %>%  filter(conv_padres_21==2) %>% as.data.frame() # Casi nunca
+data_a_veces = data_wide %>%  filter(conv_padres_21==3) %>% as.data.frame() # A veces
+data_frecuent = data_wide %>%  filter(conv_padres_21==4) %>% as.data.frame() # Frecuentemente
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_nunca$part_act_no_dis_es, na.rm=T),
+               psych::describe(data_casi_nunca$part_act_no_dis_es, na.rm=T),
+               psych::describe(data_a_veces$part_act_no_dis_es, na.rm=T),
+               psych::describe(data_frecuent$part_act_no_dis_es, na.rm=T))
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+
+pond1 <- stats::weighted.mean(x=data_nunca$part_act_no_dis_es,y=data_nunca$weight_w01,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_casi_nunca$part_act_no_dis_es,y=data_casi_nunca$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_a_veces$part_act_no_dis_es,y=data_a_veces$weight_w01,na.rm=TRUE)
+pond4 <- stats::weighted.mean(x=data_frecuent$part_act_no_dis_es,y=data_frecuent$weight_w01,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+table_preposh1[4,2]<-pond4
+
+table_preposh1$dep <- c("1. Nunca","2. Casi nunca","3. A veces", "4. Frecuentemente")
+
+part_act_no_dis_es_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+     ylab('Puntaje promedio en participación activista 
+no disruptiva (escala de 1 a 4)') + xlab(' ') + 
+  theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Participación activista no disruptiva por 
+conversación con los padres sobre temas políticos y/o sociales") + ylim(0,4)
+#part_act_no_dis_es_colegio
+ggsave(part_act_no_dis_es_colegio, file = "../output/graphs/part_act_no_dis_es_colegio_conv_padres.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+
+```
+![](../output/graphs/part_act_no_dis_es_colegio_conv_padres.png)
+
+#### **Participación política durante el 2020**
+
+```{r}
+### Crear variable
+data_wide$part_act_no_dis_20 = as.numeric(data_wide$part_pol_firma_20 + data_wide$part_pol_marc_pac_20)/2
+```
+
+```{r}
+# Creación de bbdd
+data_nunca = data_wide %>%  filter(conv_padres_20==1) %>% as.data.frame() # Nunca
+data_casi_nunca = data_wide %>%  filter(conv_padres_20==2) %>% as.data.frame() # Casi nunca
+data_a_veces = data_wide %>%  filter(conv_padres_20==3) %>% as.data.frame() # A veces
+data_frecuent = data_wide %>%  filter(conv_padres_20==4) %>% as.data.frame() # Frecuentemente
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_nunca$part_act_no_dis_20, na.rm=T),
+               psych::describe(data_casi_nunca$part_act_no_dis_20, na.rm=T),
+               psych::describe(data_a_veces$part_act_no_dis_20, na.rm=T),
+               psych::describe(data_frecuent$part_act_no_dis_20, na.rm=T))
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+
+pond1 <- stats::weighted.mean(x=data_nunca$part_act_no_dis_20,y=data_nunca$weight_w01,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_casi_nunca$part_act_no_dis_20,y=data_casi_nunca$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_a_veces$part_act_no_dis_20,y=data_a_veces$weight_w01,na.rm=TRUE)
+pond4 <- stats::weighted.mean(x=data_frecuent$part_act_no_dis_20,y=data_frecuent$weight_w01,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+table_preposh1[4,2]<-pond4
+
+table_preposh1$dep <- c("1. Nunca","2. Casi nunca","3. A veces", "4. Frecuentemente")
+
+part_act_no_dis_20_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+     ylab('Puntaje promedio en participación activista 
+no disruptiva (escala de 1 a 4)') + xlab(' ') + 
+  theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Participación activista no disruptiva por 
+conversación con los padres sobre temas políticos y/o sociales") + ylim(0,4)
+#part_act_no_dis_20_colegio
+ggsave(part_act_no_dis_20_colegio, file = "../output/graphs/part_act_no_dis_20_colegio_conv_padres.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+```
+
+![](../output/graphs/part_act_no_dis_20_colegio_conv_padres.png)
+
+#### **Participación política durante el primer semestre de 2021**
+
+```{r}
+#### Crear variable
+data_wide$part_act_no_dis_21_1s = as.numeric(data_wide$part_pol_firma.x + data_wide$part_pol_marc_pac)/2
+```
+
+```{r}
+# Creación de bbdd
+data_nunca = data_wide %>%  filter(conv_padres==1) %>% as.data.frame() # Nunca
+data_casi_nunca = data_wide %>%  filter(conv_padres==2) %>% as.data.frame() # Casi nunca
+data_a_veces = data_wide %>%  filter(conv_padres==3) %>% as.data.frame() # A veces
+data_frecuent = data_wide %>%  filter(conv_padres==4) %>% as.data.frame() # Frecuentemente
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_nunca$part_act_no_dis_21_1s, na.rm=T),
+               psych::describe(data_casi_nunca$part_act_no_dis_21_1s, na.rm=T),
+               psych::describe(data_a_veces$part_act_no_dis_21_1s, na.rm=T),
+               psych::describe(data_frecuent$part_act_no_dis_21_1s, na.rm=T))
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+
+pond1 <- stats::weighted.mean(x=data_nunca$part_act_no_dis_21_1s,y=data_nunca$weight_w02,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_casi_nunca$part_act_no_dis_21_1s,y=data_casi_nunca$weight_w02,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_a_veces$part_act_no_dis_21_1s,y=data_a_veces$weight_w02,na.rm=TRUE)
+pond4 <- stats::weighted.mean(x=data_frecuent$part_act_no_dis_21_1s,y=data_frecuent$weight_w02,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+table_preposh1[4,2]<-pond4
+
+table_preposh1$dep <- c("1. Nunca","2. Casi nunca","3. A veces", "4. Frecuentemente")
+
+part_act_no_dis_21_1s_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+     ylab('Puntaje promedio en participación activista 
+no disruptiva (escala de 1 a 4)') + xlab(' ') + 
+  theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Participación activista no disruptiva por 
+conversación con los padres sobre temas políticos y/o sociales") + ylim(0,4)
+#part_act_no_dis_21_1s_colegio
+ggsave(part_act_no_dis_21_1s_colegio, file = "../output/graphs/part_act_no_dis_21_1s_colegio_conv_padres.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+```
+
+![](../output/graphs/part_act_no_dis_21_1s_colegio_conv_padres.png)
+
+#### **Participación política durante el segundo semestre de 2021**
+
+```{r}
+#### Crear variable
+data_wide$part_act_no_dis_21_2s = as.numeric(data_wide$part_pol_firma_21b + data_wide$part_pol_marc_pac_21b)/2
+```
+
+```{r}
+# Creación de bbdd
+data_nunca = data_wide %>%  filter(conv_padres_21b==1) %>% as.data.frame() # Nunca
+data_casi_nunca = data_wide %>%  filter(conv_padres_21b==2) %>% as.data.frame() # Casi nunca
+data_a_veces = data_wide %>%  filter(conv_padres_21b==3) %>% as.data.frame() # A veces
+data_frecuent = data_wide %>%  filter(conv_padres_21b==4) %>% as.data.frame() # Frecuentemente
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_nunca$part_act_no_dis_21_2s, na.rm=T),
+               psych::describe(data_casi_nunca$part_act_no_dis_21_2s, na.rm=T),
+               psych::describe(data_a_veces$part_act_no_dis_21_2s, na.rm=T),
+               psych::describe(data_frecuent$part_act_no_dis_21_2s, na.rm=T))
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+
+pond1 <- stats::weighted.mean(x=data_nunca$part_act_no_dis_21_2s,y=data_nunca$weight_w03,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_casi_nunca$part_act_no_dis_21_2s,y=data_casi_nunca$weight_w03,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_a_veces$part_act_no_dis_21_2s,y=data_a_veces$weight_w03,na.rm=TRUE)
+pond4 <- stats::weighted.mean(x=data_frecuent$part_act_no_dis_21_2s,y=data_frecuent$weight_w03,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+table_preposh1[4,2]<-pond4
+
+table_preposh1$dep <- c("1. Nunca","2. Casi nunca","3. A veces", "4. Frecuentemente")
+
+part_act_no_dis_21_2s_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+     ylab('Puntaje promedio en participación activista 
+no disruptiva (escala de 1 a 4)') + xlab(' ') + 
+  theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Participación activista no disruptiva por 
+conversación con los padres sobre temas políticos y/o sociales") + ylim(0,4)
+#part_act_no_dis_21_2s_colegio
+ggsave(part_act_no_dis_21_2s_colegio, file = "../output/graphs/part_act_no_dis_21_2s_colegio_conv_padres.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+```
+
+![](../output/graphs/part_act_no_dis_21_2s_colegio_conv_padres.png)
+
 ## Activismo online
 
 Para medir el activismo online se creo un índice sumativo que incorporó los cuatro indicadores relacionados con este tipo de participación, calculando el promedio de participación activista online manteniendo la escala original de valores (1 a 4). Se incorporaron los siguientes indicadores:
@@ -1331,7 +2603,7 @@ Para medir el activismo online se creo un índice sumativo que incorporó los cu
 + Compartir o comentar en el posteo de otra persona acerca de temas sociales y políticos
 + Seguir a personas en redes sociales por su contenido sobre temas sociales y políticos
 
-En el gráfico a continuación se presenta el puntaje promedio de participación activista online en cada uno de los momentos sobre los que se consultó. Como se muestra en el gráfico, la participación activista online en general alcanza valores más altos que la participación activista disruptiva. El promedio de participación activista online para todos los momentos alcanza valores superiores a 2, de hecho en casi todos los momentos por los que se consultó (4 de 5) el promedio de participación es mayor que 2.5. Los niveles más altos de participación online corresponden al periodo del estallido social y al periodo del año 2020.
+En el gráfico a continuación se presenta el puntaje promedio de participación activista online en cada uno de los momentos sobre los que se consultó. Como se muestra en el gráfico, la participación activista online en general alcanza valores más altos que la participación activista online. El promedio de participación activista online para todos los momentos alcanza valores superiores a 2, de hecho en casi todos los momentos por los que se consultó (4 de 5) el promedio de participación es mayor que 2.5. Los niveles más altos de participación online corresponden al periodo del estallido social y al periodo del año 2020.
 
 ```{r}
 ### Crear variable participación política durante 3ro y 4to medio
@@ -1669,9 +2941,9 @@ ggsave(part_act_online_21_2s_colegio, file = "../output/graphs/part_act_online_2
 
 ### Máximo nivel educativo de la madre
 
-En esta sección se presentan los resultados descriptivos de la relación entre el máximo nivel educativo de la madre y la participación activista disruptiva del encuestado.
+En esta sección se presentan los resultados descriptivos de la relación entre el máximo nivel educativo de la madre y la participación activista online del encuestado.
 
-En términos generales, no es posible visualizar un patrón claro de la relación entre ambas variables. En otras palabras, los resultados expuestos en los gráficos no evidencian una relación consistente entre la dependencia administrativa del establecimiento y la participación disruptiva. Sin embargo, se ve una leve relación entre que la madre tenga educación terciaria y realizar prácticas de activismo online en todos los momentos sobre los que se consultó.
+En términos generales, no es posible visualizar un patrón claro de la relación entre ambas variables. En otras palabras, los resultados expuestos en los gráficos no evidencian una relación consistente entre la dependencia administrativa del establecimiento y la participación online. Sin embargo, se ve una relación entre que la madre tenga educación terciaria y realizar prácticas de activismo online en todos los momentos sobre los que se consultó.
 
 #### **Participación política durante 3ro y 4to medio**
 ```{r}
@@ -1882,10 +3154,10 @@ table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_online_21_1s, na.rm=
 #               psych::describe(data_ed_uni$part_act_online_21_1s, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
-pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_online_21_1s,y=data_ed_bas$weight_w01,na.rm=TRUE)
-pond2 <- stats::weighted.mean(x=data_ed_med$part_act_online_21_1s,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_online_21_1s,y=data_ed_ter$weight_w01,na.rm=TRUE)
-#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_online_21_1s,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_online_21_1s,y=data_ed_bas$weight_w02,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_ed_med$part_act_online_21_1s,y=data_ed_med$weight_w02,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_online_21_1s,y=data_ed_ter$weight_w02,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_online_21_1s,y=data_ed_uni$weight_w02,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
@@ -1943,10 +3215,10 @@ table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_online_21_2s, na.rm=
 #               psych::describe(data_ed_uni$part_act_online_21_2s, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
-pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_online_21_2s,y=data_ed_bas$weight_w01,na.rm=TRUE)
-pond2 <- stats::weighted.mean(x=data_ed_med$part_act_online_21_2s,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_online_21_2s,y=data_ed_ter$weight_w01,na.rm=TRUE)
-#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_online_21_2s,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_online_21_2s,y=data_ed_bas$weight_w03,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_ed_med$part_act_online_21_2s,y=data_ed_med$weight_w03,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_online_21_2s,y=data_ed_ter$weight_w03,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_online_21_2s,y=data_ed_uni$weight_w03,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
@@ -1982,9 +3254,9 @@ ggsave(part_act_online_21_2s_colegio, file = "../output/graphs/part_act_online_2
 
 ### Máximo nivel educativo del padre
 
-En esta sección se presentan los resultados descriptivos de la relación entre el máximo nivel educativo del padre y la participación activista disruptiva del encuestado.
+En esta sección se presentan los resultados descriptivos de la relación entre el máximo nivel educativo del padre y la participación activista online del encuestado.
 
-En términos generales, no es posible visualizar un patrón claro de la relación entre ambas variables. En otras palabras, los resultados expuestos en los gráficos no evidencian una relación consistente entre la dependencia administrativa del establecimiento y la participación disruptiva. Sin embargo, se ve una leve relación entre que el padre tenga educación terciaria y realizar prácticas de activismo online en cuatro de los cinco momentos por los que se consultó (solo durante la enseñanza media no se ve este patrón).
+En términos generales, no es posible visualizar un patrón claro de la relación entre ambas variables. En otras palabras, los resultados expuestos en los gráficos no evidencian una relación consistente entre la dependencia administrativa del establecimiento y la participación online. Sin embargo, se ve una leve relación entre que el padre tenga educación terciaria y realizar prácticas de activismo online en cuatro de los cinco momentos por los que se consultó (solo durante la enseñanza media no se ve este patrón).
 
 #### **Participación política durante 3ro y 4to medio**
 
@@ -2198,10 +3470,10 @@ table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_online_21_1s, na.rm=
 #               psych::describe(data_ed_uni$part_act_online_21_1s, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
-pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_online_21_1s,y=data_ed_bas$weight_w01,na.rm=TRUE)
-pond2 <- stats::weighted.mean(x=data_ed_med$part_act_online_21_1s,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_online_21_1s,y=data_ed_ter$weight_w01,na.rm=TRUE)
-#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_online_21_1s,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_online_21_1s,y=data_ed_bas$weight_w02,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_ed_med$part_act_online_21_1s,y=data_ed_med$weight_w02,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_online_21_1s,y=data_ed_ter$weight_w02,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_online_21_1s,y=data_ed_uni$weight_w02,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
@@ -2260,10 +3532,10 @@ table_preposh1<- rbind(psych::describe(data_ed_bas$part_act_online_21_2s, na.rm=
 #               psych::describe(data_ed_uni$part_act_online_21_2s, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
-pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_online_21_2s,y=data_ed_bas$weight_w01,na.rm=TRUE)
-pond2 <- stats::weighted.mean(x=data_ed_med$part_act_online_21_2s,y=data_ed_med$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_online_21_2s,y=data_ed_ter$weight_w01,na.rm=TRUE)
-#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_online_21_2s,y=data_ed_uni$weight_w01,na.rm=TRUE)
+pond1 <- stats::weighted.mean(x=data_ed_bas$part_act_online_21_2s,y=data_ed_bas$weight_w03,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_ed_med$part_act_online_21_2s,y=data_ed_med$weight_w03,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$part_act_online_21_2s,y=data_ed_ter$weight_w03,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$part_act_online_21_2s,y=data_ed_uni$weight_w03,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
@@ -2499,10 +3771,10 @@ table_preposh1<- rbind(psych::describe(data_nunca$part_act_online_21_1s, na.rm=T
                psych::describe(data_frecuent$part_act_online_21_1s, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
-pond1 <- stats::weighted.mean(x=data_nunca$part_act_online_21_1s,y=data_nunca$weight_w01,na.rm=TRUE)
-pond2 <- stats::weighted.mean(x=data_casi_nunca$part_act_online_21_1s,y=data_casi_nunca$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_a_veces$part_act_online_21_1s,y=data_a_veces$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_frecuent$part_act_online_21_1s,y=data_frecuent$weight_w01,na.rm=TRUE)
+pond1 <- stats::weighted.mean(x=data_nunca$part_act_online_21_1s,y=data_nunca$weight_w02,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_casi_nunca$part_act_online_21_1s,y=data_casi_nunca$weight_w02,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_a_veces$part_act_online_21_1s,y=data_a_veces$weight_w02,na.rm=TRUE)
+pond4 <- stats::weighted.mean(x=data_frecuent$part_act_online_21_1s,y=data_frecuent$weight_w02,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
@@ -2557,10 +3829,10 @@ table_preposh1<- rbind(psych::describe(data_nunca$part_act_online_21_2s, na.rm=T
                psych::describe(data_frecuent$part_act_online_21_2s, na.rm=T))
 table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
 
-pond1 <- stats::weighted.mean(x=data_nunca$part_act_online_21_2s,y=data_nunca$weight_w01,na.rm=TRUE)
-pond2 <- stats::weighted.mean(x=data_casi_nunca$part_act_online_21_2s,y=data_casi_nunca$weight_w01,na.rm=TRUE)
-pond3 <- stats::weighted.mean(x=data_a_veces$part_act_online_21_2s,y=data_a_veces$weight_w01,na.rm=TRUE)
-pond4 <- stats::weighted.mean(x=data_frecuent$part_act_online_21_2s,y=data_frecuent$weight_w01,na.rm=TRUE)
+pond1 <- stats::weighted.mean(x=data_nunca$part_act_online_21_2s,y=data_nunca$weight_w03,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_casi_nunca$part_act_online_21_2s,y=data_casi_nunca$weight_w03,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_a_veces$part_act_online_21_2s,y=data_a_veces$weight_w03,na.rm=TRUE)
+pond4 <- stats::weighted.mean(x=data_frecuent$part_act_online_21_2s,y=data_frecuent$weight_w03,na.rm=TRUE)
 
 table_preposh1[1,2]<-pond1
 table_preposh1[2,2]<-pond2
@@ -4099,7 +5371,7 @@ ggsave(elec_segvuelta_21_conv_pad_3y4, file = "../output/graphs/elec_segvuelta_2
 
 ![](../output/graphs/elec_segvuelta_21_conv_pad_3y4.jpg)
 
-## Frecuencia de conversación con los padres sobre temas sociales y/o políticos en el estallido social
+## Frecuencia de conversación con los padres sobre temas sociales y/o políticos en el estallido social 
 
 En esta sección se presentan los resultados descriptivos de la relación entre la frecuencia de conversación con los padres sobre temas sociales y/o políticos **durante el estallido social** y la participación en distintas votaciones.
 
@@ -5751,3 +7023,931 @@ ggsave(elec_segvuelta_21_conv_pad_3y4, file = "../output/graphs/elec_segvuelta_2
 ```
 
 ![](../output/graphs/elec_segvuelta_21_conv_pad_21b.jpg)
+
+# Frecuencia de conversación con los padres sobre temas sociales y/o políticos
+
+La participación activista se midió a través de un indicador que se presentan bajo la pregunta general "¿con qué frecuencia realizó las siguientes actividades? - Hablar con sus padres sobre temas sociales y/o políticos", teniendo como alternativas de respuesta *1. Nunca, 2. Casi nunca, 3. A veces, y 4. Frecuentemente*. 
+
+Se presentó la misma pregunta para consultar por distintos momentos en el tiempo. Más específicamente, se consultó por la frecuencia de conversación con los padres sobre temas sociales y/o políticos: (1) el periodo en que el encuestado cursaba 3° y 4° Medio, (2) estallido social, (3) el año 2020, (4) el primer semestre de 2021 y (5) el segundo semestre de 2021.
+
+En el gráfico a continuación se presenta el puntaje promedio de frecuencia de conversación con los padres sobre temas sociales y/o políticos en cada uno de los momentos sobre los que se consultó. Como se puede ver, la frecuencia de conversación sobre estas temáticas en general alcanza niveles altos (todos los promedios se encuentran entre 2.7 y 3.3). Los niveles más altos de frecuencia de conversación con los padres sobre temas sociales y/o políticos corresponden al 2020, al segundo semestre de 2021 y al periodo del estallido social.
+
+```{r}
+### durante 3ro y 4to medio
+### conv_padr_poli
+
+### durante estallido social
+### conv_padres_21
+
+### durante el 2020
+### conv_padres_20
+
+### durante el primer semestre de 2021
+### conv_padres
+
+### durante el segundo semestre de 2021
+### conv_padres_21b
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_wide$conv_padr_poli, na.rm=T),
+               psych::describe(data_wide$conv_padres_21, na.rm=T),
+               psych::describe(data_wide$conv_padres_20, na.rm=T),
+               psych::describe(data_wide$conv_padres, na.rm=T),
+               psych::describe(data_wide$conv_padres_21b, na.rm=T))
+
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+pond1 <- stats::weighted.mean(x=data_wide$conv_padr_poli,y=data_wide$weight_w01,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_wide$conv_padres_21,y=data_wide$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_wide$conv_padres_20,y=data_wide$weight_w01,na.rm=TRUE)
+pond4 <- stats::weighted.mean(x=data_wide$conv_padres,y=data_wide$weight_w02,na.rm=TRUE)
+pond5 <- stats::weighted.mean(x=data_wide$conv_padres_21b,y=data_wide$weight_w03,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+table_preposh1[4,2]<-pond4
+table_preposh1[5,2]<-pond5
+
+table_preposh1$dep <- c("1. Durante 3ro y 4to medio", "2. Durante el estallido social", "3. Durante el 2020", "4. Durante el 1er sem. de 2021", "5. Durante el 2do sem. de 2021")
+
+frec_conv <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+     ylab('Puntaje promedio en la frecuencia de conversación 
+(escala de 1 a 4)') + xlab(' ') + 
+     theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Frecuencia de conversación con los padres sobre 
+temas sociales y/o políticos") + ylim(0,4)
+ggsave(frec_conv, file = "../output/graphs/frec_conv.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+```
+![](../output/graphs/frec_conv.png)
+
+## Dependencia administrativa establecimiento
+
+En esta sección se presentan los resultados descriptivos de la relación entre la dependencia administrativa del establecimiento en que el encuestado estudió sus dos últimos años de enseñanza media y la frecuencia de conversación con los padres sobre temas sociales y/o políticos durante los distintos momentos sobre los que se consultó.
+
+En términos generales, es posible visualizar que hay una leve relación entre ambas variables. Es posible visualizar en los cinco momentos un patrón donde quienes provienen de establecimientos particulares privados son los que presentan un promedio más alto de conversación con sus padres sobre temas sociales y/o políticos, seguidos de quienes estudiaron en establecimientos particulares subvencionados. Mientras que quienes asistieron a establecimientos municipales son los que presentan un nivel más bajo de frecuencia de conversación sobre estas temáticas.
+
+### Frecuencia de conversación con los padres sobre temas sociales y/o políticos en 3ro y 4to medio
+
+```{r}
+### conv_padr_poli
+```
+
+```{r}
+# Creación de bbdd
+data_mun = data_wide %>%  filter(edm_admi==1) %>% as.data.frame() #Municipal
+data_sub = data_wide %>%  filter(edm_admi==2) %>% as.data.frame() #Particular Subvencionado
+data_priv = data_wide %>%  filter(edm_admi==3) %>% as.data.frame() #Particular pagado
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_mun$conv_padr_poli, na.rm=T),
+               psych::describe(data_sub$conv_padr_poli, na.rm=T),psych::describe(data_priv$conv_padr_poli, na.rm=T))
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+pond1 <- stats::weighted.mean(x=data_mun$conv_padr_poli,y=data_mun$weight_w01,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_sub$conv_padr_poli,y=data_sub$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_priv$conv_padr_poli,y=data_priv$weight_w01,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+
+table_preposh1$dep <- c("Municipal","Particular Subvencionado","Particular Privado")
+
+conv_padr_poli_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+     ylab('Puntaje promedio en la frecuencia de conversación 
+(escala de 1 a 4)') + xlab(' ') + 
+     theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Frecuencia de conversación con los padres sobre 
+temas sociales y/o políticos por 
+tipo de dependencia administrativa de la escuela") + ylim(0,4)
+#conv_padr_poli_colegio
+ggsave(conv_padr_poli_colegio, file = "../output/graphs/frec_conv_3y4_colegio_dep.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+```
+
+![](../output/graphs/frec_conv_3y4_colegio_dep.png)
+
+### Frecuencia de conversación con los padres sobre temas sociales y/o políticos en el estallido social 
+
+```{r}
+### conv_padres_21
+```
+
+```{r}
+# Creación de bbdd
+data_mun = data_wide %>%  filter(edm_admi==1) %>% as.data.frame() #Municipal
+data_sub = data_wide %>%  filter(edm_admi==2) %>% as.data.frame() #Particular Subvencionado
+data_priv = data_wide %>%  filter(edm_admi==3) %>% as.data.frame() #Particular pagado
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_mun$conv_padres_21, na.rm=T),
+               psych::describe(data_sub$conv_padres_21, na.rm=T),psych::describe(data_priv$conv_padres_21, na.rm=T))
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+pond1 <- stats::weighted.mean(x=data_mun$conv_padres_21,y=data_mun$weight_w01,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_sub$conv_padres_21,y=data_sub$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_priv$conv_padres_21,y=data_priv$weight_w01,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+
+table_preposh1$dep <- c("Municipal","Particular Subvencionado","Particular Privado")
+
+conv_padres_21_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+     ylab('Puntaje promedio en la frecuencia de conversación 
+(escala de 1 a 4)') + xlab(' ') + 
+     theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Frecuencia de conversación con los padres sobre 
+temas sociales y/o políticos por 
+tipo de dependencia administrativa de la escuela") + ylim(0,4)
+#conv_padres_21_colegio
+ggsave(conv_padres_21_colegio, file = "../output/graphs/frec_conv_est_19_colegio_dep.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+```
+
+![](../output/graphs/frec_conv_est_19_colegio_dep.png)
+
+### Frecuencia de conversación con los padres sobre temas sociales y/o políticos en el 2020 
+
+```{r}
+### conv_padres_20
+```
+
+```{r}
+# Creación de bbdd
+data_mun = data_wide %>%  filter(edm_admi==1) %>% as.data.frame() #Municipal
+data_sub = data_wide %>%  filter(edm_admi==2) %>% as.data.frame() #Particular Subvencionado
+data_priv = data_wide %>%  filter(edm_admi==3) %>% as.data.frame() #Particular pagado
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_mun$conv_padres_20, na.rm=T),
+               psych::describe(data_sub$conv_padres_20, na.rm=T),psych::describe(data_priv$conv_padres_20, na.rm=T))
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+pond1 <- stats::weighted.mean(x=data_mun$conv_padres_20,y=data_mun$weight_w01,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_sub$conv_padres_20,y=data_sub$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_priv$conv_padres_20,y=data_priv$weight_w01,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+
+table_preposh1$dep <- c("Municipal","Particular Subvencionado","Particular Privado")
+
+conv_padres_20_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+     ylab('Puntaje promedio en la frecuencia de conversación 
+(escala de 1 a 4)') + xlab(' ') + 
+     theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Frecuencia de conversación con los padres sobre 
+temas sociales y/o políticos por 
+tipo de dependencia administrativa de la escuela") + ylim(0,4)
+#conv_padres_20_colegio
+ggsave(conv_padres_20_colegio, file = "../output/graphs/frec_conv_20_colegio_dep.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+```
+
+![](../output/graphs/frec_conv_20_colegio_dep.png)
+
+### Frecuencia de conversación con los padres sobre temas sociales y/o políticos el primer semestre del 2021
+
+```{r}
+### conv_padres
+```
+
+```{r}
+# Creación de bbdd
+data_mun = data_wide %>%  filter(edm_admi==1) %>% as.data.frame() #Municipal
+data_sub = data_wide %>%  filter(edm_admi==2) %>% as.data.frame() #Particular Subvencionado
+data_priv = data_wide %>%  filter(edm_admi==3) %>% as.data.frame() #Particular pagado
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_mun$conv_padres, na.rm=T),
+               psych::describe(data_sub$conv_padres, na.rm=T),psych::describe(data_priv$conv_padres, na.rm=T))
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+pond1 <- stats::weighted.mean(x=data_mun$conv_padres,y=data_mun$weight_w02,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_sub$conv_padres,y=data_sub$weight_w02,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_priv$conv_padres,y=data_priv$weight_w02,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+
+table_preposh1$dep <- c("Municipal","Particular Subvencionado","Particular Privado")
+
+conv_padres_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+     ylab('Puntaje promedio en la frecuencia de conversación 
+(escala de 1 a 4)') + xlab(' ') + 
+     theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Frecuencia de conversación con los padres sobre 
+temas sociales y/o políticos por 
+tipo de dependencia administrativa de la escuela") + ylim(0,4)
+#conv_padres_colegio
+ggsave(conv_padres_colegio, file = "../output/graphs/frec_conv_21a_colegio_dep.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+```
+
+![](../output/graphs/frec_conv_21a_colegio_dep.png)
+
+### Frecuencia de conversación con los padres sobre temas sociales y/o políticos el segundo semestre del 2021
+
+```{r}
+### conv_padres_21b
+```
+
+```{r}
+# Creación de bbdd
+data_mun = data_wide %>%  filter(edm_admi==1) %>% as.data.frame() #Municipal
+data_sub = data_wide %>%  filter(edm_admi==2) %>% as.data.frame() #Particular Subvencionado
+data_priv = data_wide %>%  filter(edm_admi==3) %>% as.data.frame() #Particular pagado
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_mun$conv_padres_21b, na.rm=T),
+               psych::describe(data_sub$conv_padres_21b, na.rm=T),psych::describe(data_priv$conv_padres_21b, na.rm=T))
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+pond1 <- stats::weighted.mean(x=data_mun$conv_padres_21b,y=data_mun$weight_w03,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_sub$conv_padres_21b,y=data_sub$weight_w03,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_priv$conv_padres_21b,y=data_priv$weight_w03,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+
+table_preposh1$dep <- c("Municipal","Particular Subvencionado","Particular Privado")
+
+conv_padres_21b_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+     ylab('Puntaje promedio en la frecuencia de conversación 
+(escala de 1 a 4)') + xlab(' ') + 
+     theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Frecuencia de conversación con los padres sobre 
+temas sociales y/o políticos por 
+tipo de dependencia administrativa de la escuela") + ylim(0,4)
+#conv_padres_21b_colegio
+ggsave(conv_padres_21b_colegio, file = "../output/graphs/frec_conv_21b_colegio_dep.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+```
+
+![](../output/graphs/frec_conv_21b_colegio_dep.png)
+
+## Máximo nivel educativo de la madre
+
+En esta sección se presentan los resultados descriptivos de la relación entre el máximo nivel educativo de la madre y la frecuencia de conversación con los padres sobre temas sociales y/o políticos durante los distintos momentos sobre los que se consultó.
+
+En términos generales, es posible visualizar una relación directa entre el nivel educativo de la madre y la frecuencia de conversación con los padres sobre estas temáticas en los cinco momentos sobre los que se consultó. 
+
+### Frecuencia de conversación con los padres sobre temas sociales y/o políticos en 3ro y 4to medio
+
+```{r}
+### conv_padr_poli
+```
+
+```{r}
+# Creación de bbdd
+data_ed_bas = data_wide %>%  filter(nse_madre==1 | nse_madre==2 | nse_madre==3) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
+data_ed_med = data_wide %>%  filter(nse_madre==4 | nse_madre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
+data_ed_ter = data_wide %>%  filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_ed_bas$conv_padr_poli, na.rm=T),
+               psych::describe(data_ed_med$conv_padr_poli, na.rm=T),
+               psych::describe(data_ed_ter$conv_padr_poli, na.rm=T))#,
+#               psych::describe(data_ed_uni$conv_padr_poli, na.rm=T))
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+
+pond1 <- stats::weighted.mean(x=data_ed_bas$conv_padr_poli,y=data_ed_bas$weight_w01,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_ed_med$conv_padr_poli,y=data_ed_med$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$conv_padr_poli,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$conv_padr_poli,y=data_ed_uni$weight_w01,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+#table_preposh1[4,2]<-pond4
+
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
+
+conv_padr_poli_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+     ylab('Puntaje promedio en la frecuencia de conversación 
+(escala de 1 a 4)') + xlab(' ') + 
+     theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Frecuencia de conversación con los padres sobre 
+temas sociales y/o políticos por 
+nivel educativo de la madre") + ylim(0,4)
+#conv_padr_poli_colegio
+ggsave(conv_padr_poli_colegio, file = "../output/graphs/frec_conv_3y4_ed_madre.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+
+```
+
+![](../output/graphs/frec_conv_3y4_ed_madre.png)
+
+### Frecuencia de conversación con los padres sobre temas sociales y/o políticos en el estallido social 
+
+```{r}
+### conv_padres_21
+```
+
+```{r}
+# Creación de bbdd
+data_ed_bas = data_wide %>%  filter(nse_madre==1 | nse_madre==2 | nse_madre==3) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
+data_ed_med = data_wide %>%  filter(nse_madre==4 | nse_madre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
+data_ed_ter = data_wide %>%  filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_ed_bas$conv_padres_21, na.rm=T),
+               psych::describe(data_ed_med$conv_padres_21, na.rm=T),
+               psych::describe(data_ed_ter$conv_padres_21, na.rm=T))#,
+#               psych::describe(data_ed_uni$conv_padres_21, na.rm=T))
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+
+pond1 <- stats::weighted.mean(x=data_ed_bas$conv_padres_21,y=data_ed_bas$weight_w01,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_ed_med$conv_padres_21,y=data_ed_med$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$conv_padres_21,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$conv_padres_21,y=data_ed_uni$weight_w01,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+#table_preposh1[4,2]<-pond4
+
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
+
+conv_padres_21_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+     ylab('Puntaje promedio en la frecuencia de conversación 
+(escala de 1 a 4)') + xlab(' ') + 
+     theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Frecuencia de conversación con los padres sobre 
+temas sociales y/o políticos por 
+nivel educativo de la madre") + ylim(0,4)
+#conv_padres_21_colegio
+ggsave(conv_padres_21_colegio, file = "../output/graphs/frec_conv_est_19_ed_madre.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+```
+![](../output/graphs/frec_conv_est_19_ed_madre.png)
+
+### Frecuencia de conversación con los padres sobre temas sociales y/o políticos en el 2020 
+
+```{r}
+### conv_padres_20
+```
+
+```{r}
+# Creación de bbdd
+data_ed_bas = data_wide %>%  filter(nse_madre==1 | nse_madre==2 | nse_madre==3) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
+data_ed_med = data_wide %>%  filter(nse_madre==4 | nse_madre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
+data_ed_ter = data_wide %>%  filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_ed_bas$conv_padres_20, na.rm=T),
+               psych::describe(data_ed_med$conv_padres_20, na.rm=T),
+               psych::describe(data_ed_ter$conv_padres_20, na.rm=T))#,
+#               psych::describe(data_ed_uni$conv_padres_20, na.rm=T))
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+
+pond1 <- stats::weighted.mean(x=data_ed_bas$conv_padres_20,y=data_ed_bas$weight_w01,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_ed_med$conv_padres_20,y=data_ed_med$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$conv_padres_20,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$conv_padres_20,y=data_ed_uni$weight_w01,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+#table_preposh1[4,2]<-pond4
+
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
+
+conv_padres_20_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+     ylab('Puntaje promedio en la frecuencia de conversación 
+(escala de 1 a 4)') + xlab(' ') + 
+     theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Frecuencia de conversación con los padres sobre 
+temas sociales y/o políticos por 
+nivel educativo de la madre") + ylim(0,4)
+#conv_padres_20_colegio
+ggsave(conv_padres_20_colegio, file = "../output/graphs/frec_conv_20_ed_madre.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+```
+
+![](../output/graphs/frec_conv_20_ed_madre.png)
+
+### Frecuencia de conversación con los padres sobre temas sociales y/o políticos el primer semestre del 2021
+
+```{r}
+### conv_padres
+```
+
+```{r}
+# Creación de bbdd
+data_ed_bas = data_wide %>%  filter(nse_madre==1 | nse_madre==2 | nse_madre==3) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
+data_ed_med = data_wide %>%  filter(nse_madre==4 | nse_madre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
+data_ed_ter = data_wide %>%  filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_ed_bas$conv_padres, na.rm=T),
+               psych::describe(data_ed_med$conv_padres, na.rm=T),
+               psych::describe(data_ed_ter$conv_padres, na.rm=T))#,
+#               psych::describe(data_ed_uni$conv_padres, na.rm=T))
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+
+pond1 <- stats::weighted.mean(x=data_ed_bas$conv_padres,y=data_ed_bas$weight_w02,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_ed_med$conv_padres,y=data_ed_med$weight_w02,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$conv_padres,y=data_ed_ter$weight_w02,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$conv_padres,y=data_ed_uni$weight_w02,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+#table_preposh1[4,2]<-pond4
+
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
+
+conv_padres_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+     ylab('Puntaje promedio en la frecuencia de conversación 
+(escala de 1 a 4)') + xlab(' ') + 
+     theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Frecuencia de conversación con los padres sobre 
+temas sociales y/o políticos por 
+nivel educativo de la madre") + ylim(0,4)
+#conv_padres_colegio
+ggsave(conv_padres_colegio, file = "../output/graphs/frec_conv_21a_ed_madre.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+```
+
+![](../output/graphs/frec_conv_21a_ed_madre.png)
+
+
+### Frecuencia de conversación con los padres sobre temas sociales y/o políticos el segundo semestre del 2021
+
+```{r}
+### conv_padres_21b
+```
+
+```{r}
+# Creación de bbdd
+data_ed_bas = data_wide %>%  filter(nse_madre==1 | nse_madre==2 | nse_madre==3) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
+data_ed_med = data_wide %>%  filter(nse_madre==4 | nse_madre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
+data_ed_ter = data_wide %>%  filter(nse_madre==6 | nse_madre==7 | nse_madre==8 | nse_madre==9 | nse_madre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_ed_bas$conv_padres_21b, na.rm=T),
+               psych::describe(data_ed_med$conv_padres_21b, na.rm=T),
+               psych::describe(data_ed_ter$conv_padres_21b, na.rm=T))#,
+#               psych::describe(data_ed_uni$conv_padres_21b, na.rm=T))
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+
+pond1 <- stats::weighted.mean(x=data_ed_bas$conv_padres_21b,y=data_ed_bas$weight_w03,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_ed_med$conv_padres_21b,y=data_ed_med$weight_w03,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$conv_padres_21b,y=data_ed_ter$weight_w03,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$conv_padres_21b,y=data_ed_uni$weight_w03,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+#table_preposh1[4,2]<-pond4
+
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
+
+conv_padres_21b_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+     ylab('Puntaje promedio en la frecuencia de conversación 
+(escala de 1 a 4)') + xlab(' ') + 
+     theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Frecuencia de conversación con los padres sobre 
+temas sociales y/o políticos por 
+nivel educativo de la madre") + ylim(0,4)
+#conv_padres_21b_colegio
+ggsave(conv_padres_21b_colegio, file = "../output/graphs/frec_conv_21b_ed_madre.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+```
+![](../output/graphs/frec_conv_21b_ed_madre.png)
+
+## Máximo nivel educativo del padre
+
+En esta sección se presentan los resultados descriptivos de la relación entre el máximo nivel educativo del padre y la frecuencia de conversación con los padres sobre temas sociales y/o políticos durante los distintos momentos sobre los que se consultó.
+
+En términos generales, es posible visualizar una relación directa entre el nivel educativo del padre y la frecuencia de conversación con los padres sobre estas temáticas en los cinco momentos sobre los que se consultó. 
+
+### Frecuencia de conversación con los padres sobre temas sociales y/o políticos en 3ro y 4to medio
+
+```{r}
+### conv_padr_poli
+```
+
+```{r}
+# Creación de bbdd
+data_ed_bas = data_wide %>%  filter(nse_padre==1 | nse_padre==2 | nse_padre==3) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
+data_ed_med = data_wide %>%  filter(nse_padre==4 | nse_padre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
+data_ed_ter = data_wide %>%  filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_ed_bas$conv_padr_poli, na.rm=T),
+               psych::describe(data_ed_med$conv_padr_poli, na.rm=T),
+               psych::describe(data_ed_ter$conv_padr_poli, na.rm=T))#,
+#               psych::describe(data_ed_uni$conv_padr_poli, na.rm=T))
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+
+pond1 <- stats::weighted.mean(x=data_ed_bas$conv_padr_poli,y=data_ed_bas$weight_w01,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_ed_med$conv_padr_poli,y=data_ed_med$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$conv_padr_poli,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$conv_padr_poli,y=data_ed_uni$weight_w01,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+#table_preposh1[4,2]<-pond4
+
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
+
+conv_padr_poli_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+     ylab('Puntaje promedio en la frecuencia de conversación 
+(escala de 1 a 4)') + xlab(' ') + 
+     theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Frecuencia de conversación con los padres sobre 
+temas sociales y/o políticos por 
+nivel educativo del padre") + ylim(0,4)
+#conv_padr_poli_colegio
+ggsave(conv_padr_poli_colegio, file = "../output/graphs/frec_conv_3y4_ed_padre.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+
+```
+
+![](../output/graphs/frec_conv_3y4_ed_padre.png)
+
+### Frecuencia de conversación con los padres sobre temas sociales y/o políticos en el estallido social 
+
+```{r}
+### conv_padres_21
+```
+
+```{r}
+# Creación de bbdd
+data_ed_bas = data_wide %>%  filter(nse_padre==1 | nse_padre==2 | nse_padre==3) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
+data_ed_med = data_wide %>%  filter(nse_padre==4 | nse_padre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
+data_ed_ter = data_wide %>%  filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_ed_bas$conv_padres_21, na.rm=T),
+               psych::describe(data_ed_med$conv_padres_21, na.rm=T),
+               psych::describe(data_ed_ter$conv_padres_21, na.rm=T))#,
+#               psych::describe(data_ed_uni$conv_padres_21, na.rm=T))
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+
+pond1 <- stats::weighted.mean(x=data_ed_bas$conv_padres_21,y=data_ed_bas$weight_w01,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_ed_med$conv_padres_21,y=data_ed_med$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$conv_padres_21,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$conv_padres_21,y=data_ed_uni$weight_w01,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+#table_preposh1[4,2]<-pond4
+
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
+
+conv_padres_21_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+     ylab('Puntaje promedio en la frecuencia de conversación 
+(escala de 1 a 4)') + xlab(' ') + 
+     theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Frecuencia de conversación con los padres sobre 
+temas sociales y/o políticos por 
+nivel educativo del padre") + ylim(0,4)
+#conv_padres_21_colegio
+ggsave(conv_padres_21_colegio, file = "../output/graphs/frec_conv_est_19_ed_padre.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+```
+![](../output/graphs/frec_conv_est_19_ed_padre.png)
+
+### Frecuencia de conversación con los padres sobre temas sociales y/o políticos en el 2020 
+
+```{r}
+### conv_padres_20
+```
+
+```{r}
+# Creación de bbdd
+data_ed_bas = data_wide %>%  filter(nse_padre==1 | nse_padre==2 | nse_padre==3) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
+data_ed_med = data_wide %>%  filter(nse_padre==4 | nse_padre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
+data_ed_ter = data_wide %>%  filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_ed_bas$conv_padres_20, na.rm=T),
+               psych::describe(data_ed_med$conv_padres_20, na.rm=T),
+               psych::describe(data_ed_ter$conv_padres_20, na.rm=T))#,
+#               psych::describe(data_ed_uni$conv_padres_20, na.rm=T))
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+
+pond1 <- stats::weighted.mean(x=data_ed_bas$conv_padres_20,y=data_ed_bas$weight_w01,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_ed_med$conv_padres_20,y=data_ed_med$weight_w01,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$conv_padres_20,y=data_ed_ter$weight_w01,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$conv_padres_20,y=data_ed_uni$weight_w01,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+#table_preposh1[4,2]<-pond4
+
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
+
+conv_padres_20_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+     ylab('Puntaje promedio en la frecuencia de conversación 
+(escala de 1 a 4)') + xlab(' ') + 
+     theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Frecuencia de conversación con los padres sobre 
+temas sociales y/o políticos por 
+nivel educativo del padre") + ylim(0,4)
+#conv_padres_20_colegio
+ggsave(conv_padres_20_colegio, file = "../output/graphs/frec_conv_20_ed_padre.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+```
+
+![](../output/graphs/frec_conv_20_ed_padre.png)
+
+### Frecuencia de conversación con los padres sobre temas sociales y/o políticos el primer semestre del 2021
+
+```{r}
+### conv_padres
+```
+
+```{r}
+# Creación de bbdd
+data_ed_bas = data_wide %>%  filter(nse_padre==1 | nse_padre==2 | nse_padre==3) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
+data_ed_med = data_wide %>%  filter(nse_padre==4 | nse_padre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
+data_ed_ter = data_wide %>%  filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_ed_bas$conv_padres, na.rm=T),
+               psych::describe(data_ed_med$conv_padres, na.rm=T),
+               psych::describe(data_ed_ter$conv_padres, na.rm=T))#,
+#               psych::describe(data_ed_uni$conv_padres, na.rm=T))
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+
+pond1 <- stats::weighted.mean(x=data_ed_bas$conv_padres,y=data_ed_bas$weight_w02,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_ed_med$conv_padres,y=data_ed_med$weight_w02,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$conv_padres,y=data_ed_ter$weight_w02,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$conv_padres,y=data_ed_uni$weight_w02,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+#table_preposh1[4,2]<-pond4
+
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
+
+conv_padres_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+     ylab('Puntaje promedio en la frecuencia de conversación 
+(escala de 1 a 4)') + xlab(' ') + 
+     theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Frecuencia de conversación con los padres sobre 
+temas sociales y/o políticos por 
+nivel educativo del padre") + ylim(0,4)
+#conv_padres_colegio
+ggsave(conv_padres_colegio, file = "../output/graphs/frec_conv_21a_ed_padre.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+```
+
+![](../output/graphs/frec_conv_21a_ed_padre.png)
+
+
+### Frecuencia de conversación con los padres sobre temas sociales y/o políticos el segundo semestre del 2021
+
+```{r}
+### conv_padres_21b
+```
+
+```{r}
+# Creación de bbdd
+data_ed_bas = data_wide %>%  filter(nse_padre==1 | nse_padre==2 | nse_padre==3) %>% as.data.frame() # Sin Ed. (1), Ed. básica incompleta (2) o completa (3)
+data_ed_med = data_wide %>%  filter(nse_padre==4 | nse_padre==5) %>% as.data.frame() # Ed. media incompleta (4) o completa (5)
+data_ed_ter = data_wide %>%  filter(nse_padre==6 | nse_padre==7 | nse_padre==8 | nse_padre==9 | nse_padre==10) %>% as.data.frame() # técnico superior incompleto (6) o completo (7) Universitaria incompleta (8) o completa (9), Estudios de postgrado (magíster o doctorado) (10)
+```
+
+```{r}
+table_preposh1<- rbind(psych::describe(data_ed_bas$conv_padres_21b, na.rm=T),
+               psych::describe(data_ed_med$conv_padres_21b, na.rm=T),
+               psych::describe(data_ed_ter$conv_padres_21b, na.rm=T))#,
+#               psych::describe(data_ed_uni$conv_padres_21b, na.rm=T))
+table_preposh1 <- table_preposh1 %>% select(n,mean,sd,median,trimmed,min,max)
+
+pond1 <- stats::weighted.mean(x=data_ed_bas$conv_padres_21b,y=data_ed_bas$weight_w03,na.rm=TRUE)
+pond2 <- stats::weighted.mean(x=data_ed_med$conv_padres_21b,y=data_ed_med$weight_w03,na.rm=TRUE)
+pond3 <- stats::weighted.mean(x=data_ed_ter$conv_padres_21b,y=data_ed_ter$weight_w03,na.rm=TRUE)
+#pond4 <- stats::weighted.mean(x=data_ed_uni$conv_padres_21b,y=data_ed_uni$weight_w03,na.rm=TRUE)
+
+table_preposh1[1,2]<-pond1
+table_preposh1[2,2]<-pond2
+table_preposh1[3,2]<-pond3
+#table_preposh1[4,2]<-pond4
+
+#table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Técnico superior", "Universitaria o más")
+table_preposh1$dep <- c("Ed. básica o menos","Ed. media","Ed. terciaria")
+
+conv_padres_21b_colegio <-  ggplot(data=table_preposh1, aes(x=dep, y=mean, fill=dep)) +
+     geom_bar(position = 'dodge', stat='identity')+#,width=0.8) 
+     scale_fill_brewer(palette="Purples") +
+     geom_text(aes(label=format(round(mean,2)), y=0), position=position_dodge(0.9), hjust=-0.25, size=6) +
+     theme_bw(base_size = 14) +
+     scale_y_continuous(labels = scales::comma) +
+     ylab('Puntaje promedio en la frecuencia de conversación 
+(escala de 1 a 4)') + xlab(' ') + 
+     theme(legend.position="top") +
+     labs(fill = " ") +
+    coord_flip()+
+    theme(axis.text.x = element_text(colour = "grey20", size = 14, angle = 360, hjust = 0.5, vjust = 0.5, face = "bold"),
+          axis.text.y = element_text(colour = "grey20", size = 14), 
+          text = element_text(size = 14, face = "bold"),
+          plot.title = element_text(hjust=0.5),
+          legend.position = "none") + 
+     ggtitle("Frecuencia de conversación con los padres sobre 
+temas sociales y/o políticos por 
+nivel educativo del padre") + ylim(0,4)
+#conv_padres_21b_colegio
+ggsave(conv_padres_21b_colegio, file = "../output/graphs/frec_conv_21b_ed_padre.png",device = "png",width = 23,height = 13,dpi = "retina",units = "cm")
+```
+![](../output/graphs/frec_conv_21b_ed_padre.png)
+
