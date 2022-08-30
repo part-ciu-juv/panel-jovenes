@@ -1673,7 +1673,7 @@ ggsave(part_act_no_dis_21_2s_colegio, file = "../output/graphs/part_act_no_dis_2
 
 En esta sección se presentan los resultados descriptivos de la relación entre el máximo nivel educativo de la madre y la participación activista no disruptiva del encuestado.
 
-En términos generales, no es posible visualizar un patrón claro de la relación entre ambas variables. En otras palabras, los resultados expuestos en los gráficos no evidencian una relación consistente entre el nivel educativo de la madre y la participación no disruptiva. Sin embargo, se ve una relación entre que la madre tenga educación media o terciaria y haber participado en una marcha pacífica durante el estallido social, así como también entre que la madre tenga educación básica y menos y haber participado en una marcha pacífica durante el primer semestre de 2021.
+En términos generales, no es posible visualizar un patrón claro de la relación entre ambas variables. En otras palabras, los resultados expuestos en los gráficos no evidencian una relación consistente entre el nivel educativo de la madre y la participación no disruptiva. Sin embargo, se ve una relación entre que la madre tenga educación media o terciaria y haber participado en una marcha pacífica durante el estallido social, así como también entre que la madre tenga educación básica o menos y haber participado en una marcha pacífica durante el primer semestre de 2021.
 
 #### **Participación política durante 3ro y 4to medio**
 
