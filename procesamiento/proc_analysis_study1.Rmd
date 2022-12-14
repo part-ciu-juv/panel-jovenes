@@ -18,6 +18,14 @@ editor_options:
 * Presentar modelos por pasos (edhigh, educyear, conv)
 * Mediacion multinivel 
 
+1 diciembre 2022: 
+* agregar la participacion en marcha
+  - ols para cada punto
+  - multinivel lineal longitudinal  
+  - logit binario
+  - logit binario multinivel longitudinal
+* poner random slope de tiempo para cada sujeto  
+
 
 ```{r include=FALSE}
 knitr::opts_chunk$set(warning = FALSE,
@@ -70,7 +78,7 @@ data1 <- study_1 %>%
 
 # Models
 
-## Disruptive & Online 
+## Participation Disruptive & Online 
 
 ```{r part-edhigh, results='asis'}
 rm(list=ls())
@@ -92,7 +100,9 @@ pacman::p_load(dplyr,       # Manipulacion de datos
                )
 
 load(here::here("input/data/proc/study1.RData"))
-data1 <- study_1 %>% dplyr::select(-educ,-edmad,-edpad,-edpadyear,-edmadyear,-edparavg) %>% na.omit()
+data1 <- study_1 %>% 
+  dplyr::select(educyear,mujer,edhigh,age,agepavg,conv1a:segu5a,
+                "pospolcen","pospolizq","pospolind") %>% na.omit()
 
 m1a<- '
         # modelo de medicion
@@ -101,7 +111,7 @@ m1a<- '
         
         # (1) modelo de regresion: PARTICIPACION DISRUPTIVA ____________________
         # efecto directo
-        disrup1a ~ C1*edhigh+B1A*educyear+B1B*conv1a+mujer+pospolcen+pospolizq+pospolind
+        disrup1a ~ C1*edhigh+B1A*educyear+B1B*conv1a+mujer+age+agepavg+pospolcen+pospolizq+pospolind
         
         # efecto mediacion predictor sobre mediador (DECLARAR UNA VEZ)
         # educ padres sobre educacion hijos
@@ -122,7 +132,7 @@ m1a<- '
         
         # (2) modelo de regresion: PARTICIPACION ONLINE ________________________
         # efecto directo
-        online1a ~ C2*edhigh+B2A*educyear+B2B*conv1a+mujer+pospolcen+pospolizq+pospolind
+        online1a ~ C2*edhigh+B2A*educyear+B2B*conv1a+mujer+age+agepavg+pospolcen+pospolizq+pospolind
         
         # efecto indirecto (A*B)
         # educpadres by educ-hijos (A2)
@@ -155,6 +165,9 @@ tabhux <- texreg::huxtablereg(fit,single.row = T)
 tabhux2 <- dplyr::filter(tabhux,(grepl(' ~ ', V1)))
 tabhux3 <- dplyr::filter(tabhux2,!(grepl('mujer', V1)))
 tabhux4 <- dplyr::filter(tabhux3,!(grepl('pospol', V1)))
+tabhux5 <- dplyr::filter(tabhux4,!(grepl('age', V1)))
+tabhux6 <- dplyr::filter(tabhux5,!(grepl('agepavg', V1)))
+
 fitind <- tabhux %>% filter(V1 %in% c("cfi","tli","rmsea","nobs")) 
 
 tabind_dis <- dplyr::filter(tabhux,(grepl('ind_dis', V1))) 
@@ -175,7 +188,7 @@ coalesce_all_columns <- function(df) {
 }
 
 #Participacion disruptiva
-tabdis <- tabhux4 %>%  dplyr::filter((grepl('disrup', V1))) %>% 
+tabdis <- tabhux6 %>%  dplyr::filter((grepl('disrup', V1))) %>% 
   mutate(V1=stringr::str_replace_all(string = V1,
                                      pattern = "1a|2a|3a|4a|5a",
                                      replacement = "")) %>% 
@@ -185,7 +198,7 @@ tabdis <- tabdis %>%  group_by(V1) %>% do(coalesce_all_columns(.)) %>%  ungroup(
   rbind(tabind_dis,tabtot_dis,fitind) 
 
 #Participacion online
-tabonl <- tabhux4 %>%  dplyr::filter((grepl('online', V1))) %>% 
+tabonl <- tabhux6 %>%  dplyr::filter((grepl('online', V1))) %>% 
   mutate(V1=stringr::str_replace_all(string = V1,
                                      pattern = "1a|2a|3a|4a|5a",
                                      replacement = "")) %>% 
@@ -232,7 +245,1023 @@ save(tables1,
      file = here::here("output/tables/tab_educ.RData"))
 ```
 
+## Participation Peaceful protests
+
+- The following models assume the dependent variable as **continuous**    
+
+```{r mpas-edhigh-ols, results='asis'}
+rm(list=ls())
+if (!require("pacman")) install.packages("pacman") # instalar pacman
+pacman::p_load(dplyr,       # Manipulacion de datos 
+               haven,       # importar datos en .dta o .sav
+               sjmisc,      # descriptivos y frecuencias
+               sjPlot,      # tablas, plots y descriptivos
+               sjlabelled,
+               summarytools,# resumen de dataframe
+               knitr,       # tablas kable
+               kableExtra,  # tablas kable personalizadas
+               ggplot2,     # plots
+               corrplot,    # plot correlacion
+               tibble,
+               lavaan,
+               texreg,
+               mediation
+               )
+
+load(here::here("input/data/proc/study1.RData"))
+data1 <- study_1 %>% 
+  dplyr::select(-educ,-edmad,-edpad) %>% 
+  dplyr::select(mujer,starts_with("conv"),starts_with('mpas'),
+         educyear,edhigh,age,agepavg,
+         pospolcen,pospolizq,pospolind,pospol 
+         ) %>% 
+  dplyr::mutate(conv1a=as_numeric(conv1a),
+                conv2a=as_numeric(conv2a),
+                conv3a=as_numeric(conv3a),
+                conv4a=as_numeric(conv4a),
+                conv5a=as_numeric(conv5a),
+                mpas1a=as_numeric(mpas1a),
+                mpas2a=as_numeric(mpas2a),
+                mpas3a=as_numeric(mpas3a),
+                mpas4a=as_numeric(mpas4a),
+                mpas5a=as_numeric(mpas5a)) %>% 
+  na.omit()
+
+# view_df(data1)
+
+# sjmisc::frq(data1$votpr17)
+# sjmisc::frq(data1$votpleb)
+# sjmisc::frq(data1$votcons)
+
+# Hypothesis___________________________________________________________________
+m1 <- "edhigh+educyear+conv1a+mujer+age+agepavg+pospol"# highschool
+m2 <- "edhigh+educyear+conv2a+mujer+age+agepavg+pospol"# 2019 and 1sem 2020
+m3 <- "edhigh+educyear+conv3a+mujer+age+agepavg+pospol"# 2sem 2020
+m4 <- "edhigh+educyear+conv4a+mujer+age+agepavg+pospol"# 1sem 2021
+m5 <- "edhigh+educyear+conv5a+mujer+age+agepavg+pospol"# 2sem 2021
+
+hipotesis <- c(m1,
+               m2,
+               m3,
+               m4,
+               m5
+               )
+
+# Set the independent variables (IVs)
+ivs1<- "mpas1a"
+ivs2<- "mpas2a"
+ivs3<- "mpas3a"
+ivs4<- "mpas4a"
+ivs5<- "mpas5a"
+
+ivs <- c(ivs1,
+         ivs2,
+         ivs3,ivs4,ivs5)
+
+# Create the object for each model
+models <- list()
+for (i in ivs1) {
+models[[i]] <- paste0(i,"~",m1)  
+}
+
+for (i in ivs2) {
+models[[i]] <- paste0(i,"~",m2)
+}
+
+for (i in ivs3) {
+models[[i]] <- paste0(i,"~",m3)  
+}
+
+for (i in ivs4) {
+models[[i]] <- paste0(i,"~",m4)  
+}
+
+for (i in ivs5) {
+models[[i]] <- paste0(i,"~",m5)  
+}
+
+
+# Estimate logit models
+fits <- list()
+for (i in ivs) {
+  for (z in models[[i]]) {
+    fits[[z]] <- lm(formula =z, data = data1)
+  }
+}
+fit1 <- fits
+# change model names within list
+names(fit1) <- paste0(ivs)
+
+# Tables_______________________________________________________________________
+omit <- "(Intercept)|(mujer)|(pospol)|(age)|(agepavg)"
+# detail for subsections:
+# https://stackoverflow.com/questions/69338331/r-markdown-create-section-headers-in-r-and-print-r-output-in-same-section
+
+save(fit1,
+     file = here::here("output/tables/tab_ols_mpas_educ.RData"))
+
+caption <- "Participation peaceful protest, parental education and conversation"
+knitreg(l = fit1[names(fit1)[grepl("mpas", names(fit1),"\n")]],
+        omit.coef = omit,
+        caption = caption,
+        caption.above = T
+        # reorder.coef = reorderc
+        )
+
+# Mediation analysis___________________________________________________________
+mededuc1 <- "edhigh+conv1a+mujer+age+agepavg+pospol"#highschool
+mededuc2 <- "edhigh+conv2a+mujer+age+agepavg+pospol"# 2019 + 1sem 2020
+mededuc3 <- "edhigh+conv3a+mujer+age+agepavg+pospol"# 2sem 2020
+mededuc4 <- "edhigh+conv4a+mujer+age+agepavg+pospol"# 1sem 2021
+mededuc5 <- "edhigh+conv5a+mujer+age+agepavg+pospol"# 2sem 2021
+mededuc <- c(mededuc1,mededuc2,mededuc3,mededuc4,mededuc5)
+
+medconv1 <- "edhigh+educyear+mujer+age+agepavg+pospol"#highschool
+medconv2 <- "edhigh+educyear+mujer+age+agepavg+pospol"# 2019 + 1sem 2020
+medconv3 <- "edhigh+educyear+mujer+age+agepavg+pospol"# 2sem 2020
+medconv4 <- "edhigh+educyear+mujer+age+agepavg+pospol"# 1sem 2021
+medconv5 <- "edhigh+educyear+mujer+age+agepavg+pospol"# 2sem 2021
+medconv <- c(medconv1,medconv2,medconv3,medconv4,medconv5)
+
+ivs1 <- c("educyear")
+ivs2 <- c("conv1a","conv2a","conv3a","conv4a","conv5a")
+
+# Create the object for each model
+lm.educ <- list()
+for (i in ivs1) {
+lm.educ[[i]] <- paste0(i,"~",mededuc)
+}
+
+lm.conv <- list()
+for (i in ivs2) {
+lm.conv[[i]] <- paste0(i,"~",medconv[[1]])
+}
+
+
+# Estimate OLS models: mediator~predictor
+fit_educ <- list()
+for (i in ivs1) {
+  for (z in lm.educ[[i]]) {
+    fit_educ[[z]] <- lm(formula =z, data = data1)
+  }
+}
+
+fit_conv <- list()
+for (i in ivs2) {
+  for (z in lm.conv[[i]]) {
+    fit_conv[[z]] <- lm(formula =z, data = data1)
+  }
+}
+
+# change model names within list
+names(fit_educ) <- paste0("ed_",ivs2)
+# texreg::knitreg(fit_educ)
+names(fit_conv) <- paste0("co_",ivs2)
+# texreg::knitreg(fit_conv)
+
+# Estimate mediation model_____________________________________________________
+
+############################.
+# mediated by Education    #
+############################.
+medieduc <- list()
+for (i in names(fit1)) { 
+  for (z in names(fit_educ)) {
+medieduc[[i]]<- mediation::mediate(fit_educ[[z]],fit1[[i]], 
+                                treat="edhigh", mediator="educyear")    
+  }
+}
+
+# extract the average mediation effects 
+label1 <- 
+  stringr::str_remove_all(string = sjlabelled::get_label(study_1[,names(medieduc)]),
+                          pattern = ": Participating in peaceful protests")
+
+df_mededuc.ind <- data.frame(
+  "id"=1:length(medieduc),
+  "lab"= label1,  
+  "var"=names(medieduc),
+  "effect"="Indirect",  
+  "effect.avg"=NA,
+  "ci.lwr"=NA,
+  "ci.upr"=NA,
+  "pval"=NA)
+
+for (i in 1:length(medieduc)) {
+  df_mededuc.ind$effect.avg[[i]] <- medieduc[[i]][["d.avg"]]
+  df_mededuc.ind$ci.lwr[[i]] <- medieduc[[i]][["d.avg.ci"]][1]
+  df_mededuc.ind$ci.upr[[i]] <- medieduc[[i]][["d.avg.ci"]][2]  
+  df_mededuc.ind$pval[[i]] <- medieduc[[i]][["d.avg.p"]]
+  }
+
+df_mededuc.dir <- data.frame(
+  "id"=1:length(medieduc),
+  "lab"= label1,  
+  "var"=names(medieduc),
+  "effect"=rep("Direct",max(length(medieduc))),
+  "effect.avg"=NA,
+  "ci.lwr"=NA,
+  "ci.upr"=NA,
+  "pval"=NA)
+
+for (i in 1:length(medieduc)) {
+  df_mededuc.dir$effect.avg[[i]] <- medieduc[[i]][["z.avg"]]
+  df_mededuc.dir$ci.lwr[[i]] <- medieduc[[i]][["z.avg.ci"]][1]
+  df_mededuc.dir$ci.upr[[i]] <- medieduc[[i]][["z.avg.ci"]][2]  
+  df_mededuc.dir$pval[[i]] <- medieduc[[i]][["z.avg.p"]]
+  }
+
+
+df_mededuc.tot <- data.frame(
+  "id"=1:length(medieduc),
+  "lab"= label1,  
+  "var"=names(medieduc),
+  "effect"=rep("Total",max(length(medieduc))),
+  "effect.avg"=NA,
+  "ci.lwr"=NA,
+  "ci.upr"=NA,
+  "pval"=NA)
+
+for (i in 1:length(medieduc)) {
+  df_mededuc.tot$effect.avg[[i]] <- medieduc[[i]][["tau.coef"]]
+  df_mededuc.tot$ci.lwr[[i]] <- medieduc[[i]][["tau.ci"]][1]
+  df_mededuc.tot$ci.upr[[i]] <- medieduc[[i]][["tau.ci"]][2]  
+  df_mededuc.tot$pval[[i]] <- medieduc[[i]][["tau.p"]]
+  }
+
+df_mededuc.prop <- data.frame(
+  "id"=1:length(medieduc),
+  "lab"= label1,  
+  "var"=names(medieduc),
+  "effect"=rep("Proportion",max(length(medieduc))),
+  "effect.avg"=NA,
+  "ci.lwr"=NA,
+  "ci.upr"=NA,
+  "pval"=NA)
+
+for (i in 1:length(medieduc)) {
+  df_mededuc.prop$effect.avg[[i]] <- medieduc[[i]][["n.avg"]]
+  df_mededuc.prop$ci.lwr[[i]] <- medieduc[[i]][["n.avg.ci"]][1]
+  df_mededuc.prop$ci.upr[[i]] <- medieduc[[i]][["n.avg.ci"]][2]  
+  df_mededuc.prop$pval[[i]] <- medieduc[[i]][["n.avg.p"]]
+  }
+
+df_mededuc <- bind_rows(df_mededuc.ind,df_mededuc.dir,df_mededuc.tot,
+                        df_mededuc.prop) %>% 
+  arrange(id) %>% 
+  mutate(sig=gtools::stars.pval(pval)) %>% 
+  dplyr::select(-"id",-"var")
+
+colnames <- c(" ","Type","Effect","Lower CI","Upper CI","p-value","Sig.")
+note <- paste0("‘***’ p < 0.001 ‘**’ p < 0.01 ‘*’ p < 0.05 ‘.’ p < 0.1",
+               "\nN = ",dim(data1)[[1]])
+kable(df_mededuc,format = "html",digits = 3,col.names = colnames, 
+      caption = "Mediated effect of Parental Education by Education on 
+      Participation on peaceful protests") %>% 
+  kable_styling(full_width = F) %>% 
+  collapse_rows(columns = 1) %>% 
+  footnote(general = note,footnote_as_chunk = T)
+
+############################.
+# mediated by conversation #
+############################.
+
+# para cada Y debemos estimar un modelo con un M diferente. A diferencia del modelo
+# con educacion, el M va cambiando segun T, en cambio en educyears (individuo) es fijo.
+
+mediconv <- list()
+for (i in c("mpas1a")) { # High school (1)
+  for (z in c("co_conv1a")) {
+mediconv[[i]]<- mediation::mediate(fit_conv[[z]],fit1[[i]], 
+                                treat="edhigh", mediator="conv1a")    
+  }
+}
+
+for (i in c("mpas2a")) { # Oct 2019 - Jan 2020 (2)
+  for (z in c("co_conv2a")) {
+mediconv[[i]]<- mediation::mediate(fit_conv[[z]],fit1[[i]], 
+                                treat="edhigh", mediator="conv2a")    
+  }
+}
+
+for (i in c("mpas3a")) { # Mar - Dec 2020 (3)
+  for (z in c("co_conv3a")) {
+mediconv[[i]]<- mediation::mediate(fit_conv[[z]],fit1[[i]], 
+                                treat="edhigh", mediator="conv3a")    
+  }
+}
+
+for (i in c("mpas4a")) { # First half: 2021 (4)
+  for (z in c("co_conv4a")) {
+mediconv[[i]]<- mediation::mediate(fit_conv[[z]],fit1[[i]], 
+                                treat="edhigh", mediator="conv4a")    
+  }
+}
+
+for (i in c("mpas5a")) { # Second half: 2021 (5)
+  for (z in c("co_conv5a")) {
+mediconv[[i]]<- mediation::mediate(fit_conv[[z]],fit1[[i]], 
+                                treat="edhigh", mediator="conv5a")    
+  }
+}
+
+# extract the average mediation effects 
+df_medconv.ind <- data.frame(
+  "id"=1:length(mediconv),
+  "lab"= label1,  
+  "var"=names(mediconv),
+  "effect"="Indirect",  
+  "effect.avg"=NA,
+  "ci.lwr"=NA,
+  "ci.upr"=NA,
+  "pval"=NA)
+
+for (i in 1:(length(medieduc))) {
+  df_medconv.ind$effect.avg[[i]] <- mediconv[[i]][["d.avg"]]
+  df_medconv.ind$ci.lwr[[i]] <- mediconv[[i]][["d.avg.ci"]][1]
+  df_medconv.ind$ci.upr[[i]] <- mediconv[[i]][["d.avg.ci"]][2]  
+  df_medconv.ind$pval[[i]] <- mediconv[[i]][["d.avg.p"]]
+  }
+
+df_medconv.dir <- data.frame(
+  "id"=1:length(mediconv),
+  "lab"= label1,  
+  "var"=names(mediconv),
+  "effect"=rep("Direct",max(length(medieduc))),
+  "effect.avg"=NA,
+  "ci.lwr"=NA,
+  "ci.upr"=NA,
+  "pval"=NA)
+
+for (i in 1:length(medieduc)) {
+  df_medconv.dir$effect.avg[[i]] <- mediconv[[i]][["z.avg"]]
+  df_medconv.dir$ci.lwr[[i]] <- mediconv[[i]][["z.avg.ci"]][1]
+  df_medconv.dir$ci.upr[[i]] <- mediconv[[i]][["z.avg.ci"]][2]  
+  df_medconv.dir$pval[[i]] <- mediconv[[i]][["z.avg.p"]]
+  }
+
+
+df_medconv.tot <- data.frame(
+  "id"=1:length(medieduc),
+  "lab"= label1,  
+  "var"=names(medieduc),
+  "effect"=rep("Total",max(length(medieduc))),
+  "effect.avg"=NA,
+  "ci.lwr"=NA,
+  "ci.upr"=NA,
+  "pval"=NA)
+
+for (i in 1:length(medieduc)) {
+  df_medconv.tot$effect.avg[[i]] <- mediconv[[i]][["tau.coef"]]
+  df_medconv.tot$ci.lwr[[i]] <- mediconv[[i]][["tau.ci"]][1]
+  df_medconv.tot$ci.upr[[i]] <- mediconv[[i]][["tau.ci"]][2]  
+  df_medconv.tot$pval[[i]] <- mediconv[[i]][["tau.p"]]
+  }
+
+df_medconv.prop <- data.frame(
+  "id"=1:length(medieduc),
+  "lab"= label1,  
+  "var"=names(medieduc),
+  "effect"=rep("Proportion",max(length(medieduc))),
+  "effect.avg"=NA,
+  "ci.lwr"=NA,
+  "ci.upr"=NA,
+  "pval"=NA)
+
+for (i in 1:length(medieduc)) {
+  df_medconv.prop$effect.avg[[i]] <- mediconv[[i]][["n.avg"]]
+  df_medconv.prop$ci.lwr[[i]] <- mediconv[[i]][["n.avg.ci"]][1]
+  df_medconv.prop$ci.upr[[i]] <- mediconv[[i]][["n.avg.ci"]][2]  
+  df_medconv.prop$pval[[i]] <- mediconv[[i]][["n.avg.p"]]
+  }
+
+df_medconv <- bind_rows(df_medconv.ind,df_medconv.dir,df_medconv.tot,df_medconv.prop) %>% 
+  arrange(id) %>% 
+  mutate(sig=gtools::stars.pval(pval)) %>% 
+  dplyr::select(-"id",-"var")
+
+kable(df_medconv,format = "html",digits = 3, col.names = colnames,
+      caption = "Mediated effect of Parental Education by Conversation on
+      Participation on peaceful protests") %>% 
+  kable_styling(full_width = F) %>% 
+  collapse_rows(columns = 1) %>% 
+  footnote(general = note,footnote_as_chunk = T)  
+```
+
+
+- The following models assume the dependent variable as **binary**    
+
+```{r mpas-edhigh-logit, results='asis'}
+rm(list=ls())
+if (!require("pacman")) install.packages("pacman") # instalar pacman
+pacman::p_load(dplyr,       # Manipulacion de datos 
+               haven,       # importar datos en .dta o .sav
+               sjmisc,      # descriptivos y frecuencias
+               sjPlot,      # tablas, plots y descriptivos
+               sjlabelled,
+               summarytools,# resumen de dataframe
+               knitr,       # tablas kable
+               kableExtra,  # tablas kable personalizadas
+               ggplot2,     # plots
+               corrplot,    # plot correlacion
+               tibble,
+               lavaan,
+               texreg,
+               mediation
+               )
+
+load(here::here("input/data/proc/study1.RData"))
+data1 <- study_1 %>% 
+  dplyr::select(-educ,-edmad,-edpad) %>% 
+  dplyr::select(mujer,starts_with("conv"),starts_with('mpas'),
+         educyear,edhigh,age,agepavg,
+         pospolcen,pospolizq,pospolind,pospol 
+         ) %>% 
+  dplyr::mutate(conv1a=as_numeric(conv1a),
+                conv2a=as_numeric(conv2a),
+                conv3a=as_numeric(conv3a),
+                conv4a=as_numeric(conv4a),
+                conv5a=as_numeric(conv5a),
+                mpas1a=as_numeric(mpas1a_bi),
+                mpas2a=as_numeric(mpas2a_bi),
+                mpas3a=as_numeric(mpas3a_bi),
+                mpas4a=as_numeric(mpas4a_bi),
+                mpas5a=as_numeric(mpas5a_bi)) %>% 
+  na.omit()
+
+# view_df(data1)
+
+# sjmisc::frq(data1$votpr17)
+# sjmisc::frq(data1$votpleb)
+# sjmisc::frq(data1$votcons)
+
+# Hypothesis___________________________________________________________________
+m1 <- "edhigh+educyear+conv1a+mujer+age+agepavg+pospol"# highschool
+m2 <- "edhigh+educyear+conv2a+mujer+age+agepavg+pospol"# 2019 and 1sem 2020
+m3 <- "edhigh+educyear+conv3a+mujer+age+agepavg+pospol"# 2sem 2020
+m4 <- "edhigh+educyear+conv4a+mujer+age+agepavg+pospol"# 1sem 2021
+m5 <- "edhigh+educyear+conv5a+mujer+age+agepavg+pospol"# 2sem 2021
+
+hipotesis <- c(m1,
+               m2,
+               m3,
+               m4,
+               m5
+               )
+
+# Set the independent variables (IVs)
+ivs1<- "mpas1a_bi"
+ivs2<- "mpas2a_bi"
+ivs3<- "mpas3a_bi"
+ivs4<- "mpas4a_bi"
+ivs5<- "mpas5a_bi"
+
+ivs <- c(ivs1,
+         ivs2,
+         ivs3,ivs4,ivs5)
+
+# Create the object for each model
+models <- list()
+for (i in ivs1) {
+models[[i]] <- paste0(i,"~",m1)  
+}
+
+for (i in ivs2) {
+models[[i]] <- paste0(i,"~",m2)
+}
+
+for (i in ivs3) {
+models[[i]] <- paste0(i,"~",m3)  
+}
+
+for (i in ivs4) {
+models[[i]] <- paste0(i,"~",m4)  
+}
+
+for (i in ivs5) {
+models[[i]] <- paste0(i,"~",m5)  
+}
+
+
+# Estimate logit models
+fits <- list()
+for (i in ivs) {
+  for (z in models[[i]]) {
+    fits[[z]] <- glm(formula =z, data = data1,family = "binomial")
+  }
+}
+fit1 <- fits
+# change model names within list
+names(fit1) <- paste0(ivs)
+# Tables_______________________________________________________________________
+omit <- "(Intercept)|(mujer)|(pospol)|(age)|(agepavg)"
+# detail for subsections:
+# https://stackoverflow.com/questions/69338331/r-markdown-create-section-headers-in-r-and-print-r-output-in-same-section
+
+save(fit1,
+     file = here::here("output/tables/tab_log_mpas_educ.RData"))
+
+caption <- "Participation peaceful protest, parental education and conversation"
+knitreg(l = fit1[names(fit1)[grepl("mpas", names(fit1),"\n")]],
+        omit.coef = omit,
+        caption = caption,
+        caption.above = T
+        # reorder.coef = reorderc
+        )
+
+# Mediation analysis___________________________________________________________
+mededuc1 <- "edhigh+conv1a+mujer+age+agepavg+pospol"#highschool
+mededuc2 <- "edhigh+conv2a+mujer+age+agepavg+pospol"# 2019 + 1sem 2020
+mededuc3 <- "edhigh+conv3a+mujer+age+agepavg+pospol"# 2sem 2020
+mededuc4 <- "edhigh+conv4a+mujer+age+agepavg+pospol"# 1sem 2021
+mededuc5 <- "edhigh+conv5a+mujer+age+agepavg+pospol"# 2sem 2021
+mededuc <- c(mededuc1,mededuc2,mededuc3,mededuc4,mededuc5)
+
+medconv1 <- "edhigh+educyear+mujer+age+agepavg+pospol"#highschool
+medconv2 <- "edhigh+educyear+mujer+age+agepavg+pospol"# 2019 + 1sem 2020
+medconv3 <- "edhigh+educyear+mujer+age+agepavg+pospol"# 2sem 2020
+medconv4 <- "edhigh+educyear+mujer+age+agepavg+pospol"# 1sem 2021
+medconv5 <- "edhigh+educyear+mujer+age+agepavg+pospol"# 2sem 2021
+medconv <- c(medconv1,medconv2,medconv3,medconv4,medconv5)
+
+ivs1 <- c("educyear")
+ivs2 <- c("conv1a","conv2a","conv3a","conv4a","conv5a")
+
+# Create the object for each model
+lm.educ <- list()
+for (i in ivs1) {
+lm.educ[[i]] <- paste0(i,"~",mededuc)
+}
+
+lm.conv <- list()
+for (i in ivs2) {
+lm.conv[[i]] <- paste0(i,"~",medconv[[1]])
+}
+
+
+# Estimate OLS models: mediator~predictor
+fit_educ <- list()
+for (i in ivs1) {
+  for (z in lm.educ[[i]]) {
+    fit_educ[[z]] <- lm(formula =z, data = data1)
+  }
+}
+
+fit_conv <- list()
+for (i in ivs2) {
+  for (z in lm.conv[[i]]) {
+    fit_conv[[z]] <- lm(formula =z, data = data1)
+  }
+}
+
+# change model names within list
+names(fit_educ) <- paste0("ed_",ivs2)
+# texreg::knitreg(fit_educ)
+names(fit_conv) <- paste0("co_",ivs2)
+# texreg::knitreg(fit_conv)
+
+# Estimate mediation model_____________________________________________________
+
+############################.
+# mediated by Education    #
+############################.
+medieduc <- list()
+for (i in names(fit1)) { 
+  for (z in names(fit_educ)) {
+medieduc[[i]]<- mediation::mediate(fit_educ[[z]],fit1[[i]], 
+                                treat="edhigh", mediator="educyear")    
+  }
+}
+
+# extract the average mediation effects 
+label1 <- 
+  stringr::str_remove_all(string = sjlabelled::get_label(study_1[,names(medieduc)]),
+                          pattern = ": Participating in peaceful protests")
+
+df_mededuc.ind <- data.frame(
+  "id"=1:length(medieduc),
+  "lab"= label1,  
+  "var"=names(medieduc),
+  "effect"="Indirect",  
+  "effect.avg"=NA,
+  "ci.lwr"=NA,
+  "ci.upr"=NA,
+  "pval"=NA)
+
+for (i in 1:length(medieduc)) {
+  df_mededuc.ind$effect.avg[[i]] <- medieduc[[i]][["d.avg"]]
+  df_mededuc.ind$ci.lwr[[i]] <- medieduc[[i]][["d.avg.ci"]][1]
+  df_mededuc.ind$ci.upr[[i]] <- medieduc[[i]][["d.avg.ci"]][2]  
+  df_mededuc.ind$pval[[i]] <- medieduc[[i]][["d.avg.p"]]
+  }
+
+df_mededuc.dir <- data.frame(
+  "id"=1:length(medieduc),
+  "lab"= label1,  
+  "var"=names(medieduc),
+  "effect"=rep("Direct",max(length(medieduc))),
+  "effect.avg"=NA,
+  "ci.lwr"=NA,
+  "ci.upr"=NA,
+  "pval"=NA)
+
+for (i in 1:length(medieduc)) {
+  df_mededuc.dir$effect.avg[[i]] <- medieduc[[i]][["z.avg"]]
+  df_mededuc.dir$ci.lwr[[i]] <- medieduc[[i]][["z.avg.ci"]][1]
+  df_mededuc.dir$ci.upr[[i]] <- medieduc[[i]][["z.avg.ci"]][2]  
+  df_mededuc.dir$pval[[i]] <- medieduc[[i]][["z.avg.p"]]
+  }
+
+
+df_mededuc.tot <- data.frame(
+  "id"=1:length(medieduc),
+  "lab"= label1,  
+  "var"=names(medieduc),
+  "effect"=rep("Total",max(length(medieduc))),
+  "effect.avg"=NA,
+  "ci.lwr"=NA,
+  "ci.upr"=NA,
+  "pval"=NA)
+
+for (i in 1:length(medieduc)) {
+  df_mededuc.tot$effect.avg[[i]] <- medieduc[[i]][["tau.coef"]]
+  df_mededuc.tot$ci.lwr[[i]] <- medieduc[[i]][["tau.ci"]][1]
+  df_mededuc.tot$ci.upr[[i]] <- medieduc[[i]][["tau.ci"]][2]  
+  df_mededuc.tot$pval[[i]] <- medieduc[[i]][["tau.p"]]
+  }
+
+df_mededuc.prop <- data.frame(
+  "id"=1:length(medieduc),
+  "lab"= label1,  
+  "var"=names(medieduc),
+  "effect"=rep("Proportion",max(length(medieduc))),
+  "effect.avg"=NA,
+  "ci.lwr"=NA,
+  "ci.upr"=NA,
+  "pval"=NA)
+
+for (i in 1:length(medieduc)) {
+  df_mededuc.prop$effect.avg[[i]] <- medieduc[[i]][["n.avg"]]
+  df_mededuc.prop$ci.lwr[[i]] <- medieduc[[i]][["n.avg.ci"]][1]
+  df_mededuc.prop$ci.upr[[i]] <- medieduc[[i]][["n.avg.ci"]][2]  
+  df_mededuc.prop$pval[[i]] <- medieduc[[i]][["n.avg.p"]]
+  }
+
+df_mededuc <- bind_rows(df_mededuc.ind,df_mededuc.dir,df_mededuc.tot,
+                        df_mededuc.prop) %>% 
+  arrange(id) %>% 
+  mutate(sig=gtools::stars.pval(pval)) %>% 
+  dplyr::select(-"id",-"var")
+
+colnames <- c(" ","Type","Effect","Lower CI","Upper CI","p-value","Sig.")
+note <- paste0("‘***’ p < 0.001 ‘**’ p < 0.01 ‘*’ p < 0.05 ‘.’ p < 0.1",
+               "\nN = ",dim(data1)[[1]])
+kable(df_mededuc,format = "html",digits = 3,col.names = colnames, 
+      caption = "Mediated effect of Parental Education by Education on 
+      Participation on peaceful protests") %>% 
+  kable_styling(full_width = F) %>% 
+  collapse_rows(columns = 1) %>% 
+  footnote(general = note,footnote_as_chunk = T)
+
+############################.
+# mediated by conversation #
+############################.
+
+# para cada Y debemos estimar un modelo con un M diferente. A diferencia del modelo
+# con educacion, el M va cambiando segun T, en cambio en educyears (individuo) es fijo.
+
+mediconv <- list()
+for (i in c("mpas1a_bi")) { # High school (1)
+  for (z in c("co_conv1a")) {
+mediconv[[i]]<- mediation::mediate(fit_conv[[z]],fit1[[i]], 
+                                treat="edhigh", mediator="conv1a")    
+  }
+}
+
+for (i in c("mpas2a_bi")) { # Oct 2019 - Jan 2020 (2)
+  for (z in c("co_conv2a")) {
+mediconv[[i]]<- mediation::mediate(fit_conv[[z]],fit1[[i]], 
+                                treat="edhigh", mediator="conv2a")    
+  }
+}
+
+for (i in c("mpas3a_bi")) { # Mar - Dec 2020 (3)
+  for (z in c("co_conv3a")) {
+mediconv[[i]]<- mediation::mediate(fit_conv[[z]],fit1[[i]], 
+                                treat="edhigh", mediator="conv3a")    
+  }
+}
+
+for (i in c("mpas4a_bi")) { # First half: 2021 (4)
+  for (z in c("co_conv4a")) {
+mediconv[[i]]<- mediation::mediate(fit_conv[[z]],fit1[[i]], 
+                                treat="edhigh", mediator="conv4a")    
+  }
+}
+
+for (i in c("mpas5a_bi")) { # Second half: 2021 (5)
+  for (z in c("co_conv5a")) {
+mediconv[[i]]<- mediation::mediate(fit_conv[[z]],fit1[[i]], 
+                                treat="edhigh", mediator="conv5a")    
+  }
+}
+
+# extract the average mediation effects 
+df_medconv.ind <- data.frame(
+  "id"=1:length(mediconv),
+  "lab"= label1,  
+  "var"=names(mediconv),
+  "effect"="Indirect",  
+  "effect.avg"=NA,
+  "ci.lwr"=NA,
+  "ci.upr"=NA,
+  "pval"=NA)
+
+for (i in 1:(length(medieduc))) {
+  df_medconv.ind$effect.avg[[i]] <- mediconv[[i]][["d.avg"]]
+  df_medconv.ind$ci.lwr[[i]] <- mediconv[[i]][["d.avg.ci"]][1]
+  df_medconv.ind$ci.upr[[i]] <- mediconv[[i]][["d.avg.ci"]][2]  
+  df_medconv.ind$pval[[i]] <- mediconv[[i]][["d.avg.p"]]
+  }
+
+df_medconv.dir <- data.frame(
+  "id"=1:length(mediconv),
+  "lab"= label1,  
+  "var"=names(mediconv),
+  "effect"=rep("Direct",max(length(medieduc))),
+  "effect.avg"=NA,
+  "ci.lwr"=NA,
+  "ci.upr"=NA,
+  "pval"=NA)
+
+for (i in 1:length(medieduc)) {
+  df_medconv.dir$effect.avg[[i]] <- mediconv[[i]][["z.avg"]]
+  df_medconv.dir$ci.lwr[[i]] <- mediconv[[i]][["z.avg.ci"]][1]
+  df_medconv.dir$ci.upr[[i]] <- mediconv[[i]][["z.avg.ci"]][2]  
+  df_medconv.dir$pval[[i]] <- mediconv[[i]][["z.avg.p"]]
+  }
+
+
+df_medconv.tot <- data.frame(
+  "id"=1:length(medieduc),
+  "lab"= label1,  
+  "var"=names(medieduc),
+  "effect"=rep("Total",max(length(medieduc))),
+  "effect.avg"=NA,
+  "ci.lwr"=NA,
+  "ci.upr"=NA,
+  "pval"=NA)
+
+for (i in 1:length(medieduc)) {
+  df_medconv.tot$effect.avg[[i]] <- mediconv[[i]][["tau.coef"]]
+  df_medconv.tot$ci.lwr[[i]] <- mediconv[[i]][["tau.ci"]][1]
+  df_medconv.tot$ci.upr[[i]] <- mediconv[[i]][["tau.ci"]][2]  
+  df_medconv.tot$pval[[i]] <- mediconv[[i]][["tau.p"]]
+  }
+
+df_medconv.prop <- data.frame(
+  "id"=1:length(medieduc),
+  "lab"= label1,  
+  "var"=names(medieduc),
+  "effect"=rep("Proportion",max(length(medieduc))),
+  "effect.avg"=NA,
+  "ci.lwr"=NA,
+  "ci.upr"=NA,
+  "pval"=NA)
+
+for (i in 1:length(medieduc)) {
+  df_medconv.prop$effect.avg[[i]] <- mediconv[[i]][["n.avg"]]
+  df_medconv.prop$ci.lwr[[i]] <- mediconv[[i]][["n.avg.ci"]][1]
+  df_medconv.prop$ci.upr[[i]] <- mediconv[[i]][["n.avg.ci"]][2]  
+  df_medconv.prop$pval[[i]] <- mediconv[[i]][["n.avg.p"]]
+  }
+
+df_medconv <- bind_rows(df_medconv.ind,df_medconv.dir,df_medconv.tot,
+                        df_medconv.prop) %>% 
+  arrange(id) %>% 
+  mutate(sig=gtools::stars.pval(pval)) %>% 
+  dplyr::select(-"id",-"var")
+
+kable(df_medconv,format = "html",digits = 3, col.names = colnames,
+      caption = "Mediated effect of Parental Education by Conversation on
+      Participation on peaceful protests") %>% 
+  kable_styling(full_width = F) %>% 
+  collapse_rows(columns = 1) %>% 
+  footnote(general = note,footnote_as_chunk = T)  
+```
+
+The following models assume the dependent variable as **continuous** using the longitudinal nested structure 
+
+```{r mpas-long, results='asis'}
+rm(list=ls())
+if (!require("pacman")) install.packages("pacman") # instalar pacman
+pacman::p_load(dplyr,       # Manipulacion de datos 
+               haven,       # importar datos en .dta o .sav
+               sjmisc,      # descriptivos y frecuencias
+               sjPlot,      # tablas, plots y descriptivos
+               sjlabelled,
+               summarytools,# resumen de dataframe
+               knitr,       # tablas kable
+               kableExtra,  # tablas kable personalizadas
+               ggplot2,     # plots
+               corrplot,    # plot correlacion
+               tibble,
+               lavaan,
+               texreg,
+               mediation,
+               estimatr,
+               bife
+               )
+load(here::here("input/data/proc/study1_long.RData"))
+
+data1<- 
+study_1_long %>% 
+  dplyr::select(folio_encuestado,momento,mpas,educyear,age,agepavg,edhigh,conv_t1,conv,
+                mujer,pospol) %>%
+  mutate(
+    conv_t1=as.numeric(conv_t1),
+    conv=as.numeric(conv),
+    mpas=as.numeric(mpas)
+         )  %>% 
+  na.omit()
+# dim(data1)
+
+# Models-----------------------------------------------------------------------
+mpasnull <- 
+lme4::lmer(mpas~1+(1|folio_encuestado),
+            data = data1)
+
+mpas_conv <- 
+lme4::lmer(mpas~edhigh+educyear+conv+mujer+age+agepavg+pospol+momento+I(momento^2)+(1|folio_encuestado),
+            data = data1)
+mpas_conv_re_t <- 
+lme4::lmer(mpas~edhigh+educyear+conv+mujer+age+agepavg+pospol+momento+I(momento^2)+(1+momento|folio_encuestado),
+            data = data1)
+
+mpas_conv_int <- 
+lme4::lmer(mpas~edhigh*momento+educyear+conv+mujer+age+agepavg+pospol+momento+I(momento^2)+(1+momento|folio_encuestado),
+            data = data1)
+
+mpas_convfix <- 
+lme4::lmer(mpas~edhigh+educyear+conv_t1+mujer+age+agepavg+pospol+momento+I(momento^2)+(1|folio_encuestado),
+            data = data1)
+mpas_convfix_re_t <- 
+lme4::lmer(mpas~edhigh+educyear+conv_t1+mujer+age+agepavg+pospol+momento+I(momento^2)+(1+momento|folio_encuestado),
+            data = data1)
+
+mpas_convfix_int1 <- 
+lme4::lmer(mpas~edhigh*momento+educyear+conv_t1+mujer+age+agepavg+pospol+momento+I(momento^2)+(1+momento|folio_encuestado),
+            data = data1)
+
+mpas_convfix_int2 <- 
+lme4::lmer(mpas~edhigh+educyear+conv_t1*momento+mujer+age+agepavg+pospol+momento+I(momento^2)+(1+momento|folio_encuestado),
+            data = data1)
+
+
+# summary(mpas)
+
+# Table ------------------------------------------------------------------------
+mpasifica <- list(mpasnull,
+                  mpas_conv,mpas_conv_re_t,mpas_conv_int,
+                  mpas_convfix,mpas_convfix_re_t,mpas_convfix_int1,mpas_convfix_int2)
+caption <- "Multilevel longitudinal linear regression for Participation on peaceful protests"
+knitreg(mpasifica,
+        include.ci = FALSE,
+        omit.coef = c("(pospol)|(mujer)|(age)|(agepavg)"),
+        caption.above = T,caption = caption,
+        )
+
+```
+
+- The following models assume the dependent variable as **binary** using the longitudinal nested structure 
+
+```{r mpas-long-log, results='asis'}
+rm(list=ls())
+if (!require("pacman")) install.packages("pacman") # instalar pacman
+pacman::p_load(dplyr,       # Manipulacion de datos 
+               haven,       # importar datos en .dta o .sav
+               sjmisc,      # descriptivos y frecuencias
+               sjPlot,      # tablas, plots y descriptivos
+               sjlabelled,
+               summarytools,# resumen de dataframe
+               knitr,       # tablas kable
+               kableExtra,  # tablas kable personalizadas
+               ggplot2,     # plots
+               corrplot,    # plot correlacion
+               tibble,
+               lavaan,
+               texreg,
+               mediation,
+               estimatr,
+               bife
+               )
+load(here::here("input/data/proc/study1_long.RData"))
+
+data1<- 
+study_1_long %>% 
+  dplyr::select(folio_encuestado,momento,mpas_bi,educyear,age,agepavg,edhigh,conv_t1,conv,
+                mujer,pospol) %>%
+  mutate(
+    conv_t1=as.numeric(conv_t1),
+    conv=as.numeric(conv),
+    mpas_bi=as.numeric(mpas_bi)
+         )  %>% 
+  na.omit()
+dim(data1)
+
+data1$mpas_bi <- car::recode(data1$mpas_bi,"1=0;2=1")
+# class(data1$mpas_bi)
+# table(data1$mpas_bi)
+
+# Models-----------------------------------------------------------------------
+mpasnull <- 
+lme4::glmer(mpas_bi~1+(1|folio_encuestado),
+            data = data1,family = "binomial")
+# 9.75/(3.29+9.75)
+# sjstats::icc(mpasnull)[[1]]
+# pdata <- panelr::panel_data(data1, id = folio_encuestado, wave = momento)
+# model <- panelr::wbm(vot ~  edhigh+educyear+conv_t1+mujer+pospol, data = pdata,use.wave = T, family = binomial,model = "random")
+# summary(model)
+
+mpas_conv <- 
+lme4::lmer(mpas_bi~edhigh+educyear+conv+mujer+age+agepavg+pospol+momento+I(momento^2)+(1|folio_encuestado),
+            data = data1,
+           # family = "binomial"
+           )
+mpas_conv_re_t <- 
+lme4::lmer(mpas_bi~edhigh+educyear+conv+mujer+age+agepavg+pospol+momento+I(momento^2)+(1+momento|folio_encuestado),
+            data = data1,
+           # family = "binomial"
+           )
+
+mpas_conv_int <- 
+lme4::lmer(mpas_bi~edhigh*momento+educyear+conv+mujer+age+agepavg+pospol+momento+I(momento^2)+(1+momento|folio_encuestado),
+            data = data1,
+           # family = "binomial"
+           )
+
+mpas_convfix <- 
+lme4::lmer(mpas_bi~edhigh+educyear+conv_t1+mujer+age+agepavg+pospol+momento+I(momento^2)+(1|folio_encuestado),
+            data = data1,
+           # family = "binomial"
+           )
+mpas_convfix_re_t <- 
+lme4::lmer(mpas_bi~edhigh+educyear+conv_t1+mujer+age+agepavg+pospol+momento+I(momento^2)+(1+momento|folio_encuestado),
+            data = data1,
+           # family = "binomial"
+           )
+
+mpas_convfix_int1 <- 
+lme4::lmer(mpas_bi~edhigh*momento+educyear+conv_t1+mujer+age+agepavg+pospol+momento+I(momento^2)+(1+momento|folio_encuestado),
+            data = data1,
+           # family = "binomial"
+           )
+
+mpas_convfix_int2 <- 
+lme4::lmer(mpas_bi~edhigh+educyear+conv_t1*momento+mujer+age+agepavg+pospol+momento+I(momento^2)+(1+momento|folio_encuestado),
+            data = data1,
+           # family = "binomial"
+           )
+
+
+# summary(mpas)
+
+# Table ------------------------------------------------------------------------
+mpasifica <- list(mpasnull,
+                  mpas_conv,mpas_conv_re_t,mpas_conv_int,
+                  mpas_convfix,mpas_convfix_re_t,mpas_convfix_int1,mpas_convfix_int2)
+caption <- "Multilevel longitudinal linear probability regression for Participation on peaceful protests"
+knitreg(mpasifica,
+        include.ci = FALSE,
+        omit.coef = c("(pospol)|(mujer)|(age)|(agepavg)|(Intercept)"),
+        caption.above = T,caption = caption,
+          # custom.gof.rows = list("ICC"=c(sjstats::icc(votonull)[[1]],
+          # sjstats::icc(voto)[[2]])),
+        )
+
+# logit2prob <- function(logit){
+#   odds <- exp(logit)
+#   prob <- odds / (1 + odds)
+#   return(prob)
+# }
+
+# logit2prob(lme4::fixef(votonull))
+# logit2prob(lme4::fixef(voto))
+
+# set.seed(1234)
+# if (!require("glmmTMB")) install.packages("glmmTMB") # instalar pacman
+
+# plot_model(model = mpas,type = "re",sort.est = "sort.all",
+#            grid = F,
+#            transform = NULL,
+#            axis.labels = c(1:961))
+# plot_model(model = voto,type = "pred",terms = "edhigh")
+# plot_model(model = voto,type = "pred",terms = "educyear")
+```
+
 ## Voting behaviour 
+
+- The following models assume the dependent variable as **binary**
 
 ```{r vot-edhigh, results='asis'}
 rm(list=ls())
@@ -628,7 +1657,6 @@ kable(df_medconv,format = "html",digits = 3, col.names = colnames,
   footnote(general = note,footnote_as_chunk = T)  
 ```
 
-
 ```{r vot-edhigh-conv1, results='asis'}
 rm(list=ls())
 if (!require("pacman")) install.packages("pacman") # instalar pacman
@@ -730,9 +1758,9 @@ knitreg(l = fit1[names(fit1)[grepl("vot", names(fit1),"\n")]],
 
 ```
 
-### longitudinal
+- The following models assume the dependent variable as **binary** using the longitudinal nested structure 
 
-```{r vot-mult, results='asis'}
+```{r vot-long, results='asis'}
 rm(list=ls())
 if (!require("pacman")) install.packages("pacman") # instalar pacman
 pacman::p_load(dplyr,       # Manipulacion de datos 
@@ -759,18 +1787,20 @@ load(here::here("input/data/proc/study1_long.RData"))
 
 data1<- 
 study_1_long %>% 
-  dplyr::select(folio_encuestado,momento,vot,edhigh:conv_t1) %>%
+  dplyr::select(folio_encuestado,momento,vot,educyear,age,agepavg,edhigh,conv_t1,conv,
+                mujer,pospol) %>%
   dplyr::filter(vot !=2,momento !=3,momento !=6) %>%  
   mutate(conv_t1=as.numeric(conv_t1),
-         # conv=as.numeric(conv)
+         vot=as.numeric(vot),
+         conv=as.numeric(conv)
          ) %>% 
   na.omit()
-# dim(data1)
+dim(data1)
 
 # Models-----------------------------------------------------------------------
-votonull <- 
-lme4::glmer(vot~1+(1|folio_encuestado),
-            data = data1,family = "binomial")
+# votonull <- 
+# lme4::glmer(vot~1+(1|folio_encuestado),
+#             data = data1,family = "binomial")
 # 9.75/(3.29+9.75)
 # sjstats::icc(votonull)[[1]]
 # pdata <- panelr::panel_data(data1, id = folio_encuestado, wave = momento)
@@ -778,38 +1808,74 @@ lme4::glmer(vot~1+(1|folio_encuestado),
 # summary(model)
 
 voto <- 
-lme4::glmer(vot~edhigh+educyear+conv_t1+mujer+pospol+momento+(1|folio_encuestado),
-            data = data1,family = "binomial")
+lme4::lmer(vot~edhigh+educyear+conv_t1+mujer+age+agepavg+pospol+momento+I(momento^2)+(1|folio_encuestado),
+            data = data1,
+           # family = "binomial"
+           )
 voto_re_t <- 
-lme4::glmer(vot~edhigh+educyear+conv_t1+mujer+pospol+momento+(1+momento|folio_encuestado),
-            data = data1,family = "binomial")
+lme4::lmer(vot~edhigh+educyear+conv_t1+mujer+age+agepavg+pospol+momento+I(momento^2)+(1+momento|folio_encuestado),
+            data = data1,
+           # family = "binomial"
+           )
+
+
+voto_conv_int <- 
+lme4::lmer(vot~edhigh*momento+educyear+conv+mujer+age+agepavg+pospol+momento+I(momento^2)+(1+momento|folio_encuestado),
+            data = data1,
+           # family = "binomial"
+           )
+
+voto_convfix <- 
+lme4::lmer(vot~edhigh+educyear+conv_t1+mujer+age+agepavg+pospol+momento+I(momento^2)+(1|folio_encuestado),
+            data = data1,
+           # family = "binomial"
+           )
+voto_convfix_re_t <- 
+lme4::lmer(vot~edhigh+educyear+conv_t1+mujer+age+agepavg+pospol+momento+I(momento^2)+(1+momento|folio_encuestado),
+            data = data1,
+           # family = "binomial"
+           )
+
+voto_convfix_int1 <- 
+lme4::lmer(vot~edhigh*momento+educyear+conv_t1+mujer+age+agepavg+pospol+momento+I(momento^2)+(1+momento|folio_encuestado),
+            data = data1,
+           # family = "binomial"
+           )
+
+voto_convfix_int2 <- 
+lme4::lmer(vot~edhigh+educyear+conv_t1*momento+mujer+age+agepavg+pospol+momento+I(momento^2)+(1+momento|folio_encuestado),
+            data = data1,
+           # family = "binomial"
+           )
+
 # summary(voto)
 
 # Table ------------------------------------------------------------------------
-votos <- list(votonull,voto,voto_re_t)
-caption <- "Multilevel longitudinal logistic regression for voting"
+votos <- list(voto,voto_re_t,voto_conv_int,
+              voto_convfix,voto_convfix_re_t,voto_convfix_int1,voto_convfix_int2)
+caption <- "Multilevel longitudinal lineal probability models for voting"
 knitreg(votos,
         include.ci = FALSE,
-        omit.coef = c("(pospol)|(mujer)"),
+        omit.coef = c("(pospol)|(mujer)|(age)|(agepavg)|(Intercept)"),
         caption.above = T,caption = caption,
           # custom.gof.rows = list("ICC"=c(sjstats::icc(votonull)[[1]],
           # sjstats::icc(voto)[[2]])),
         )
 
-logit2prob <- function(logit){
-  odds <- exp(logit)
-  prob <- odds / (1 + odds)
-  return(prob)
-}
+# logit2prob <- function(logit){
+#   odds <- exp(logit)
+#   prob <- odds / (1 + odds)
+#   return(prob)
+# }
 
 # logit2prob(lme4::fixef(votonull))
 # logit2prob(lme4::fixef(voto))
 
-set.seed(1234)
-plot_model(model = voto,type = "re",sort.est = "sort.all",
-           grid = F,
-           transform = NULL,
-           axis.labels = c(1:1010))
+# set.seed(1234)
+# plot_model(model = voto,type = "re",sort.est = "sort.all",
+#            grid = F,
+#            transform = NULL,
+#            axis.labels = c(1:1010))
 # plot_model(model = voto,type = "pred",terms = "edhigh")
 # plot_model(model = voto,type = "pred",terms = "educyear")
 ```

@@ -141,6 +141,9 @@ df_wide %>%
     edpad="nse_padre_w01",
     psu="edm_psu_w01",
     mujer="cs_genero_w01",
+    agepad="fam_edad_m_w01",
+    agemad="fam_edad_p_w01",
+    age = "cs_edad_w01",
     #conversacion
     conv1a=conv_padr_poli_w01,
     conv2a=conv_padres_21_w01,
@@ -242,7 +245,7 @@ df_wide %>%
 # recode y labels_______________________________________________________________
 
 # PSU
-study_1$psu <- set_label(study_1$psu,"University Selection Test (PSU/10)")
+study_1$psu <- sjlabelled::set_label(study_1$psu,"University Selection Test (PSU/10)")
 sjmisc::frq(study_1$psu)
 study_1$psu <- study_1$psu/10
 sjmisc::frq(study_1$psu)
@@ -295,19 +298,85 @@ study_1$edpadyear <- sjlabelled::set_label(study_1$edpadyear,"Years of Education
 sjmisc::frq(study_1$edpadyear)
 
 #Education (parents average)
-
 study_1$edparavg <-  (study_1$edpadyear+study_1$edmadyear)/2
 study_1$edparavg <- sjlabelled::set_label(study_1$edparavg,"Years of Education (parents)")
 sjmisc::frq(study_1$edparavg)
 
 #Education (highest)
-
-
 study_1$edhigh <- pmax(study_1$edpadyear, study_1$edmadyear,na.rm = T)
 study_1$edhigh <- sjlabelled::set_label(study_1$edhigh,"Years of Education (Parent highest)")
 sjmisc::frq(study_1$edhigh)
 
- # Partipation (all moments in life cycle)
+# Age family
+# Age
+sjmisc::frq(study_1$age)
+study_1$age[study_1$age==-99] <- NA
+study_1$age <- sjlabelled::set_label(study_1$age,"Age")
+sjmisc::frq(study_1$age)
+
+## Age - mother
+sjmisc::frq(study_1$agemad)
+study_1$agemad[study_1$agemad==-99] <- NA
+study_1$agemad[study_1$agemad %in% c(0,1) ] <- NA
+study_1$agemad <- sjlabelled::set_label(study_1$agemad,"Age - mother")
+sjmisc::frq(study_1$agemad)
+
+# # Age - father
+sjmisc::frq(study_1$agepad)
+study_1$agepad[study_1$agepad==-99] <- NA
+study_1$agepad[study_1$agepad %in% c(0,1,2) ] <- NA
+study_1$agepad <- sjlabelled::set_label(study_1$agepad,"Age - father")
+sjmisc::frq(study_1$agepad)
+
+# consistency between age and parental age
+# # example: father has 66, son has 30 = father was 36 when his son was born
+table(study_1$agepad - study_1$age) # 1 (n=1)
+table(study_1$agemad - study_1$age) # 8 (n=1); 1 (n=1)
+
+# set null this cases
+table((study_1$agepad - study_1$age) ==0)
+table((study_1$agemad - study_1$age) ==0)
+study_1$nullagepad <- (study_1$agepad - study_1$age)
+sjmisc::frq(study_1$nullagepad)
+
+study_1$nullagemad <- (study_1$agemad - study_1$age)
+sjmisc::frq(study_1$nullagemad)
+#View(study_1[,c("folio_encuestado","age","agepad","agemad","nullagepad","nullagemad")])
+
+# id odd cases cases: "144718b7c6088d84","74d7cd977b8cff6f"
+study_a <- subset(study_1, study_1$folio_encuestado != "4f8c048f9f728801")
+study_a <- subset(study_a, study_a$folio_encuestado != "5acc1dd752d5faa6")
+sjmisc::frq(study_a$nullagepad)
+sjmisc::frq(study_a$nullagemad)
+study_1 <- study_a
+dim(study_1)
+
+# Age - parental average
+study_1$agepavg <- (study_1$agepad+study_1$agemad)/2
+study_1$agepavg <-ifelse(test = is.na(study_1$agepavg),
+                         yes = study_1$agepad,no = study_1$agepavg)
+study_1$agepavg <-ifelse(test = is.na(study_1$agepavg),
+                         yes = study_1$agemad,no = study_1$agepavg)
+#View(study_1[,c("agepad","agemad","agepavg")])
+study_1$agepavg <- sjlabelled::set_label(study_1$agepavg,"Parental age")
+summary(study_1$agepavg)
+
+
+study_1$agegrpar <- car::recode(study_1$agepavg,
+                                "24:45.5='45 or less';
+                                46:55.5='46 - 55';
+                                56:65.5='56 - 65';
+                                66:hi='66 or more';NA='Missing'",as.factor = T)
+study_1$agegrpar <- sjlabelled::set_label(study_1$agegrpar,"Parental age")
+study_1<- fastDummies::dummy_cols(.data = study_1,select_columns = "agegrpar",
+                                  remove_first_dummy = T,ignore_na = T)
+study_1 <- study_1 %>% rename(ag_46_55=`agegrpar_46 - 55`,
+                              ag_56_65=`agegrpar_56 - 65`,
+                              ag_66_mr=`agegrpar_66 or more`,
+                              ag_miss=agegrpar_Missing)
+sjmisc::frq(study_1$agegrpar)
+
+# Partipation (all moments in life cycle)---------------------------------------
 vars <- study_1 %>% dplyr::select(firm1a:segu5a) %>% names()
 study_1[,vars]<- lapply(study_1[,vars], ordered)
 valab <- c("Never","Almost never","Sometimes","Frequently")
@@ -336,9 +405,27 @@ study_1[,vars]  <-
 study_1[,vars]  <-
   sjlabelled::set_labels(x = study_1[,vars],
                         labels = valab)
+
+# Participation in peaceful protests (Binary) -----
+
+study_1$mpas1a_bi<- car::recode(study_1$mpas1a,recodes = "c(1,2)=0;c(3,4)=1")
+study_1$mpas2a_bi<- car::recode(study_1$mpas2a,recodes = "c(1,2)=0;c(3,4)=1")
+study_1$mpas3a_bi<- car::recode(study_1$mpas3a,recodes = "c(1,2)=0;c(3,4)=1")
+study_1$mpas4a_bi<- car::recode(study_1$mpas4a,recodes = "c(1,2)=0;c(3,4)=1")
+study_1$mpas5a_bi<- car::recode(study_1$mpas5a,recodes = "c(1,2)=0;c(3,4)=1")
+
+mpaslab <- study_1 %>% 
+  dplyr::select(mpas1a,mpas2a,mpas3a,mpas4a,mpas5a) %>% sjlabelled::get_label() 
+study_1[,names(dplyr::select(study_1,ends_with("_bi")))]  <-
+  sjlabelled::set_label(x = study_1[,names(dplyr::select(study_1,ends_with("_bi")))],
+                        label = mpaslab)
+
+
+study_1[,names(dplyr::select(study_1,ends_with("_bi")))] %>% sjmisc::frq()
+
 # sjPlot::view_df(study_1,show.prc = T,show.type = T)
 
-# Partipation: voting in elections
+# Partipation: voting in elections ---------------------------------------
 ## Question with age limit
 varsvote <- study_1 %>% dplyr::select(votpr17,votpleb,votcons) %>% names()
 study_1[,varsvote]<- lapply(study_1[,varsvote], ordered)
@@ -377,7 +464,7 @@ study_1[,varsvote]  <-
 
 study_1[,varsvote] %>% view_df()
 
-# Socialization: 
+# Socialization:  ---------------------------------------
 # Conversation with parents about political issues
 # Participate in manifestations with one of your parents
 vars2 <- study_1 %>% dplyr::select(conv1a:marc5a) %>% names()
@@ -402,13 +489,13 @@ study_1[,vars2]  <-
   sjlabelled::set_labels(x = study_1[,vars2],
                         labels = valab)
 
-# Gender
+# Gender ---------------------------------------
 sjmisc::frq(study_1$mujer)
 study_1$mujer <- factor(study_1$mujer,levels = c(1,2),labels = c("Man","Woman"))
 study_1$mujer <- sjlabelled::set_label(study_1$mujer,"Gender")
 sjmisc::frq(study_1$mujer)
 
-# political position
+# political position---------------------------------------
 
 sjmisc::frq(study_1$pospol1)
 study_1$pospol <- as.numeric(car::recode(study_1$pospol1,recodes = "1:2=1;3=2;4:5=3;6:8=4"))
@@ -494,6 +581,12 @@ data_long <- long_panel(data = data_panel, #base de datos formato wide
                          label_location = "end", #indica donde se localiza la etiqueta asociada a la ola 
                          id = "folio_encuestado", #indica identificador individual
                          wave = "momento") #nombre que tomará la variable que indica periodo. 
+
+# Generate binary variable for Participation in Peaceful protests
+sjmisc::frq(data_long$mpas)
+data_long$mpas_bi<- car::recode(data_long$mpas,recodes = "c(1,2)=0;c(3,4)=1")
+sjmisc::frq(data_long$mpas_bi)
+
 study_1_long <- 
 data_long %>% left_join(x = .,
                         y = dplyr::select(study_1,
@@ -501,7 +594,7 @@ data_long %>% left_join(x = .,
                                           edhigh,
                                           educyear,
                                           psu,
-                                          mujer,
+                                          mujer,age,agepavg,
                                           pospol,
                                           conv_t1=conv1a))
 
