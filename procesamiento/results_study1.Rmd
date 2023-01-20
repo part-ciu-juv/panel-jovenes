@@ -1,0 +1,113 @@
+---
+title: "Resultados"
+# author: "Brian Montenegro"
+date: "`r format(Sys.time(), '%A %d %B %Y %X')`"
+output:
+  bookdown::html_document2:
+    number_sections: true
+    toc: true
+    toc_float:
+        collapsed: false
+editor_options:
+  chunk_output_type: console
+---
+
+```{r include=FALSE}
+knitr::opts_chunk$set(warning = FALSE,
+                      message = FALSE, 
+                      cache = TRUE,
+                      results = "hold", 
+                      echo = F)
+options(scipen=999)
+rm(list=ls())
+options(knitr.kable.NA = '')
+# .rs.restartR()
+```
+
+# Metodología
+## Datos
+
+El Estudio Panel de Ciudadanía Juvenil 2020-2021 es un estudio longitudinal de tres olas que aborda temáticas de participación política, socialización política familiar y características socioeconómicas de jóvenes chilenos de entre 18 y 29 años. La primera ola constó de un total de 3122 estudiantes, y durante esta primera medición se realizaron una serie de preguntas retrospectivas que permitieron caracterizar la participación de estos jóvenes en el período político inmediatamente anterior (2019-2020), por lo que se puede hablar de que es una investigación que mide cinco momentos dentro de tres olas. La segunda ola se compuso de 1541 jóvenes entrevistados y la tercera de 1065, lo que permitió observar el comportamiento político de estos jóvenes en el período reciente (primer y segundo semestre 2021, respectivamente). Esta investigación se realizó de forma on-line mediante un formulario digital y tiene un carácter de no probabilístico.
+
+## Variables Dependientes
+
+Esta investigación constó de cuatro variables dependientes: el comportamiento electoral, la participación activista pacífica, la participación activista disruptiva y la participación on-line. En relación al comportamiento electoral, se consultó a los jóvenes sobre su participación en las distintas elecciones ocurridas entre el año 2017 y 2021. A saber, se consultó por la votación en las elecciones presidenciales del año 2017, el plebiscito constitucional del año 2020, las elecciones municipales y la elección de convencionales constituyentes en 2021 y la elección presidencial del año 2021 (primera y segunda vuelta). Para medir la participación activista pacífica, se les consultó cinco veces a los jóvenes si participaron en una marcha pacífica durante: el periodo de tercero y cuatro medio, el estallido social, entre marzo y diciembre de 2020, primera mitad del 2021 y segunda mitad del 2021. 
+
+Para la elaboración de las variables participación on-line y activismo disruptivo se realizó un set de ecuaciones estructurales para cada uno de los cinco momentos señalados anteriormente, más específicamente un Análisis Factorial Confirmatorio (AFC). En el caso de la participación on-line, se consideraron las siguientes actividades de participación realizadas: (1) usar internet para buscar información sobre temas sociales y/o políticos, (2) postear imágenes o mensajes acerca de temas sociales y/o políticos en internet, (3) compartir o comentar en el posteo de otra persona acerca de temas sociales y políticos, (4) seguir a personas en redes sociales por su contenido sobre temas sociales y políticos (con categorías 1= Nunca, 2= Rara vez, 3 = A veces, 4 = Frecuentemente). Para el activismo disruptivo, se consideraron las siguientes posibilidades de participación durante los cinco momentos: (1) participar en una marcha o manifestación con disturbios, (2) participar en bloqueo de calles o carreteras, (3) pintar y/o (3) rayar paredes con demandas o consignas, participar en la toma de un edificio o institución (con categorías 1= Nunca, 2= Rara vez, 3 = A veces, 4 = Frecuentemente).
+
+## Variables independientes
+
+Se consideró como variable predictora el nivel educacional más alto alcanzado por alguno de los padres, el nivel educacional de los jóvenes al momento se hacer la entrevista y la frecuencia de conversación sobre temas políticos, esto último fue preguntado en los 5 momentos a partir de la pregunta: ¿Con qué frecuencia realiza las siguientes actividades? Hablar con sus padres sobre temas sociales y/o políticos (con categorías 1= Nunca, 2= Rara vez, 3 = A veces, 4 = Frecuentemente).
+
+
+## Método
+
+Dada la naturaleza distinta de las variables dependientes, se utilizaron distintas técnicas para evaluar la relación de dependencia entre las variables de socialización política y recursos (familiares y propios) con las distintas formas de participación. Para el caso del voto se realizó un análisis longitudinal multinivel, por su estructura anidada de jóvenes en los cinco momentos, en donde la variable dependiente fue el voto y las independientes fueron el nivel educativo más alto alcanzado por uno de los padres/madres, el nivel educativo del joven al momento de entrevistársele, la frecuencia de conversación fijada en el momento uno y el momento (con control estadístico de sexo y posición política). Se realizó un modelo de intercepto aleatorio y un modelo con el efecto del momento liberado, para observar si era aleatorio. Por su parte, para el caso de la participación on-line y de la participación activista disruptiva, se realizó un modelamiento de ecuaciones estructurales, en donde se calculó el efecto directo, indirecto y total de las variables independientes sobre los modelos de medición en los cinco momentos.
+
+## Resultados
+
+### Comportamiento electoral
+
+Hipótesis 1: En el modelo 2 del análisis logístico multinivel (intercepto aleatorio) el nivel educativo de los padres aumenta en promedio la participación electoral de los jóvenes ($\beta = 0,05$; I.C = 99,9%). En el modelo de probabilidad lineal (intercepto aleatorio), este efecto no es significativo ($\beta = 0,01$), pero sí lo es en los demás modelos, pero sólo al 95% de confianza (con efectos aleatorios, efectos interacción, entre otras especificaciones). *¿Con cuál es mejor quedarse?*
+
+Hipótesis 2: En el modelo 2 del análisis logístico multinivel (intercepto aleatorio) el nivel alcanzado por los jóvenes aumenta en promedio su propia participación electoral ($\beta = 0,37$; I.C = 99,9%). Este efecto aumenta en el modelo con el efecto del "momento" liberado ($\beta = 0,47$). En los modelos de probabilidad lineal se mantiene un mismo efecto independiente de la especificación de las variables independientes ($\beta = 0,05$; I.C = 99,9%). *¿Con cuál es mejor quedarse?*
+
+Hipótesis 3: 
+
+Hipótesis 4: En el modelo 2 del análisis logístico multinivel (intercepto aleatorio) la conversación familiar en el momento 1 aumenta en promedio la participación electoral de los jóvenes ($\beta = 0,29$; I.C = 99,9%). Este efecto disminuye con el efecto del "momento" liberado ($\beta = 0,23$; I.C = 99,9%).En los modelos de probabilidad lineal se mantiene un mismo efecto independiente de la especificación de las variables independientes ($\beta = 0,03$; I.C = 99,9%).
+
+Hipotesis 5: En los modelos en que se compara el efecto de los recursos socioeconómicos de la familia sobre la votación, no se puede concluir que sea similar en jóvenes menores de edad y jóvenes con mayoría de edad, dado que en prácticamente todos estos casos los coeficientes son no significaivos. Sin embargo, se puede concluir que el efecto de los recursos socioeconómicos de los jóvenes sobre su participación electoral tiene una tendencia a la baja con el tiempo, es decir, este efecto pierde importancia mientras más adulto se hace el joven.
+
+Hipótesis 6: Al considerar los efectos indirectos del nivel educativo de los padres en el comportamiento electoral, mediado por el estatus educativo logrado por los jóvenes, se puede observar que hay un efecto indirecto significativo en las elecciones presidenciales del año 2017 ($\beta = 0.008$; I.C = 99,9%), el plebiscito constitucional del año 2020 ($\beta = 0.006$; I.C = 99,9%), la elección de convencionales constituyentes ($\beta = 0.006$; I.C = 99,9%), las elecciones municipales del año 2021($\beta = 0.006$; I.C = 99,9%), las elecciones parlamentarias del año 2021 ($\beta = 0.006$; I.C = 99,9%), la primera vuelta presidencial del año 2021 ($\beta = 0.003$; I.C = 99,9%) y la segunda vuelta presidencial del año 2021 ($\beta = 0.003$; I.C = 99%). En relación a la hipótesis 6, se puede interpretar que la mediación del estatus educativo logrado por los jóvenes sobre la relación entre el nivel educativo de los padres y el comportamiento electoral, se mantiene en niveles similares entre jóvenes menores de edad y mayores de edad.
+
+Hipótesis 7: Al considerar los efectos indirectos del nivel educativo de los padres en el comportamiento electoral, mediado por la conversación política familiar, se puede observar que hay un efecto indirecto significativo en las elecciones presidenciales del año 2017 ($\beta = 0.001$; I.C = 99,9%), el plebiscito constitucional del año 2020 ($\beta = 0.001$; I.C = 90%), la elección de convencionales constituyentes ($\beta = 0.003$; I.C = 99%), las elecciones municipales del año 2021 ($\beta = 0.003$; I.C = 99%), las elecciones parlamentarias del año 2021 ($\beta = 0.002$; I.C = 99%), la primera vuelta presidencial del año 2021 ($\beta = 0.001$; I.C = 99,9%) y la segunda vuelta presidencial del año 2021 ($\beta = 0.001$; I.C = 99%). En relación a la hipótesis 7, se puede interpretar que la mediación de la conversación política familiar  sobre la relación entre el nivel educativo de los padres y el comportamiento electoral de los jóvenes, se mantiene en niveles similares a través del tiempo.
+
+
+### Protesta pacífica
+
+H1: En los modelos multinivel que asumen la variable "participación en marchas" como continua, el nivel educativo de los padres disminuye en promedio la participación en marchas de jóvenes ($\beta = -0.01$; I.C = 95%), aunque en los otros modelos este efecto se pierde. En prácticamente todos los modelos de probabilidad lineal el nivel educativo de los padres disminuye la participación en marchas de jóvenes ($\beta = -0.01$; I.C = 95%). 
+
+H2: En los modelos multinivel lineales y de probabilidad lineal no hay un efecto significativo del nivel educativo logrado sobre la participación pacífica.
+
+H3:
+
+H4: En los modelos multinivel lineales, la conversación política familiar predice la participación en marchas pacíficas. Esto sucede cuando se fija la conversación al tiempo 1 ($\beta = 0,15$; I.C = 99,9%) y cuando se compara con le pregunta de conversación política familiar más cercana de las acciones de protesta pacífica ($\beta = 0,20$; I.C = 99,9%). No se interpretan los de probabilidad lineal porque los efectos son menos buenos que los de los modelos lineales.
+
+H5: En los modelos en que se compara el efecto de los recursos socioeconómicos de la familia sobre la participación pacífica, no se puede concluir que sea similar en jóvenes menores de edad y jóvenes con mayoría de edad, dado que en prácticamente todos estos casos los coeficientes son no significativos.
+
+H6: Al considerar los efectos indirectos del nivel educativo de los padres en la participación en protestas pacíficas, mediado por el estatus educativo logrado por los jóvenes, se puede observar que hay un efecto indirecto significativo en las siguientes acciones de protesta reportada por los jóvenes: protestas pacíficas realizadas en la educación secundaria ($\beta = 0,004$; I.C = 90%), protestas pacíficas realizadas durante el estallido social ($\beta = 0,006$; I.C = 95%). En los otros tres momentos, no se encontró un efecto de mediación del estatus educativo logrado por los jóvenes sobre en la relación del nivel educativo de los padres y la participación en protestas pacíficas de los jóvenes.
+
+H7: Al considerar los efectos indirectos del nivel educativo de los padres en la participación en protestas pacíficas, mediado por la conversación política familiar, se puede observar que hay un efecto indirecto significativo en las siguientes acciones de protesta reportada por los jóvenes: protestas pacíficas realizadas en la educación secundaria ($\beta = 0,008$; I.C = 99,9%), protestas pacíficas realizadas durante el estallido social ($\beta = 0,008$; I.C = 99%), participación en protestas pacíficas durante marzo y diciembre de 2020 ($\beta = 0,003$; I.C = 95%), participación en protestas pacíficas en la primera mitad del 2021 ($\beta = 0,006$; I.C = 99%) y la segunda mitad del 2021 ($\beta = 0,004$; I.C = 99%). En relación a la hipótesis 7, se puede interpretar que la mediación de la conversación política familiar  sobre la relación entre el nivel educativo de los padres y la participación en protestas pacíficas de los jóvenes, se mantiene en niveles similares a través del tiempo.
+
+
+### Protesta disruptiva
+
+H1: Al considerar los efectos directos, a mayor nivel educativo, se presenta una disminución de la participación política disruptiva de los jóvenes, sin embargo, este efecto sólo es significativo en el momento 1 ($\beta = 0,04$; I.C = 99%) y en el momento 4 ($\beta = 0,04$; I.C = 99%).
+
+H2: Al considerar los efectos directos, a mayor nivel educativo logrado por los jóvenes, se presenta una disminución o aumento de la participación disruptiva de los jóvenes (dependiendo del momento), sin embargo, este efecto sólo es significativo en el momento 4 ($\beta = 0,07$; I.C = 95%). A partir de estos datos, no se puede concluir tan tajantemente en relación a la hipótesis 2.
+
+H3:
+
+H4: Al considerar los efectos directos, a mayor frecuencia de conversación política con padres, se presenta un aumento en la participación disruptiva de los padres, este efecto es significativo en el momento 1 ($\beta = 0,20$; I.C = 99,9%), momento 2 ($\beta = 0,10$; I.C = 95%); momento 4 ($\beta = 0,14$; I.C = 99%) y en el momento 5 ($\beta = 0,10$; I.C = 95%). Este resultado es bastante consistente a través del tiempo.
+
+H5: En los modelos en que se compara el efecto de los recursos socioeconómicos de la familia sobre la participación disruptiva, no se puede concluir que sea similar en jóvenes menores de edad y jóvenes con mayoría de edad, dado que en prácticamente todos estos casos los coeficientes son no significativos.
+
+H6: No hay evidencia concluyente, ya que ninguno de los coeficientes de los efectos indirectos son significativos.
+
+H7: En tres de los cinco momentos, la conversación familiar actúa como un mediador de la relación entre nivel educativo de los padres y participación política disruptiva. Momento 1 ($\beta = 0,01$; I.C = 99,9%), momento 2 ($\beta = 0,01$; I.C = 95%), momento 4 ($\beta = 0,01$; I.C = 95%). Sin embargo, el tamaño del efecto es bastante bajo.
+
+### Participación online
+
+H1: Al considerar los efectos directos, a mayor nivel educativo, se presenta una disminución de la participación política online de los jóvenes, sin embargo, este efecto sólo es significativo en el momento 1 ($\beta = -0,03$; I.C = 99,9%), momento 2 ($\beta = -0,03$; I.C = 99,9%), momento 3 ($\beta = -0,03$; I.C = 99,9%), momento 4 ($\beta = -0,03$; I.C = 99,9%). El efecto directo del nivel educativo de los padres sobre la participación online no fue significativa.
+
+H2: Al considerar los efectos directos, a mayor nivel educativo logrado por los jóvenes, se presenta un aumento en la participación online de los jóvenes, sin embargo, este efecto sólo es significativo todos los momentos: momento 1 ($\beta = 0,05$; I.C = 95%), momento 2 ($\beta = 0,12$; I.C = 99,9%), momento 3 ($\beta = 0,11$; I.C = 99,9%), momento 4 ($\beta = 0,08$; I.C = 99%), momento 5 ($\beta = 0,10$; I.C = 99,9%).
+
+H3: 
+
+H4: Al considerar los efectos directos, a mayor frecuencia de conversación política con padres, se presenta un aumento en la participación online de los jóvenes, este efecto es significativo en el momento 1 ($\beta = 0,37$; I.C = 99,9%), momento 2 ($\beta = 0,40$; I.C = 99,9%); momento 4 ($\beta = 0,42$; I.C = 99,9%); momento 4 ($\beta = 0,40$; I.C = 99,9%) y en el momento 5 ($\beta = 0,38$; I.C = 99,9%). Este resultado es bastante consistente a través del tiempo.
+
+H5: Son similares a través de los años, ya que se conserva el tamaño del efecto y el nivel de significación, menos en el momento 5 (ver resultados de hipótesis 1).
+
+H6: No hay evidencia concluyente, ya que ninguno de los coeficientes de los efectos indirectos son significativos.
+
+H7: En tres de los cinco momentos, la conversación familiar actúa como un mediador de la relación entre nivel educativo de los padres y participación política online. Momento 1 ($\beta = 0,01$; I.C = 99,9%), momento 2 ($\beta = 0,01$; I.C = 95%), momento 4 ($\beta = 0,01$; I.C = 95%). Sin embargo, el tamaño del efecto es bastante bajo.

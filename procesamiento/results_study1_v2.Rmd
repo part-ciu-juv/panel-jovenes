@@ -1,0 +1,545 @@
+---
+title: "Resultados"
+date: "`r format(Sys.time(), '%A %d %B %Y %X')`"
+output:
+  html_document:
+    toc: yes
+    df_print: paged
+  bookdown::html_document2:
+    number_sections: yes
+    toc: yes
+    toc_float:
+      collapsed: no
+editor_options:
+  chunk_output_type: console
+---
+
+```{r include=FALSE}
+knitr::opts_chunk$set(warning = FALSE,
+                      message = FALSE, 
+                      cache = TRUE,
+                      results = "hold", 
+                      echo = F)
+options(scipen=999)
+rm(list=ls())
+options(knitr.kable.NA = '')
+# .rs.restartR()
+```
+
+# Introducción
+
+Comúnmente la socialización política de los jóvenes se entiende y estudia desde el punto de vista de la desigualdad de los resultados políticos. Esto se debe a que existe vasta evidencia que vincula aspectos como el involucramiento ciudadano, el interés por la política o la misma participación ciudadana juvenil, al cumplimiento de ciertos perfiles individuales de los jóvenes, los cuales previamente son socializados por instituciones generadoras de identidades políticas, como lo son la familia, la escuela o los medios. Es así como jóvenes que provienen de contextos sociales distintos, suelen expresar de forma diferente sus acciones políticas. En particular, la participación política juvenil y su desigualdad intrínseca es un fenómeno de larga data, pero no por ello menos importante en la actualidad. Esto pues, debido a que la participación es el sustento y la fuente de legitimidad de las democracias modernas, la desigualdad de la participación política en los jóvenes socava la igualdad política y produce toma de decisiones sub-óptimas, ya que no todas las voces son escuchadas de manera igualitaria (Grasso & Giuni, 2021).
+En este marco, los últimos 15 años la participación política juvenil ha sido un fenómeno clave para entender el escenario político chileno, tanto por su influencia en el ámbito de las tomas de decisiones como por su influencia en el debate público. Como breve recuento, la participación electoral de los jóvenes ha sido considerado “baja” desde la instauración del voto voluntario, esto pues, desde el 2012 el tramo etario de menor porcentaje de votación en elecciones municipales y presidenciales (entre 20% y 30% de participación), ha sido el de entre 18 y 29 años. Esto llevó a algunos académicos a plantear la hipótesis de la apatía política para la juventud chilena, ignorando el hecho de que, desde entre los años 2006 y 2011 se generó un movimiento estudiantil que tuvo en el centro de sus prácticas de participación aquellas relacionadas con protesta pacífica y formas creativas de manifestación política. Por su parte, dentro de la última década también hubo un estallido social el 2019 que en muchos momentos tuvo como principal repertorio de protesta el activismo radical o normativamente ilegal, también protagonizado por jóvenes. Por último, en los últimos tres lustros se dio cuenta de nuevas formas de participación que son propias de una generación nativa digital, como es el caso de la participación on-line, que en algunos casos servía para organizar formas de participación off-line y en otros casos se ha visto que funcionaron como formas de participación per se, por ejemplo, a través de las acciones de apoyar, compartir y postear contenido político.
+En este sentido, un primer desafío relevante para estudiar el fenómeno de la desigualdad de la socialización política, es entender de forma correcta y ordenada lo que es la participación política. Esto nos puede ayudar a comprender el fenómeno desde una óptica más amplia y compleja, ya que intuitivamente es razonable pensar que no es lo mismo socializar la acción de votar, que tiene que ver con el traspaso intergeneracional de valores institucionales, que socializar una acción de protesta o la acción de manifestar una opinión a través de medios digitales, que tiene que ver con la reproducción de prácticas no convencionales.
+
+## Modelo de recursos y socialización política
+
+La desigualdad de la participación de los jóvenes comienza en casa. Esto se debe a que, el hogar es el primer lugar donde los sujetos adquieren valores, actitudes y prácticas de participación, y debido a que las familias son tan distintas en su conformación socioeconómica, política y cultural, es esperable que los jóvenes no expresen en igual forma y cantidad sus prácticas de participación. Esto se explica de forma coherente en la teoría de recursos, la cual explica que existe una diferencia en la socialización de los jóvenes cuando ellos provienen de familias de distintos sectores de la sociedad. A saber, la literatura ha mostrado que hay una vinculación entre los recursos socioeconómicos y culturales de las familias en distintos contextos-país, con un aumento en la participación política convencional de sus hijos, en comparación de las familias con menores niveles de estos recursos. A su vez, también está documentado que el nivel socioeconómico logrado por los jóvenes, que está influenciado por el de sus padres, impacta en su participación política.
+
+La teoría del modelo de recursos es bastante consistente, pero no es una teoría determinística, es decir, no todos los jóvenes de un sector de la sociedad van a actuar políticamente de la misma manera, ya que existen otros mecanismos de socialización e hitos en las historias de vida de los jóvenes que afectan en su expresión de lo político. Uno de estos aspectos que ha sido abordado por distintos estudios es la conversación política familiar, este fenómeno se describe como la conversación sobre temas de contingencia política, ideología, personajes políticos, etc., entre distintos miembros de la familia (padres, principalmente) con jóvenes (hijos, principalmente). Esto sería un caso de mecanismo de transmisión intergeneracional de la participación, en cuanto es una forma de estimular el interés por los asuntos políticos de los jóvenes, lo que derivaría en mayores niveles de participación dado mayores niveles de conversación. Si bien se hace la diferencia entre socialización política familiar y modelo de recursos, son dos aspectos de la transmisión intergeneracional de la participación que podrían estar perfectamente correlacionados, esto porque familias con mayores recursos por lo general podrían brindar tiempo de mejor calidad a sus hijos para hablar sobre temas políticos.
+
+Dado que por definición la socialización política familiar se realiza en etapas tempranas de la vida de los jóvenes, una de los desafíos para el estudio de sus condicionantes es si su efecto es persistente en el tiempo o decae con el pasar de los años. Algunos autores postulan la tesis de la persistencia para explicar que la socialización política y los recursos son una base sólida para explicar la acción política de la adultez joven. Otros explican que hay mecanismos de socialización como la escuela o los medios de comunicación que deforman lo adquirido en edades tempranas. A su vez, otro de los desafíos, es entender si estos mecanismos de socialización interactúan de forma igualitaria o desigual entre los distintos tipos de participación. Estas preguntas son claves para el comprendimiento de la desigualdad de la participación política juvenil. En este sentido, el presente estudio se realiza las siguientes preguntas: 
+
+1. ¿Cuáles son los factores y mecanismos que explican la transmisión intergeneracional de la desigualdad política?
+
+2. ¿En qué medida la asociación entre condiciones socioeconómicas de la familia con diferentes tipos de participación ciudadana se produce de manera indirecta, a través de la transmisión de los recursos de una generación a otra?
+
+3. ¿En qué medida la asociación entre condiciones socioeconómicas de la familia con diferentes tipos de participación ciudadana se produce de manera indirecta, como una propensión de las familias a socializar políticamente de la siguiente generación?
+
+4. ¿En qué medida los procesos directos y/o indirectos de la transmisión intergeneracional de la desigualdad política son persistentes en el tiempo?
+
+# Marco teórico
+
+## Repertorios de participación
+
+El paraguas conceptual de la participación política se ha traducido en medio siglo de discusión académica. Las definiciones más generales explican que la participación ciudadana es el principal mecanismo de comunicación de intereses, preferencias y necesidades desde la ciudadanía hacia los sistemas políticos, además de ser la fuente de legitimidad de las democracias (Scholzman et al., 1999). A su vez, la participación política también se ha definido como los mecanismos que tienen los ciudadanos para influir en las acciones que adoptan los tomadores de decisiones de cada democracia, que, a través de acciones políticas voluntarias, individuales o colectivamente organizadas, “irritan” al sistema político (Luhmann, 2006; Parry et al., 1992).
+
+
+Las prácticas de participación política han sido entendidas como ‘actividades ciudadanas’ o ‘repertorios de participación’ (Quintelier, 2013). Esto lleva a entender que las formas de participación son una lista “prácticamente interminable” de acciones cuyos objetivos son incidir en la toma de decisiones de las democracias (van Deth, 2001). Así, una acción privada que aparentemente podría no tener una consecuencia a nivel de sistema político (ej.: baja de sueldos de trabajadores en una empresa), podría desencadenar en una forma de participación inesperada, que busque comunicar un malestar a los gobernantes de un país (ej.: a través de protestas en la vía pública) (van Deth, 2001).
+
+Los repertorios de participación se han encapsulado bajo distintas etiquetas y según diversos criterios de agrupamiento. Uno de los principales es a partir del grado de institucionalización de la práctica de participación, en donde la participación convencional hace referencia a las prácticas de participación que, directa o indirectamente, están vinculados a un funcionamiento de las instituciones (Quaranta, 2018; Hooghe & Marien, 2012). 
+
+Así, como en el grupo de las prácticas convencionales de participación es posible identificar el contacto a políticos o el militar en un partido político, sin embargo, la práctica de participación convencional por excelencia es el voto en elecciones legales (Ekman and Amnå 2012; Van Deth 2001). Esta acción se entiende como el proceso eleccionario por el cual se eligen representantes – en democracias representativas- o en el cuál se deciden aspectos políticos de una nación a través de referéndum o plebiscitos – en democracias directas. Las condiciones para que una práctica de participación se considere convencional es que sea un acto legal, público e institucionalizado. Así, el objetivo de la participación convencional es decidir quién toma el poder en un sistema político, ya sea a nivel local, regional o nacional (Kaim, 2021). 
+
+Por su parte, la participación no convencional comprende aquellas acciones que se realizan por fuera de los marcos institucionales, es decir, son métodos alternativos a la participación convencional para incidir en los asuntos públicos, dentro de las prácticas de participación no convencionales, es posible encontrar acciones conocidas como activismo o actividades de protesta. En el contexto de la participación política, el activismo es una acción política vinculada al cambio social de algún orden o valor establecido, que pudiera tener consecuencias a nivel local, regional o nacional (Altbach, 1989; Earl, 2017; Sedwick, 2010; Wong et al., 2019). Siguiendo la idea, el activismo es una acción que siempre ha está ligada a prácticas políticas que se desarrollan por fuera de las instituciones formales, pero que están comprometidas con el cambio social de alguna causa, institución o cultura. En la literatura se han estudiado los repertorios del activismo político, una primera aproximación la entrega Norris (2004) para hablar sobre las transformaciones del concepto, en donde plantea que actualmente hay dos formas predominantes de activismo: la orientada a acciones ciudadanas y la orientada a causas políticas. Dentro de las orientadas a acciones ciudadanas es posible considerar aquellas que usan formas de participación con un sentido cívico, como, por ejemplo, participación en marchas o todas aquellas actividades cívicas realizadas dentro de los marcos normativos de los países. 
+
+Por su parte, dentro de las orientadas a causas políticas es posible encontrar acciones de protesta violenta o participación radical. Así, una de las distinciones que los académicos usan para subcategorizar el activismo de los jóvenes es el límite que imponen las normas y las leyes. Se consideraría activismo pacífico o legal las formas de participación que las instituciones de los países permiten realizar sin una respuesta estatal y policial a ellas, incluso asegurando e incentivando la participación en ellas, incluidas las protestas autorizadas. Por su parte, el activismo radical, que también aparece en la literatura como ilegal o disruptivo, es aquel que, para su uso, es necesario quebrantar las reglas jurídicas y/o sociales que los Estados y las sociedades imponen (Wong et al., 2019). Existe una distinción académica sobre el concepto de activismo y radicalización. Para Maskaliunaite (2015) el activismo radical “es un proceso por el cual una persona adopta sistemas de creencias que justifican el uso de la violencia para efectuar cambios sociales (…) así como a emplear violentos medios con fines políticos” (pág. 14, traducción propia).  Para este autor, el activismo ilegal es un proceso de radicalización del activismo pacífico, en donde la ideología juega un papel importante para convencer de utilizar métodos violentos para conseguir los objetivos políticos y en donde las formas no violentas de activismo se observan como ineficaces.
+
+Otra forma de organización conceptual de la participación sería a través del lugar desde el cual se realiza. Aquí es posible distinguir entre dos prácticas: la participación off-line y la participación on-line (Boulianne & Theocharis, 2018; Vissers & Stolle, 2014). Dentro de las primeras es posible encontrar tanto prácticas de participación convencionales como no convencionales, pero que se realicen por fuera del espacio virtual, las redes sociales y del internet. Un ejemplo podría ser los procesos de elecciones presenciales y las protestas en la vía pública. Por su parte, la participación online es una forma de participación funcionalmente diferenciada de otras (Norris, 2000) que consta en organizar iniciativas políticas a través de redes sociales, ser miembro activo de una organización de activismo online o donaciones online (Oser et al., 2013). 
+
+En el contexto de los repertorios de participación, se han podido avizorar diferencias etarias en el acceso a las distintas formas de participación (Melo & Stockemer, 2014; Nie, Verba & Kim; Quintelier, 2007). Estudios empíricos señalan que mientras los adultos tienen una tendencia a incrementar su probabilidad de voto y menores probabilidades de ser activistas, los jóvenes y adultos jóvenes tienden a participar en mayor medida de políticas no convencionales y que conlleven un menor compromiso institucional (Flinders et al, 2009; Melo & Stockemer, 2014). De una forma similar, investigaciones han planteado que los jóvenes llevan la delantera en cuanto a los usos de las plataformas digitales para participar políticamente y realización de activismo online (Dahlgren, 2011; Loader, Vromen & Xenos, 2014; Vissers & Stolle, 2014). 
+Como se observó, investigaciones recientes han puesto de relevancia el estudio de la participación en los jóvenes. Esto toma valor desde el punto de vista de los repertorios, ya que los adultos jóvenes tienen la posibilidad de desarrollar una mayor cantidad de prácticas de participación, lo que los hace un sujeto de especial interés para la agenda de ciudadanía, sin embargo, también es de importancia por las desigualdades de origen con las cuales los jóvenes socializan sus prácticas de participación y finalmente las ejercen, ya que la desigualdad de voz política a partir de diferencias socioeconómicas restaría legitimidad a los sistemas políticos democráticos (Scholzman et al., 1999).
+
+# Antecedentes de la participación
+
+Estudios clásicos y recientes de participación ciudadana afirman que la participación de los jóvenes está estratificada a través del nivel socioeconómico de las familias y sus credenciales educativas (Plutzer, 2002; Quintelier, 2015; Verba et al., 1995). En concreto, esto significa que familias con mayores recursos socioeconómicos tenderán a socializar de forma más fuerte la participación política de los jóvenes, en parte porqué las familias más pobres tendrían menos tiempo y energía para concentrarse en la socialización política de sus hijos (Peck & Kaplan, 1995). Esta relación se debe también a que, familias con mayores recursos económicos tienen la posibilidad de brindar mayores oportunidades de socialización política a los jóvenes, esto por medio de mayores y mejores fuentes de información, de una discusión política más sofisticada por el nivel educativo de los padres y de un ambiente de crianza más rico en términos de educación ciudadana, debido a la relación que existe entre el interés en la política y los ingresos de las familias (Scholzman et al., 2012). Del mismo modo, familias más educadas puede ser un indicador de mayor definición de identidades políticas y participación ciudadana, esto porque al ser los padres modelos a seguir para sus hijos, quienes son más educados suelen entregar mayores herramientas discursivas, argumentativas y cívicas a sus hijos, por lo que los jóvenes tenderán a participar en mayor medida de la política (Amna, 2012; McDevitt and Chaffee 2000; Shala & Grajcevci, 2018). Siguiendo esta racionalidad se espera que Jóvenes que provienen de familias con mayores recursos socioeconómicos presentan mayores niveles de participación ciudadana (H1). 
+
+En la literatura también se ha encontrado evidencia que vincula diferencias en la participación de acuerdo a las posiciones logradas en la esfera laboral y educativa. El estudio de Robert, Oross & Szabó (2017) menciona que hay diferencias de participación política formal entre jóvenes con regímenes contractuales fijos y aquellos jóvenes desempleados o con contratos laborales de peor calidad, favoreciendo la participación a los primeros. Así, el argumento que esgrimen los autores para explicar esta situación es que, aquellos jóvenes que pueden acceder a mejores contratos sienten una mayor integración social y responsabilidad con la sociedad, lo cual los lleva a tener mayores niveles de participación formal respecto a quienes tienen contratos de menor nivel (Robert et al., 2017). Por su parte, el nivel educativo de los jóvenes también es importante para lograr mayores niveles de participación, esto se debe a que jóvenes con más respaldo educativo tienen mayores herramientas cognitiva para aprender sobre política, además la educación incrementa las capacidades de los sujetos jóvenes para entender conceptos abstractos relacionados con la política, lo que les permite una mejor llegada con ella y así obtener una más alta participación respecto a quienes tienen menor educación formal (Peck & Kaplan, 1995; Shala & Grajcevci, 2018). *Siguiendo esta lógica se espera que Jóvenes que obtienen mejores posiciones en el mercado laboral y/o mayores credenciales educacionales presentarán mayores niveles de participación ciudadana tradicional (H1a).*
+
+Asimismo, los recursos socioeconómicos no sólo se pueden traducir en mayores niveles de participación sino también en una mejor posición en el mercado laboral o en el nivel educacional logrado por la siguiente generación, por la vía de la transmisión del estatus. *En ese sentido, jóvenes que provienen de familias con mayores recursos socioeconómicos presentarán también mayores estatus y/o recursos socioeconómicos, y que dado el mayor estatus logrado presenten mayores niveles de participación ciudadana (H2).*
+
+En el caso de la relación entre socialización política y recursos familiares, también hay evidencia para sustentar una relación directa entre estos dos factores. Esto pues, las familias con más recursos entregan una mayor gamma de oportunidades de socialización a los jóvenes, y también brindan la posibilidad informarse por una diversidad mayor de plataformas, en desmedro de las familias con menores recursos, que tienen menos tiempo, herramientas y recursos para la socialización política de la juventud (Peck & Kaplan, 1995; Thorson & Edgerly, 2018). También cabe señalar que en los hogares donde hay mayor espacio para la discusión política y en que se alienta a los jóvenes a tomar sus propias decisiones, hay una mayor transmisión de la participación a jóvenes, y este enfoque está estrechamente vinculado con el background socioeconómico de los padres (Jaanmat & Hoskins, 2019; Quintelier, 2015). Esto quiere decir que la relación entre recursos y participación política de los jóvenes estaría mediada por la socialización política. *En este sentido, en esta investigación se espera que los recursos socioeconómicos de los padres se asocian con mayores prácticas de socialización política al interior de la familia (H3)*
+
+La literatura coincide en que las familias son el pilar de la participación ciudadana futura de los jóvenes, ya que es el espacio en donde se generan hábitos cívicos, comportamientos ciudadanos y preferencias políticas (Andolina et al., 2004; Scholzman et al., 2012; Wilder, 1999). Es en los contextos familiares donde hay mayores prácticas de socialización política se generaría un ambiente de crecimiento indicado para generar compromiso político, herramientas cívicas y conocimiento ciudadano, lo que en definitiva estaría vinculado con una mayor participación futura de los jóvenes en la política (Valentino & Sears, 1998). See argumenta que en familias con mayores prácticas de socialización política se generan mayores probabilidades de crear ambientes ricos en términos de discusiones familiares frecuentes sobre temas políticos y con mayor estimulación cognitiva en temas de ciudadanía a través de la conversación, lo que está vinculado a mayor compromiso político (Andolina et al., 2003; Valentino & Sears, 1998; Cornejo et al., 2021). A su vez, una mayor participación de los jóvenes en estos contextos familiares también se refrenda en la imitación directa de los jóvenes de las prácticas de sus padres, lo que explicaría tanto preferencias políticas como niveles de participación en el futuro (Beck, 1977; Quintelier, 2015, Cornejo et al., 2020). En el contexto chileno, investigaciones recientes en una muestra de activistas han mostrado que en las familias que discuten sobre temas sociopolíticos, los jóvenes más saben sobre la participación de sus padres, lo que en definitiva predice una mayor participación política de esos jóvenes, especialmente medido en formas radicales de participación (Cornejo et al., 2021).  *En esa dirección se espera que jóvenes que crecen/crecieron en familias con mayores prácticas vinculadas a la socialización política presentarán mayores niveles de participación política (H4).*
+
+Es importante notar que las hipótesis asumen el enfoque de la persistencia, que plantea que la socialización experimentada en etapas pre-adultas del ciclo de vida de una persona son, por lo general, estables (Wasburn et al., 2017). Particularmente, la perspectiva de la persistencia plantea que una parte importante de las orientaciones políticas de los adultos se socializan en la adolescencia temprana, generando actitudes políticas como la aceptación a la autoridad, la idea de buen ciudadano, las principales preferencias políticas y por supuesto, las prácticas de participación en la adultez (Wasburn et al., 2017; Sears & Funk, 1999). En este sentido, fuentes de socialización política como la familia y sus recursos son esenciales para generar ciudadanos con actitudes y prácticas políticas estables (Wasburn et al., 2017). De este modo, se espera que las principales relaciones directas presentadas en las hipótesis anteriores, se mantengan constantes con el paso del tiempo. 
+
+*H5: El efecto de los recursos socioeconómicos sobre la participación ciudadana sea similar en jóvenes menores de edad que en jóvenes mayores de edad.*
+
+*H6: El rol mediador que juega el estatus socioeconómico logrado por los jóvenes sobre la participación ciudadana observado en cohortes más jóvenes se mantiene en edades posteriores.*
+
+*H7: El rol mediador que juegan las prácticas de socialización familiar sobre la participación ciudadana observado en cohortes más jóvenes se mantiene en edades posteriores.*
+
+## Nota sobre hipótesis
+
+En general, las relaciones sustantivas esperadas en las hipótesis están basadas en literatura sobre formas tradicionales de participación, que son las que permiten proponerlas y teorizar en base a ellas. Sin embargo, dado que es una investigación que no se centra únicamente en esos modos de participación, es completamente razonable encontrar diferencias en las formas en que estas distintas formas de participación política son socializadas. Así, este artículo no tan sólo intentará confirmar las relaciones entre factores que la literatura invita a teorizar, sino que también explorará en aquellas relaciones en que no se ha llegado a un grado de consenso ni en la dirección ni en el grado en que son socializadas.
+
+# Metodología
+
+## Datos
+
+El Estudio Panel de Ciudadanía Juvenil 2020-2021 es un estudio longitudinal de tres olas que aborda temáticas de participación política, socialización política familiar y características socioeconómicas de jóvenes chilenos de entre 18 y 29 años. La primera ola constó de un total de 3122 estudiantes, y durante esta primera medición se realizaron una serie de preguntas retrospectivas que permitieron caracterizar la participación de estos jóvenes en el período político inmediatamente anterior (2019-2020), por lo que se puede hablar de que es una investigación que mide cinco momentos dentro de tres olas. La segunda ola se compuso de 1541 jóvenes entrevistados y la tercera de 1065, lo que permitió observar el comportamiento político de estos jóvenes en el período reciente (primer y segundo semestre 2021, respectivamente). Esta investigación se realizó de forma on-line mediante un formulario digital y tiene un carácter de no probabilístico, por lo que no se pueden hacer inferencias a la población.
+
+## Variables Dependientes
+
+Esta investigación constó de cuatro variables dependientes: el comportamiento electoral, la participación activista pacífica, la participación activista disruptiva y la participación on-line. En relación al comportamiento electoral, se consultó a los jóvenes sobre su participación en las distintas elecciones ocurridas entre el periodo 2017-2021. En específico, se consultó sobre su participación en las elecciones presidenciales del 2017, en el plebiscito constitucional del año 2020, en las elecciones de convencionales constituyentes del mismo año, en las elecciones municipales del 2020, en las elecciones parlamentarias del año 2021, en la primera vuelta presidencial del año 2021 y la segunda vuelta presidencial del año 2021. Estas variables tuvieron de opciones 0= "No", 1 = "Sí". 
+
+Por su parte, la participación activista pacífica fue medida a partir de la pregunta "Durante alguno de los cinco momentos, ¿realizó algunas de las siguientes actividades? Participar en marchas o protestas pacíficas". Esta pregunta tenía como categorías posibles  1 = Nunca, 2 = Rara vez, 3 = A veces, 4 = Frecuentemente. 
+
+Para la elaboración de las variables participación activista disruptiva y participación on-line se realizó un set de ecuaciones estructurales para cada uno de los cinco momentos señalados en un inicio, más específicamente un Análisis Factorial Confirmatorio (AFC). Para el activismo disruptivo, se consideraron las siguientes posibilidades de participación durante los cinco momentos: (1) participar en una marcha o manifestación con disturbios, (2) participar en bloqueo de calles o carreteras, (3) pintar y/o (3) rayar paredes con demandas o consignas, participar en la toma de un edificio o institución (con categorías 1 = Nunca, 2 = Rara vez, 3 = A veces, 4 = Frecuentemente). En el caso de la participación on-line, se consideraron las siguientes actividades de participación realizadas: (1) usar internet para buscar información sobre temas sociales y/o políticos, (2) postear imágenes o mensajes acerca de temas sociales y/o políticos en internet, (3) compartir o comentar en el posteo de otra persona acerca de temas sociales y políticos, (4) seguir a personas en redes sociales por su contenido sobre temas sociales y políticos (con categorías 1 = Nunca, 2 = Rara vez, 3 = A veces, 4 = Frecuentemente). 
+
+## Variables independientes
+
+Para el modelo de recursos, se consideró como variable predictora el nivel educacional más alto alcanzado por alguno de los padres. Para el nivel socioeconómico logrado por el estudiante, se consideró el nivel educacional de los jóvenes al momento se hacer la entrevista. Por último, para evaluar aspectos de socialización política familiar, se incluyó en los modelos la frecuencia de conversación sobre temas políticos, esto último fue preguntado en los 5 momentos a partir de la pregunta: ¿Con qué frecuencia realiza las siguientes actividades? Hablar con sus padres sobre temas sociales y/o políticos (con categorías 1= Nunca, 2= Rara vez, 3 = A veces, 4 = Frecuentemente).
+
+## Variables de control
+
+Se consideraron como variables de control el género de los estudiantes, la posición política de los mismos, su edad y un promedio de la edad de los padres.
+
+## Método
+
+Dada la naturaleza distinta de las variables dependientes, se utilizaron distintas técnicas para evaluar la relación de dependencia entre las variables de socialización política y recursos (familiares y propios) con las distintas formas de participación. Para el caso del voto y la participación activista pacífica, se realizó un análisis multinivel longitudinal, en donde la variable dependiente fue el voto y las independientes fueron el nivel educativo más alto alcanzado por uno de los padres/madres, el nivel educativo del joven al momento de entrevistársele, la frecuencia de conversación fijada en el momento uno y el momento (con control estadístico de sexo y posición política). Por su parte, para el caso de la participación on-line y de la participación activista disruptiva, se realizó un modelamiento de ecuaciones estructurales (análisis de senderos), en donde se calculó el efecto directo, indirecto y total de las variables independientes sobre los modelos de medición en los cinco momentos.
+
+# Resultados
+
+Los resultados se dividen en cuatro subsecciones: en primer lugar se mostrarán los resultados de las regresiones logísticas multinivel para el comportamiento electoral, posteriormente se presentarán los resultados para la participación pacífica, luego se enseñarán las tablas de efectos directos, indirectores y totales para la participación activista disruptiva y online.
+
+## Comportamiento electoral
+
+```{r vot-edhigh-conv1, results='asis'}
+rm(list=ls())
+if (!require("pacman")) install.packages("pacman") # instalar pacman
+pacman::p_load(dplyr,       # Manipulacion de datos 
+               haven,       # importar datos en .dta o .sav
+               sjmisc,      # descriptivos y frecuencias
+               sjPlot,      # tablas, plots y descriptivos
+               sjlabelled,
+               summarytools,# resumen de dataframe
+               knitr,       # tablas kable
+               kableExtra,  # tablas kable personalizadas
+               ggplot2,     # plots
+               corrplot,    # plot correlacion
+               tibble,
+               lavaan,
+               texreg,
+               mediation
+               )
+
+load(here::here("input/data/proc/study1.RData"))
+data1 <- study_1 %>% 
+  dplyr::select(-educ,-edmad,-edpad) %>% 
+  dplyr::filter(votpr17 !=2 & votpleb !=2 & votcons !=2) %>%
+  dplyr::select(mujer:conv5a,votpr17:vot2vue,
+         educyear,edhigh,psu,
+         pospolcen,pospolizq,pospolind,pospol 
+         ) %>% 
+  dplyr::mutate(conv1a=as_numeric(conv1a),
+         conv3a=as_numeric(conv3a),
+         conv4a=as_numeric(conv4a),
+         conv5a=as_numeric(conv5a)) %>% 
+  na.omit()
+
+# view_df(data1)
+
+# sjmisc::frq(data1$votpr17)
+# sjmisc::frq(data1$votpleb)
+# sjmisc::frq(data1$votcons)
+
+# Hypothesis___________________________________________________________________
+m1 <- "edhigh+educyear+conv1a+mujer+pospol"#highschool
+# m2 <- "edhigh+educyear+conv3a+mujer+pospol"# 2sem 2020
+# m3 <- "edhigh+educyear+conv4a+mujer+pospol"# 1sem 2021
+# m4 <- "edhigh+educyear+conv5a+mujer+pospol"# 2sem 2021
+
+hipotesis <- c(m1
+               # m2,m3,m4
+               )
+
+# Set the independent variables (IVs)
+ivs1<- data1 %>% dplyr::select(votpr17) %>% names()        #highschool
+ivs2<- data1 %>% dplyr::select(votpleb) %>% names()        # 2sem 2020
+ivs3<- data1 %>% dplyr::select(votconv:votmuni) %>% names()# 1sem 2021
+ivs4<- data1 %>% dplyr::select(votdipu:vot2vue) %>% names()# 2sem 2021
+
+ivs <- c(ivs1,ivs2,ivs3,ivs4)
+
+# Create the object for each model
+models <- list()
+for (i in ivs1) {
+models[[i]] <- paste0(i,"~",m1)  
+}
+
+for (i in ivs2) {
+models[[i]] <- paste0(i,"~",m1)  
+}
+
+for (i in ivs3) {
+models[[i]] <- paste0(i,"~",m1)  
+}
+
+for (i in ivs4) {
+models[[i]] <- paste0(i,"~",m1)  
+}
+
+# Estimate logit models
+fits <- list()
+for (i in ivs) {
+  for (z in models[[i]]) {
+    fits[[z]] <- glm(formula =z, data = data1,family = "binomial")
+  }
+}
+fit1 <- fits
+# change model names within list
+names(fit1) <- paste0(ivs)
+
+# Tables_______________________________________________________________________
+omit <- "(Intercept)|(mujer)|(pospol)"
+# detail for subsections:
+# https://stackoverflow.com/questions/69338331/r-markdown-create-section-headers-in-r-and-print-r-output-in-same-section
+
+caption <- "Voting behaviour, parental education and conversation (fixed t1)"
+knitreg(l = fit1[names(fit1)[grepl("vot", names(fit1),"\n")]],
+        omit.coef = omit,
+        caption = caption,
+        caption.above = T
+        # reorder.coef = reorderc
+        )
+
+```
+
+La tabla 1 presenta el análisis de regresión multinivel para el comportamiento electoral, es decir, el voto en distintas elecciones producidas durante el estudio (7). En relación a las primeras hipótesis, es posible establecer que el nivel educativo de los padres aumenta el nivel de participación de los jóvenes únicamente en la elección presidencial del 2017, la cuál probablemente fue la primera de sus vidas ($\beta = 0,07$; I.C = 95%). En todas las otras elecciones consultadas, no hay un efecto significativo del nivel educativo de los padres. Por el contrario, el nivel educativo logrado por los jóvenes aumenta el nivel de participación electoral en todas las elecciones, sin embargo, el efecto decrece con el paso del tiempo: elecciones 2017 ($\beta = 0,30$; I.C = 99,9%), votación plebiscito constitucional ($\beta = 0,32$; I.C = 95%), votación convencionales constituyentes ($\beta = 0,30$; I.C = 99,9%), votación elecciones municipales ($\beta = 0,26$; I.C = 99,9%), votación de elecciones parlamentarias ($\beta = 0,27$; I.C = 95%), votación en primera vuelta presidencial 2021 ($\beta = 0,17$; I.C = 99%) y votación en segunda vuelta presidencial 2021 ($\beta = 0,18$; I.C = 99,9%). En cuanto a los componentes de socialización política familiar, a mayor frecuencia de conversación sociopolítica entre padres e hijos (fijada en el tiempo 1) hay una mayor participación electoral de los jóvenes. Este efecto es significativo en las elecciones 2017 ($\beta = 0,25$; I.C = 99%), votación convencionales constituyentes ($\beta = 0,25$; I.C = 99%), votación elecciones municipales ($\beta = 0,26$; I.C = 99%) y votación en primera vuelta presidencial 2021 ($\beta = 0,22$; I.C = 99%).
+
+Duda, ¿como se integran los efectos indirectos del comportamiento electoral?
+
+Hipótesis 6: Al considerar los efectos indirectos del nivel educativo de los padres en el comportamiento electoral, mediado por el estatus educativo logrado por los jóvenes, se puede observar que hay un efecto indirecto significativo en las elecciones presidenciales del año 2017 ($\beta = 0.008$; I.C = 99,9%), el plebiscito constitucional del año 2020 ($\beta = 0.006$; I.C = 99,9%), la elección de convencionales constituyentes ($\beta = 0.006$; I.C = 99,9%), las elecciones municipales del año 2021($\beta = 0.006$; I.C = 99,9%), las elecciones parlamentarias del año 2021 ($\beta = 0.006$; I.C = 99,9%), la primera vuelta presidencial del año 2021 ($\beta = 0.003$; I.C = 99,9%) y la segunda vuelta presidencial del año 2021 ($\beta = 0.003$; I.C = 99%). En relación a la hipótesis 6, se puede interpretar que la mediación del estatus educativo logrado por los jóvenes sobre la relación entre el nivel educativo de los padres y el comportamiento electoral, se mantiene en niveles similares entre jóvenes menores de edad y mayores de edad.
+
+Hipótesis 7: Al considerar los efectos indirectos del nivel educativo de los padres en el comportamiento electoral, mediado por la conversación política familiar, se puede observar que hay un efecto indirecto significativo en las elecciones presidenciales del año 2017 ($\beta = 0.001$; I.C = 99,9%), el plebiscito constitucional del año 2020 ($\beta = 0.001$; I.C = 90%), la elección de convencionales constituyentes ($\beta = 0.003$; I.C = 99%), las elecciones municipales del año 2021 ($\beta = 0.003$; I.C = 99%), las elecciones parlamentarias del año 2021 ($\beta = 0.002$; I.C = 99%), la primera vuelta presidencial del año 2021 ($\beta = 0.001$; I.C = 99,9%) y la segunda vuelta presidencial del año 2021 ($\beta = 0.001$; I.C = 99%). En relación a la hipótesis 7, se puede interpretar que la mediación de la conversación política familiar  sobre la relación entre el nivel educativo de los padres y el comportamiento electoral de los jóvenes, se mantiene en niveles similares a través del tiempo.
+
+## Participación pacífica
+
+```{r mpas-edhigh-logit, results='asis'}
+rm(list=ls())
+if (!require("pacman")) install.packages("pacman") # instalar pacman
+pacman::p_load(dplyr,       # Manipulacion de datos 
+               haven,       # importar datos en .dta o .sav
+               sjmisc,      # descriptivos y frecuencias
+               sjPlot,      # tablas, plots y descriptivos
+               sjlabelled,
+               summarytools,# resumen de dataframe
+               knitr,       # tablas kable
+               kableExtra,  # tablas kable personalizadas
+               ggplot2,     # plots
+               corrplot,    # plot correlacion
+               tibble,
+               lavaan,
+               texreg,
+               mediation
+               )
+
+load(here::here("input/data/proc/study1.RData"))
+data1 <- study_1 %>% 
+  dplyr::select(-educ,-edmad,-edpad) %>% 
+  dplyr::select(mujer,starts_with("conv"),starts_with('mpas'),
+         educyear,edhigh,age,agepavg,
+         pospolcen,pospolizq,pospolind,pospol 
+         ) %>% 
+  dplyr::mutate(conv1a=as_numeric(conv1a),
+                conv2a=as_numeric(conv2a),
+                conv3a=as_numeric(conv3a),
+                conv4a=as_numeric(conv4a),
+                conv5a=as_numeric(conv5a),
+                mpas1a=as_numeric(mpas1a_bi),
+                mpas2a=as_numeric(mpas2a_bi),
+                mpas3a=as_numeric(mpas3a_bi),
+                mpas4a=as_numeric(mpas4a_bi),
+                mpas5a=as_numeric(mpas5a_bi)) %>% 
+  na.omit()
+
+# view_df(data1)
+
+# sjmisc::frq(data1$votpr17)
+# sjmisc::frq(data1$votpleb)
+# sjmisc::frq(data1$votcons)
+
+# Hypothesis___________________________________________________________________
+m1 <- "edhigh+educyear+conv1a+mujer+age+agepavg+pospol"# highschool
+#m2 <- "edhigh+educyear+conv2a+mujer+age+agepavg+pospol"# 2019 and 1sem 2020
+#m3 <- "edhigh+educyear+conv3a+mujer+age+agepavg+pospol"# 2sem 2020
+#m4 <- "edhigh+educyear+conv4a+mujer+age+agepavg+pospol"# 1sem 2021
+#m5 <- "edhigh+educyear+conv5a+mujer+age+agepavg+pospol"# 2sem 2021
+
+hipotesis <- c(m1
+               #m2,
+               #m3,
+               #m4,
+               #m5
+               )
+
+# Set the independent variables (IVs)
+ivs1<- "mpas1a_bi"
+ivs2<- "mpas2a_bi"
+ivs3<- "mpas3a_bi"
+ivs4<- "mpas4a_bi"
+ivs5<- "mpas5a_bi"
+
+ivs <- c(ivs1,
+         ivs2,
+         ivs3,ivs4,ivs5)
+
+# Create the object for each model
+models <- list()
+for (i in ivs1) {
+models[[i]] <- paste0(i,"~",m1)  
+}
+
+for (i in ivs2) {
+models[[i]] <- paste0(i,"~",m1)
+}
+
+for (i in ivs3) {
+models[[i]] <- paste0(i,"~",m1)  
+}
+
+for (i in ivs4) {
+models[[i]] <- paste0(i,"~",m1)  
+}
+
+for (i in ivs5) {
+models[[i]] <- paste0(i,"~",m1)  
+}
+
+
+# Estimate logit models
+fits <- list()
+for (i in ivs) {
+  for (z in models[[i]]) {
+    fits[[z]] <- glm(formula =z, data = data1,family = "binomial")
+  }
+}
+fit1 <- fits
+# change model names within list
+names(fit1) <- paste0(ivs)
+# Tables_______________________________________________________________________
+omit <- "(Intercept)|(mujer)|(pospol)|(age)|(agepavg)"
+# detail for subsections:
+# https://stackoverflow.com/questions/69338331/r-markdown-create-section-headers-in-r-and-print-r-output-in-same-section
+
+save(fit1,
+     file = here::here("output/tables/tab_log_mpas_educ.RData"))
+
+caption <- "Participation peaceful protest, parental education and conversation"
+knitreg(l = fit1[names(fit1)[grepl("mpas", names(fit1),"\n")]],
+        omit.coef = omit,
+        caption = caption,
+        caption.above = T
+        # reorder.coef = reorderc
+        )
+```
+
+La tabla 2 presenta los resultados para la participación activista, pero en actividades pacíficas. En primer lugar, el nivel educativo alcanzado por los padres tiende a disminuir el promedio de actividades pacíficas en las que participan sus hijos. Sin embargo, este resultado es significativo únicamente en el primer momento, es decir, durante la educación media de los jóvenes ($\beta = -0,10$; I.C = 99,9%). En cuanto al nivel educativo alcanzado por los jóvenes al momento de la encuesta, este aumenta la probabilidad de participar en actividades pacíficas solamente en el estallido social, es decir, en el año 2019 ($\beta = 0,11$; I.C = 95%). Por otro lado, la frecuencia en la conversación sobre temas sociopolíticos entre padres e hijos (fijada en el tiempo 1), aumenta los niveles de participación en marchas pacíficas en todos los momentos: educación media ($\beta = 0,46$; I.C = 99,9%), durante el estallido social ($\beta = 0,17$; I.C = 95%), en el año 2020 ($\beta = 0,31$; I.C = 99,9%), el primer semestre del 2021 ($\beta = 0,31$; I.C = 99,9%) y en el segundo semestre del 2021 ($\beta = 0,30$; I.C = 99,9%).
+
+Duda, ¿como se integran los efectos indirectos de la participación?
+
+H6: Al considerar los efectos indirectos del nivel educativo de los padres en la participación en protestas pacíficas, mediado por el estatus educativo logrado por los jóvenes, se puede observar que hay un efecto indirecto significativo en las siguientes acciones de protesta reportada por los jóvenes: protestas pacíficas realizadas en la educación secundaria ($\beta = 0,004$; I.C = 90%), protestas pacíficas realizadas durante el estallido social ($\beta = 0,006$; I.C = 95%). En los otros tres momentos, no se encontró un efecto de mediación del estatus educativo logrado por los jóvenes sobre en la relación del nivel educativo de los padres y la participación en protestas pacíficas de los jóvenes.
+
+H7: Al considerar los efectos indirectos del nivel educativo de los padres en la participación en protestas pacíficas, mediado por la conversación política familiar, se puede observar que hay un efecto indirecto significativo en las siguientes acciones de protesta reportada por los jóvenes: protestas pacíficas realizadas en la educación secundaria ($\beta = 0,008$; I.C = 99,9%), protestas pacíficas realizadas durante el estallido social ($\beta = 0,008$; I.C = 99%), participación en protestas pacíficas durante marzo y diciembre de 2020 ($\beta = 0,003$; I.C = 95%), participación en protestas pacíficas en la primera mitad del 2021 ($\beta = 0,006$; I.C = 99%) y la segunda mitad del 2021 ($\beta = 0,004$; I.C = 99%). En relación a la hipótesis 7, se puede interpretar que la mediación de la conversación política familiar  sobre la relación entre el nivel educativo de los padres y la participación en protestas pacíficas de los jóvenes, se mantiene en niveles similares a través del tiempo.
+
+## Participación disruptiva
+
+```{r}
+rm(list=ls())
+if (!require("pacman")) install.packages("pacman") # instalar pacman
+pacman::p_load(dplyr,       # Manipulacion de datos 
+               haven,       # importar datos en .dta o .sav
+               sjmisc,      # descriptivos y frecuencias
+               sjPlot,      # tablas, plots y descriptivos
+               sjlabelled,
+               summarytools,# resumen de dataframe
+               knitr,       # tablas kable
+               kableExtra,  # tablas kable personalizadas
+               ggplot2,     # plots
+               corrplot,    # plot correlacion
+               tibble,
+               lavaan,
+               texreg,
+               huxtable
+               )
+
+load(here::here("input/data/proc/study1.RData"))
+data1 <- study_1 %>% 
+  dplyr::select(educyear,mujer,edhigh,age,agepavg,conv1a:segu5a,
+                "pospolcen","pospolizq","pospolind") %>% na.omit()
+
+m1a<- '
+        # modelo de medicion
+        disrup1a =~ mdis1a + bloq1a + raya1a + toma1a
+        online1a =~ onli1a + post1a + come1a + segu1a
+        
+        # (1) modelo de regresion: PARTICIPACION DISRUPTIVA ____________________
+        # efecto directo
+        disrup1a ~ C1*edhigh+B1A*educyear+B1B*conv1a+mujer+age+agepavg+pospolcen+pospolizq+pospolind
+        
+        # efecto mediacion predictor sobre mediador (DECLARAR UNA VEZ)
+        # educ padres sobre educacion hijos
+        educyear ~ A1A*edhigh+mujer+pospolcen+pospolizq+pospolind
+        
+        # educ padres sobre conversacion hijos
+        conv1a ~ A1B*edhigh+mujer+pospolcen+pospolizq+pospolind
+        
+        # efecto indirecto (A*B)
+        # educpadres by educ-hijos (A1)
+        ind_dis1_educ:= A1A*B1A 
+        # educpadres by conversation (A2)
+        ind_dis2_conv:= A1B*B1B
+
+        # total effect
+        tot_dis1_educ:= C1 + (A1A*B1A)
+        tot_dis2_conv:= C1 + (A1B*B1B)
+        
+        # (2) modelo de regresion: PARTICIPACION ONLINE ________________________
+        # efecto directo
+        online1a ~ C2*edhigh+B2A*educyear+B2B*conv1a+mujer+age+agepavg+pospolcen+pospolizq+pospolind
+        
+        # efecto indirecto (A*B)
+        # educpadres by educ-hijos (A2)
+        ind_onl_educ:= A1A*B2A 
+        # educpadres by conversation (A2)
+        ind_onl2_conv:= A1B*B2B
+
+        # total effect
+        tot_onl1_educ:= C2 + (A1A*B2A)
+        tot_onl2_conv:= C2 + (A1A*B2B)        
+'
+
+
+m2a <- stringr::str_replace_all(string = m1a,pattern = "1a",replacement = "2a")
+m3a <- stringr::str_replace_all(string = m1a,pattern = "1a",replacement = "3a")
+m4a <- stringr::str_replace_all(string = m1a,pattern = "1a",replacement = "4a")
+m5a <- stringr::str_replace_all(string = m1a,pattern = "1a",replacement = "5a")
+
+models <- c(m1a,m2a,m3a,m4a,m5a)
+
+fits <- list()
+for (i in 1:length(models)) {
+    fits[[i]] <- lavaan::sem(model = models[[i]], data = data1,ordered = T)    
+}
+
+fit<- texreg::get.data(l = fits)
+filt<- data.frame(coef=fit[[1]]@coef.names)
+
+tabhux <- texreg::huxtablereg(fit,single.row = T)
+tabhux2 <- dplyr::filter(tabhux,(grepl(' ~ ', V1)))
+tabhux3 <- dplyr::filter(tabhux2,!(grepl('mujer', V1)))
+tabhux4 <- dplyr::filter(tabhux3,!(grepl('pospol', V1)))
+tabhux5 <- dplyr::filter(tabhux4,!(grepl('age', V1)))
+tabhux6 <- dplyr::filter(tabhux5,!(grepl('agepavg', V1)))
+
+fitind <- tabhux %>% filter(V1 %in% c("cfi","tli","rmsea","nobs")) 
+
+tabind_dis <- dplyr::filter(tabhux,(grepl('ind_dis', V1))) 
+tabtot_dis <- dplyr::filter(tabhux,(grepl('tot_dis', V1)))
+
+tabind_onl <- dplyr::filter(tabhux,(grepl('ind_onl', V1)))
+tabtot_onl <- dplyr::filter(tabhux,(grepl('tot_onl', V1)))
+
+coalesce_all_columns <- function(df) {
+  tibble(
+    V1 = df$V1[1],
+    V2 = na.omit(df$V2),
+    V3 = na.omit(df$V3),
+    V4 = na.omit(df$V4),
+    V5 = na.omit(df$V5),
+    V6 = na.omit(df$V6)        
+  )
+}
+
+#Participacion disruptiva
+tabdis <- tabhux6 %>%  dplyr::filter((grepl('disrup', V1))) %>% 
+  mutate(V1=stringr::str_replace_all(string = V1,
+                                     pattern = "1a|2a|3a|4a|5a",
+                                     replacement = "")) %>% 
+  as.data.frame()
+tabdis[tabdis==""] <- NA
+tabdis <- tabdis %>%  group_by(V1) %>% do(coalesce_all_columns(.)) %>%  ungroup() %>% 
+  rbind(tabind_dis,tabtot_dis,fitind) 
+
+#Participacion online
+tabonl <- tabhux6 %>%  dplyr::filter((grepl('online', V1))) %>% 
+  mutate(V1=stringr::str_replace_all(string = V1,
+                                     pattern = "1a|2a|3a|4a|5a",
+                                     replacement = "")) %>% 
+  as.data.frame()
+tabonl[tabonl==""] <- NA  
+tabonl <- tabonl %>%  group_by(V1) %>% do(coalesce_all_columns(.)) %>%  ungroup() %>% 
+  rbind(tabind_dis,tabtot_dis,fitind)   
+
+coef <- c("Conversation" ,
+  "Years of education - parent highest",
+  "Years of education",
+  "Ind: Education",
+  "Ind: Conversation",
+  "Total: Education",
+  "Total: Conversation",
+  "CFI",
+  "RMSEA",
+  "TLI",
+  "N")
+
+col <- c(" ",paste0("Model ",1:length(fits)))
+tabdis$V1 <- coef
+tab_dis_educ <- 
+kable(tabdis,format = "html",
+      booktabs=T,
+      row.names = F,
+      caption = "Disruptive political participation, parental education and conversation",
+      col.names = col) %>% 
+  kable_styling(full_width = F)
+tab_dis_educ
+
+```
+
+La tabla 3 presenta la descomposición de los efectos directos, indirectos y totales para la participación de los jóvenes en protestas disruptivas, esto en los 5 momentos consultados. En cuanto a los efectos directos, el nivel educativo de los padres está relacionado negativamente con la participación de los jóvenes en eventos de este estilo, sin embargo, sólo se halló una significación estadística en la educación media ($\beta = 0,04$; I.C = 99%) y durante el primer semestre del 2021 ($\beta = 0,04$; I.C = 99%). En cuanto al nivel educativo logrado por los jóvenes, este se vincula positivamente con la participación disruptiva, sin embargo, la evidencia no es tan fuerte, ya que sólo se encontró una relación significativa durante el primer semestre del 2021 ($\beta = 0,07$; I.C = 95%). Siguiendo con este razonamiento, es posible establecer que existe una relación positiva entre la frecuencia con la que se habla sobre temas sociopolíticos al interior de la familia y la participación de los jóvenes en actividades disruptivas, este resultado es bastante consistente con el paso del tiempo, ya que se encontraron coeficientes significativos en la educación media ($\beta = 0,20$; I.C = 99,9%), durante el estallido social ($\beta = 0,10$; I.C = 95%); el primer semestre del 2021 ($\beta = 0,14$; I.C = 99%) y en el segundo semestre del 2021 ($\beta = 0,10$; I.C = 95%).
+
+Al considerar los efectos indirectos, no se detectó evidencia que estableciera un efecto mediador del estatus educacional logrado por los jóvenes sobre la relación entre nivel educativo de los padres y la participación disruptiva de los jóvenes, esto porque ninguno de los coeficientes resultó significativo. Por otro lado, en tres de los cinco momentos, la conversación familiar actúa como un mediador de la relación entre nivel educativo de los padres y participación política disruptiva. Esto sucede particularmente en la educación media de los jóvenes ($\beta = 0,01$; I.C = 99,9%), en el estallido social ($\beta = 0,01$; I.C = 95%) y en el primer semestre del 2021 ($\beta = 0,01$; I.C = 95%). Sin embargo, como se puede observar, los tamaños de los coeficientes son bastante pequeños.
+
+## Participación online
+
+```{r}
+tabonl$V1 <- coef
+tab_onl_educ <- 
+kable(tabonl,format = "html",
+      booktabs=T,
+      row.names = F,
+      caption = "Online political participation, parental education and conversation",
+      col.names = col) %>% 
+  kable_styling(full_width = F) %>% 
+  row_spec(7,hline_after = T) 
+tab_onl_educ
+
+```
+
+La tabla 4 presenta los resultados para la participación online, en los cinco momentos medidos. En primer lugar, se encontró que a mayor nivel educativo de los padres, en promedio la participación online (buscar, postear, compartir o seguir contenido político online) disminuye. Este efecto es consistente a través del tiempo, ya que es significativo en cuatro de los cinco momentos: en la educación media ($\beta = -0,03$; I.C = 99,9%), estallido social ($\beta = -0,03$; I.C = 99,9%), primer semestre 2021 ($\beta = -0,03$; I.C = 99,9%), segundo semestre 2021 ($\beta = -0,03$; I.C = 99,9%). En contraposición, un resultado interesante es que el nivel educativo obtenido por los jóvenes se asocia positivamente con su propia participación online. Este efecto es consistente en los cinco momentos, a distintos niveles de confianza: educación media ($\beta = 0,05$; I.C = 95%), estallido social ($\beta = 0,12$; I.C = 99,9%), año 2020 ($\beta = 0,11$; I.C = 99,9%), primer semestre 2021 ($\beta = 0,08$; I.C = 99%), segundo semestre 2021 ($\beta = 0,10$; I.C = 99,9%). En relación a la frecuencia de conversación política entre padres e hijos, a mayor frecuencia de esta característica hay mayor participación online de los jóvenes, lo cuál además es bastante consistente a través del tiempo: educación media ($\beta = 0,37$; I.C = 99,9%), estallido social ($\beta = 0,40$; I.C = 99,9%); año 2020 ($\beta = 0,42$; I.C = 99,9%); primera parte del 2021 ($\beta = 0,40$; I.C = 99,9%) y en la segunda parte del 2021 ($\beta = 0,38$; I.C = 99,9%).
+
+Los efectos indirectos observados en la tabla 4 enseñan que para estos datos no existe un efecto mediador del nivel educativo logrado por los estudiantes en la relación entre nivel educativo de los padres y la participación en activismo online. Esto se concluye a partir de la no significación estadística de los efectos indirectos en los cinco modelos. Por otro lado, se encontró que la conversación familiar sí actúa como un mediador de la relación entre nivel educativo de los padres y participación online de los jóvenes, sin embargo, los efectos indirectos son bastante pequeños y en sólo tres de los cinco momentos: educación media ($\beta = 0,01$; I.C = 99,9%), estallido social ($\beta = 0,01$; I.C = 95%), primer semestre 2021 ($\beta = 0,01$; I.C = 95%).
+
+# Conclusiones
