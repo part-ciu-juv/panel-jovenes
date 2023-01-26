@@ -167,7 +167,7 @@ data1 <- study_1 %>%
 # sjmisc::frq(data1$votcons)
 
 # Hypothesis___________________________________________________________________
-m1 <- "edhigh+mujer+pospol"#highschool
+m1 <- "edhigh+educyear+conv1a++mujer+pospol"#highschool
 # m2 <- "edhigh+educyear+conv3a+mujer+pospol"# 2sem 2020
 # m3 <- "edhigh+educyear+conv4a+mujer+pospol"# 1sem 2021
 # m4 <- "edhigh+educyear+conv5a+mujer+pospol"# 2sem 2021
