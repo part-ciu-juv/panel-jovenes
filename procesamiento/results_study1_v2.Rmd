@@ -2,14 +2,14 @@
 title: "Resultados"
 date: "`r format(Sys.time(), '%A %d %B %Y %X')`"
 output:
-  html_document:
-    toc: yes
-    df_print: paged
   bookdown::html_document2:
     number_sections: yes
     toc: yes
     toc_float:
       collapsed: no
+  html_document:
+    toc: yes
+    df_print: paged
 editor_options:
   chunk_output_type: console
 ---
