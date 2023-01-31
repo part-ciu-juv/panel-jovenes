@@ -103,23 +103,23 @@ El Estudio Panel de Ciudadanía Juvenil 2020-2021 es un estudio longitudinal de 
 
 ## Variables Dependientes
 
-Esta investigación constó de cuatro variables dependientes: el comportamiento electoral, la participación activista pacífica, la participación activista disruptiva y la participación on-line. En relación al comportamiento electoral, se consultó a los jóvenes sobre su participación en las distintas elecciones ocurridas entre el periodo 2017-2021. En específico, se consultó sobre su participación en las elecciones presidenciales del 2017, en el plebiscito constitucional del año 2020, en las elecciones de convencionales constituyentes del mismo año, en las elecciones municipales del 2020, en las elecciones parlamentarias del año 2021, en la primera vuelta presidencial del año 2021 y la segunda vuelta presidencial del año 2021. Estas variables tuvieron de opciones 0= "No", 1 = "Sí". 
+Esta investigación constó de cuatro variables dependientes: el comportamiento electoral, la participación activista pacífica, la participación activista disruptiva y la participación on-line. En relación al comportamiento electoral, se consultó a los jóvenes sobre su participación en las distintas elecciones ocurridas entre el periodo 2017-2021. En específico, se consultó sobre su participación en las elecciones presidenciales del 2017, en el plebiscito constitucional del año 2020, en las elecciones de convencionales constituyentes del mismo año, en las elecciones municipales del 2020, en las elecciones parlamentarias del año 2021, en la primera vuelta presidencial del año 2021 y la segunda vuelta presidencial del año 2021. Estas variables tuvieron de opciones 0 = "No", 1 = "Sí". 
 
-Por su parte, la participación activista pacífica fue medida a partir de la pregunta "Durante alguno de los cinco momentos, ¿realizó algunas de las siguientes actividades? Participar en marchas o protestas pacíficas". Esta pregunta tenía como categorías posibles  1 = Nunca, 2 = Rara vez, 3 = A veces, 4 = Frecuentemente. 
+Por su parte, la participación activista pacífica fue medida a partir de la pregunta "Durante alguno de los cinco momentos, ¿realizó algunas de las siguientes actividades? Participar en marchas o protestas pacíficas". Esta pregunta tenía como categorías posibles  1 = Nunca, 2 = Rara vez, 3 = A veces, 4 = Frecuentemente.
 
-Para la elaboración de las variables participación activista disruptiva y participación on-line se realizó un set de ecuaciones estructurales para cada uno de los cinco momentos señalados en un inicio, más específicamente un Análisis Factorial Confirmatorio (AFC). Para el activismo disruptivo, se consideraron las siguientes posibilidades de participación durante los cinco momentos: (1) participar en una marcha o manifestación con disturbios, (2) participar en bloqueo de calles o carreteras, (3) pintar y/o (3) rayar paredes con demandas o consignas, participar en la toma de un edificio o institución (con categorías 1 = Nunca, 2 = Rara vez, 3 = A veces, 4 = Frecuentemente). En el caso de la participación on-line, se consideraron las siguientes actividades de participación realizadas: (1) usar internet para buscar información sobre temas sociales y/o políticos, (2) postear imágenes o mensajes acerca de temas sociales y/o políticos en internet, (3) compartir o comentar en el posteo de otra persona acerca de temas sociales y políticos, (4) seguir a personas en redes sociales por su contenido sobre temas sociales y políticos (con categorías 1 = Nunca, 2 = Rara vez, 3 = A veces, 4 = Frecuentemente). 
+Para la elaboración de las variables participación activista disruptiva y participación on-line se realizó un set de ecuaciones estructurales para cada uno de los cinco momentos señalados en un inicio, más específicamente un Análisis Factorial Confirmatorio (AFC). Para el activismo disruptivo, se consideraron las siguientes posibilidades de participación durante los cinco momentos: (1) participar en una marcha o manifestación con disturbios, (2) participar en bloqueo de calles o carreteras, (3) pintar y/o (3) rayar paredes con demandas o consignas, participar en la toma de un edificio o institución (con categorías 1 = Nunca, 2 = Rara vez, 3 = A veces, 4 = Frecuentemente). En el caso de la participación on-line, se consideraron las siguientes actividades de participación realizadas: (1) usar internet para buscar información sobre temas sociales y/o políticos, (2) postear imágenes o mensajes acerca de temas sociales y/o políticos en internet, (3) compartir o comentar en el posteo de otra persona acerca de temas sociales y políticos, (4) seguir a personas en redes sociales por su contenido sobre temas sociales y políticos (con categorías 1 = Nunca, 2 = Rara vez, 3 = A veces, 4 = Frecuentemente). Los índices de ajuste del modelo para cada AFC se consideraron óptimos (Ver Tabla 3 y 4).
 
 ## Variables independientes
 
-Para el modelo de recursos, se consideró como variable predictora el nivel educacional más alto alcanzado por alguno de los padres. Para el nivel socioeconómico logrado por el estudiante, se consideró el nivel educacional de los jóvenes al momento se hacer la entrevista. Por último, para evaluar aspectos de socialización política familiar, se incluyó en los modelos la frecuencia de conversación sobre temas políticos, esto último fue preguntado en los 5 momentos a partir de la pregunta: ¿Con qué frecuencia realiza las siguientes actividades? Hablar con sus padres sobre temas sociales y/o políticos (con categorías 1= Nunca, 2= Rara vez, 3 = A veces, 4 = Frecuentemente).
+Para el modelo de recursos, se consideró como variable predictora nivel educativo de los padres, en donde se considero el más alto alcanzado por alguno de ellos. Para el nivel socioeconómico de los estudiantes, se consideró el nivel educacional al momento se hacer la entrevista. Por último, para evaluar aspectos de socialización política familiar, se incluyó en los modelos la frecuencia de conversación sobre temas políticos, esto último fue preguntado en los 5 momentos a partir de la pregunta: ¿Con qué frecuencia realiza las siguientes actividades? Hablar con sus padres sobre temas sociales y/o políticos (con categorías 1 = Nunca, 2 = Rara vez, 3 = A veces, 4 = Frecuentemente).
 
 ## Variables de control
 
-Se consideraron como variables de control el género de los estudiantes, la posición política de los mismos, su edad y un promedio de la edad de los padres.
+Se consideraron como variables de control el género de los estudiantes, la posición política de los mismos, su edad y un promedio de la edad de los padres. 
 
 ## Método
 
-Dada la naturaleza distinta de las variables dependientes, se utilizaron distintas técnicas para evaluar la relación de dependencia entre las variables de socialización política y recursos (familiares y propios) con las distintas formas de participación. Para el caso del voto y la participación activista pacífica, se realizó un análisis multinivel longitudinal, en donde la variable dependiente fue el voto y las independientes fueron el nivel educativo más alto alcanzado por uno de los padres/madres, el nivel educativo del joven al momento de entrevistársele, la frecuencia de conversación fijada en el momento uno y el momento (con control estadístico de sexo y posición política). Por su parte, para el caso de la participación on-line y de la participación activista disruptiva, se realizó un modelamiento de ecuaciones estructurales (análisis de senderos), en donde se calculó el efecto directo, indirecto y total de las variables independientes sobre los modelos de medición en los cinco momentos.
+Dada la naturaleza distinta de las variables dependientes, se utilizaron distintas técnicas para evaluar la relación de dependencia entre las variables de socialización política y recursos con las distintas formas de participación. Para el caso del voto y la participación activista pacífica, se realizó un análisis multinivel longitudinal, en donde la variable dependiente fue el voto y las independientes fueron el nivel educativo más alto alcanzado por uno de los padres/madres, el nivel educativo del joven al momento de entrevistársele, la frecuencia de conversación fijada en el momento uno y el momento (con control estadístico de sexo y posición política). Por su parte, para el caso de la participación on-line y de la participación activista disruptiva, se realizó un modelamiento de ecuaciones estructurales (análisis de senderos), en donde se calculó el efecto directo, indirecto y total de las variables independientes sobre los modelos de medición en los cinco momentos.
 
 # Resultados
 
@@ -167,7 +167,7 @@ data1 <- study_1 %>%
 # sjmisc::frq(data1$votcons)
 
 # Hypothesis___________________________________________________________________
-m1 <- "edhigh+educyear+conv1a++mujer+pospol"#highschool
+m1 <- "edhigh+educyear+conv1a+mujer+pospol"#highschool
 # m2 <- "edhigh+educyear+conv3a+mujer+pospol"# 2sem 2020
 # m3 <- "edhigh+educyear+conv4a+mujer+pospol"# 1sem 2021
 # m4 <- "edhigh+educyear+conv5a+mujer+pospol"# 2sem 2021
@@ -228,7 +228,7 @@ knitreg(l = fit1[names(fit1)[grepl("vot", names(fit1),"\n")]],
 
 ```
 
-La tabla 1 presenta el análisis de regresión multinivel para el comportamiento electoral, es decir, el voto en distintas elecciones producidas durante el estudio (7). En relación a las primeras hipótesis, es posible establecer que el nivel educativo de los padres aumenta el nivel de participación de los jóvenes únicamente en la elección presidencial del 2017, la cuál fue la primera de sus vidas ($\beta = 0,07$; I.C = 95%). En todas las otras elecciones medidas, no existe un efecto significativo del nivel educativo de los padres sobre el comportamiento electoral. Esta situación varía cuando ajustamos un modelo sin las variables de educación de los jóvenes y frecuencia en la conversación de temas sociopolíticos, lo que da a entender que existe un efecto de mediación entre el nivel educativo de los padres con las otras variables independientes (Ver Anexo I).
+La tabla 1 presenta el análisis de regresión logística para el comportamiento electoral, es decir, el voto en distintas elecciones producidas durante el estudio (7). En relación a las primeras hipótesis, es posible establecer que el nivel educativo de los padres aumenta el nivel de participación de los jóvenes en cuatro de las siete elecciones medidas: elecciones presidenciales 2017 ($\beta = 0,11$; I.C = 99,9%), elecciones plebiscitarias del 2020 ($\beta = 0,10$; I.C = 99,9%), elecciones de convencionales constituyentes ($\beta = 0,06$; I.C = 95%), elecciones municipales 2021 ($\beta = 0,17$; I.C = 99%). Como se puede observar en el Anexo I, el efecto de la educación de los padres se mantiene en el tiempo cuando está aislado de las otras formas de socialización política, esto pues, al introducir a la ecuación la conversación política familiar y el logro educativo de los jóvenes, este coeficiente sólo es significativo en la primera elección ($\beta = 0,07$; I.C = 95%, Tabla 1). Esto permitiría identificar un efecto de mediación entre el nivel educativo de los padres con las otras variables independientes.
 
 Por su parte, el nivel educativo de los jóvenes aumenta el nivel de participación electoral en todas las elecciones, sin embargo, el efecto decrece con el paso del tiempo: elecciones 2017 ($\beta = 0,30$; I.C = 99,9%), votación plebiscito constitucional ($\beta = 0,32$; I.C = 95%), votación convencionales constituyentes ($\beta = 0,30$; I.C = 99,9%), votación elecciones municipales ($\beta = 0,26$; I.C = 99,9%), votación de elecciones parlamentarias ($\beta = 0,27$; I.C = 95%), votación en primera vuelta presidencial 2021 ($\beta = 0,17$; I.C = 99%) y votación en segunda vuelta presidencial 2021 ($\beta = 0,18$; I.C = 99,9%). En cuanto a los componentes de socialización política familiar, a mayor frecuencia de conversación sociopolítica entre padres e hijos (fijada en el tiempo 1) hay una mayor participación electoral de los jóvenes. Este efecto es significativo en las elecciones 2017 ($\beta = 0,25$; I.C = 99%), votación convencionales constituyentes ($\beta = 0,25$; I.C = 99%), votación elecciones municipales ($\beta = 0,26$; I.C = 99%) y votación en primera vuelta presidencial 2021 ($\beta = 0,22$; I.C = 99%).
 
@@ -331,7 +331,6 @@ for (i in ivs5) {
 models[[i]] <- paste0(i,"~",m1)  
 }
 
-
 # Estimate logit models
 fits <- list()
 for (i in ivs) {
@@ -359,7 +358,7 @@ knitreg(l = fit1[names(fit1)[grepl("mpas", names(fit1),"\n")]],
         )
 ```
 
-La tabla 2 presenta los resultados para la participación activista, pero en actividades pacíficas. En primer lugar, el nivel educativo alcanzado por los padres tiende a disminuir el promedio de actividades pacíficas en las que participan sus hijos. Sin embargo, este resultado es significativo únicamente en el primer momento, es decir, durante la educación media de los jóvenes ($\beta = -0,10$; I.C = 99,9%). Esta situación se mantiene incluso cuando se quitan del modelo las variables independientes nivel educativo de los estudiantes y frecuencia de la conversación de temas sociopolíticos(Ver Anexo II).
+La tabla II presenta los resultados para la participación activista, pero en actividades pacíficas. En primer lugar, el nivel educativo alcanzado por los padres tiende a disminuir el promedio de actividades pacíficas en las que participan sus hijos. Sin embargo, este resultado es significativo únicamente en el primer momento, es decir, durante la educación media de los jóvenes ($\beta = -0,7$; I.C = 99,9%, ver Anexo II). Esta situación se mantiene igual cuando se agregan al modelo las variables independientes nivel educativo de los estudiantes y frecuencia de la conversación de temas sociopolíticos(Ver Tabla II).
 
 En cuanto al nivel educativo alcanzado por los jóvenes al momento de la encuesta, este aumenta la probabilidad de participar en actividades pacíficas solamente en el estallido social, es decir, en el año 2019 ($\beta = 0,11$; I.C = 95%). Por otro lado, la frecuencia en la conversación sobre temas sociopolíticos entre padres e hijos (fijada en el tiempo 1), aumenta los niveles de participación en marchas pacíficas en todos los momentos: educación media ($\beta = 0,46$; I.C = 99,9%), durante el estallido social ($\beta = 0,17$; I.C = 95%), en el año 2020 ($\beta = 0,31$; I.C = 99,9%), el primer semestre del 2021 ($\beta = 0,31$; I.C = 99,9%) y en el segundo semestre del 2021 ($\beta = 0,30$; I.C = 99,9%).
 
@@ -547,4 +546,360 @@ La tabla 4 presenta los resultados para la participación online, en los cinco m
 
 Los efectos indirectos observados en la tabla 4 enseñan que para estos datos no existe un efecto mediador del nivel educativo logrado por los estudiantes en la relación entre nivel educativo de los padres y la participación en activismo online. Esto se concluye a partir de la no significación estadística de los efectos indirectos en los cinco modelos. Por otro lado, se encontró que la conversación familiar sí actúa como un mediador de la relación entre nivel educativo de los padres y participación online de los jóvenes, sin embargo, los efectos indirectos son bastante pequeños y en sólo tres de los cinco momentos: educación media ($\beta = 0,01$; I.C = 99,9%), estallido social ($\beta = 0,01$; I.C = 95%), primer semestre 2021 ($\beta = 0,01$; I.C = 95%).
 
+
 # Conclusiones
+
+# Bibliografía
+
+# Anexos 
+
+
+```{r, results='asis'}
+rm(list=ls())
+if (!require("pacman")) install.packages("pacman") # instalar pacman
+pacman::p_load(dplyr,       # Manipulacion de datos 
+               haven,       # importar datos en .dta o .sav
+               sjmisc,      # descriptivos y frecuencias
+               sjPlot,      # tablas, plots y descriptivos
+               sjlabelled,
+               summarytools,# resumen de dataframe
+               knitr,       # tablas kable
+               kableExtra,  # tablas kable personalizadas
+               ggplot2,     # plots
+               corrplot,    # plot correlacion
+               tibble,
+               lavaan,
+               texreg,
+               mediation
+               )
+
+load(here::here("input/data/proc/study1.RData"))
+data1 <- study_1 %>% 
+  dplyr::select(-educ,-edmad,-edpad) %>% 
+  dplyr::filter(votpr17 !=2 & votpleb !=2 & votcons !=2) %>%
+  dplyr::select(mujer:conv5a,votpr17:vot2vue,
+         educyear,edhigh,psu,
+         pospolcen,pospolizq,pospolind,pospol 
+         ) %>% 
+  dplyr::mutate(conv1a=as_numeric(conv1a),
+         conv3a=as_numeric(conv3a),
+         conv4a=as_numeric(conv4a),
+         conv5a=as_numeric(conv5a)) %>% 
+  na.omit()
+
+# view_df(data1)
+
+# sjmisc::frq(data1$votpr17)
+# sjmisc::frq(data1$votpleb)
+# sjmisc::frq(data1$votcons)
+
+# Hypothesis___________________________________________________________________
+m1 <- "edhigh+mujer+pospol"#highschool
+# m2 <- "edhigh+educyear+conv3a+mujer+pospol"# 2sem 2020
+# m3 <- "edhigh+educyear+conv4a+mujer+pospol"# 1sem 2021
+# m4 <- "edhigh+educyear+conv5a+mujer+pospol"# 2sem 2021
+
+hipotesis <- c(m1
+               # m2,m3,m4
+               )
+
+# Set the independent variables (IVs)
+ivs1<- data1 %>% dplyr::select(votpr17) %>% names()        #highschool
+ivs2<- data1 %>% dplyr::select(votpleb) %>% names()        # 2sem 2020
+ivs3<- data1 %>% dplyr::select(votconv:votmuni) %>% names()# 1sem 2021
+ivs4<- data1 %>% dplyr::select(votdipu:vot2vue) %>% names()# 2sem 2021
+
+ivs <- c(ivs1,ivs2,ivs3,ivs4)
+
+# Create the object for each model
+models <- list()
+for (i in ivs1) {
+models[[i]] <- paste0(i,"~",m1)  
+}
+
+for (i in ivs2) {
+models[[i]] <- paste0(i,"~",m1)  
+}
+
+for (i in ivs3) {
+models[[i]] <- paste0(i,"~",m1)  
+}
+
+for (i in ivs4) {
+models[[i]] <- paste0(i,"~",m1)  
+}
+
+# Estimate logit models
+fits <- list()
+for (i in ivs) {
+  for (z in models[[i]]) {
+    fits[[z]] <- glm(formula =z, data = data1,family = "binomial")
+  }
+}
+fit1 <- fits
+# change model names within list
+names(fit1) <- paste0(ivs)
+
+# Tables_______________________________________________________________________
+omit <- "(Intercept)|(mujer)|(pospol)"
+# detail for subsections:
+# https://stackoverflow.com/questions/69338331/r-markdown-create-section-headers-in-r-and-print-r-output-in-same-section
+
+caption <- "Anexo I: Voting behaviour, parental education and conversation (fixed t1)"
+knitreg(l = fit1[names(fit1)[grepl("vot", names(fit1),"\n")]],
+        omit.coef = omit,
+        caption = caption,
+        caption.above = T
+        # reorder.coef = reorderc
+        )
+
+```
+
+```{r, results='asis'}
+rm(list=ls())
+if (!require("pacman")) install.packages("pacman") # instalar pacman
+pacman::p_load(dplyr,       # Manipulacion de datos 
+               haven,       # importar datos en .dta o .sav
+               sjmisc,      # descriptivos y frecuencias
+               sjPlot,      # tablas, plots y descriptivos
+               sjlabelled,
+               summarytools,# resumen de dataframe
+               knitr,       # tablas kable
+               kableExtra,  # tablas kable personalizadas
+               ggplot2,     # plots
+               corrplot,    # plot correlacion
+               tibble,
+               lavaan,
+               texreg,
+               mediation
+               )
+
+load(here::here("input/data/proc/study1.RData"))
+data1 <- study_1 %>% 
+  dplyr::select(-educ,-edmad,-edpad) %>% 
+  dplyr::select(mujer,starts_with("conv"),starts_with('mpas'),
+         educyear,edhigh,age,agepavg,
+         pospolcen,pospolizq,pospolind,pospol 
+         ) %>% 
+  dplyr::mutate(conv1a=as_numeric(conv1a),
+                conv2a=as_numeric(conv2a),
+                conv3a=as_numeric(conv3a),
+                conv4a=as_numeric(conv4a),
+                conv5a=as_numeric(conv5a),
+                mpas1a=as_numeric(mpas1a_bi),
+                mpas2a=as_numeric(mpas2a_bi),
+                mpas3a=as_numeric(mpas3a_bi),
+                mpas4a=as_numeric(mpas4a_bi),
+                mpas5a=as_numeric(mpas5a_bi)) %>% 
+  na.omit()
+
+# view_df(data1)
+
+# sjmisc::frq(data1$votpr17)
+# sjmisc::frq(data1$votpleb)
+# sjmisc::frq(data1$votcons)
+
+# Hypothesis___________________________________________________________________
+m1 <- "edhigh+mujer+age+agepavg+pospol"# highschool
+#m2 <- "edhigh+educyear+conv2a+mujer+age+agepavg+pospol"# 2019 and 1sem 2020
+#m3 <- "edhigh+educyear+conv3a+mujer+age+agepavg+pospol"# 2sem 2020
+#m4 <- "edhigh+educyear+conv4a+mujer+age+agepavg+pospol"# 1sem 2021
+#m5 <- "edhigh+educyear+conv5a+mujer+age+agepavg+pospol"# 2sem 2021
+
+hipotesis <- c(m1
+               #m2,
+               #m3,
+               #m4,
+               #m5
+               )
+
+# Set the independent variables (IVs)
+ivs1<- "mpas1a_bi"
+ivs2<- "mpas2a_bi"
+ivs3<- "mpas3a_bi"
+ivs4<- "mpas4a_bi"
+ivs5<- "mpas5a_bi"
+
+ivs <- c(ivs1,
+         ivs2,
+         ivs3,ivs4,ivs5)
+
+# Create the object for each model
+models <- list()
+for (i in ivs1) {
+models[[i]] <- paste0(i,"~",m1)  
+}
+
+for (i in ivs2) {
+models[[i]] <- paste0(i,"~",m1)
+}
+
+for (i in ivs3) {
+models[[i]] <- paste0(i,"~",m1)  
+}
+
+for (i in ivs4) {
+models[[i]] <- paste0(i,"~",m1)  
+}
+
+for (i in ivs5) {
+models[[i]] <- paste0(i,"~",m1)  
+}
+
+# Estimate logit models
+fits <- list()
+for (i in ivs) {
+  for (z in models[[i]]) {
+    fits[[z]] <- glm(formula =z, data = data1,family = "binomial")
+  }
+}
+fit1 <- fits
+# change model names within list
+names(fit1) <- paste0(ivs)
+# Tables_______________________________________________________________________
+omit <- "(Intercept)|(mujer)|(pospol)|(age)|(agepavg)"
+# detail for subsections:
+# https://stackoverflow.com/questions/69338331/r-markdown-create-section-headers-in-r-and-print-r-output-in-same-section
+
+save(fit1,
+     file = here::here("output/tables/tab_log_mpas_educ.RData"))
+
+caption <- "Anexo II: Participation peaceful protest, parental education and conversation"
+knitreg(l = fit1[names(fit1)[grepl("mpas", names(fit1),"\n")]],
+        omit.coef = omit,
+        caption = caption,
+        caption.above = T
+        # reorder.coef = reorderc
+        )
+```
+
+```{r, results='asis'}
+rm(list=ls())
+if (!require("pacman")) install.packages("pacman") # instalar pacman
+pacman::p_load(dplyr,       # Manipulacion de datos 
+               haven,       # importar datos en .dta o .sav
+               sjmisc,      # descriptivos y frecuencias
+               sjPlot,      # tablas, plots y descriptivos
+               sjlabelled,
+               summarytools,# resumen de dataframe
+               knitr,       # tablas kable
+               kableExtra,  # tablas kable personalizadas
+               ggplot2,     # plots
+               corrplot,    # plot correlacion
+               tibble,
+               lavaan,
+               texreg,
+               huxtable
+               )
+
+load(here::here("input/data/proc/study1.RData"))
+data1 <- study_1 %>% 
+  dplyr::select(educyear,mujer,edhigh,age,agepavg,conv1a:segu5a,
+                "pospolcen","pospolizq","pospolind") %>% na.omit()
+
+m1a<- '
+        # modelo de medicion
+        disrup1a =~ mdis1a + bloq1a + raya1a + toma1a
+        online1a =~ onli1a + post1a + come1a + segu1a
+        
+        # (1) modelo de regresion: PARTICIPACION DISRUPTIVA ____________________
+        # efecto directo
+        disrup1a ~ edhigh+mujer+age+agepavg+pospolcen+pospolizq+pospolind
+
+        
+        # (2) modelo de regresion: PARTICIPACION ONLINE ________________________
+        # efecto directo
+        online1a ~ edhigh+mujer+age+agepavg+pospolcen+pospolizq+pospolind
+'
+
+m2a <- stringr::str_replace_all(string = m1a,pattern = "1a",replacement = "2a")
+m3a <- stringr::str_replace_all(string = m1a,pattern = "1a",replacement = "3a")
+m4a <- stringr::str_replace_all(string = m1a,pattern = "1a",replacement = "4a")
+m5a <- stringr::str_replace_all(string = m1a,pattern = "1a",replacement = "5a")
+
+models <- c(m1a,m2a,m3a,m4a,m5a)
+
+fits <- list()
+for (i in 1:length(models)) {
+    fits[[i]] <- lavaan::sem(model = models[[i]], data = data1,ordered = T)    
+}
+
+fit<- texreg::get.data(l = fits)
+filt<- data.frame(coef=fit[[1]]@coef.names)
+
+tabhux <- texreg::huxtablereg(fit,single.row = T)
+tabhux2 <- dplyr::filter(tabhux,(grepl(' ~ ', V1)))
+tabhux3 <- dplyr::filter(tabhux2,!(grepl('mujer', V1)))
+tabhux4 <- dplyr::filter(tabhux3,!(grepl('pospol', V1)))
+tabhux5 <- dplyr::filter(tabhux4,!(grepl('age', V1)))
+tabhux6 <- dplyr::filter(tabhux5,!(grepl('agepavg', V1)))
+
+fitind <- tabhux %>% filter(V1 %in% c("cfi","tli","rmsea","nobs")) 
+
+
+coalesce_all_columns <- function(df) {
+  tibble(
+    V1 = df$V1[1],
+    V2 = na.omit(df$V2),
+    V3 = na.omit(df$V3),
+    V4 = na.omit(df$V4),
+    V5 = na.omit(df$V5),
+    V6 = na.omit(df$V6)        
+  )
+}
+
+#Participacion disruptiva
+tabdis <- tabhux6 %>%  dplyr::filter((grepl('disrup', V1))) %>% 
+  mutate(V1=stringr::str_replace_all(string = V1,
+                                     pattern = "1a|2a|3a|4a|5a",
+                                     replacement = "")) %>% 
+  as.data.frame()
+tabdis[tabdis==""] <- NA
+tabdis <- tabdis %>%  group_by(V1) %>% do(coalesce_all_columns(.)) %>%  ungroup() %>% 
+  rbind(fitind) 
+
+
+#Participacion online
+tabonl <- tabhux6 %>%  dplyr::filter((grepl('online', V1))) %>% 
+  mutate(V1=stringr::str_replace_all(string = V1,
+                                     pattern = "1a|2a|3a|4a|5a",
+                                     replacement = "")) %>% ungroup() %>% 
+  as.data.frame()
+tabonl[tabonl==""] <- NA  
+tabonl <- tabonl %>%  group_by(V1) %>% do(coalesce_all_columns(.)) %>%  ungroup() %>% 
+  rbind(fitind) 
+
+
+coef <- c("Years of education - parent highest",
+  "CFI",
+  "RMSEA",
+  "TLI",
+  "N")
+
+col <- c(" ",paste0("Model ",1:length(fits)))
+tabdis$V1 <- coef
+tab_dis_educ <- 
+kable(tabdis,format = "html",
+      booktabs=T,
+      row.names = F,
+      caption = "Anexo III: Disruptive political participation and parental education",
+      col.names = col) %>% 
+  kable_styling(full_width = F)
+tab_dis_educ
+
+tabonl$V1 <- coef
+tab_onl_educ <- 
+kable(tabonl,format = "html",
+      booktabs=T,
+      row.names = F,
+      caption = "Anexo IV: Online political participation and parental education",
+      col.names = col) %>% 
+  kable_styling(full_width = F)
+tab_onl_educ
+#tables1 <- list(tab_dis_educ,tab_onl_educ)
+#save(tables1,
+     #file = here::here("output/tables/tab_educ.RData"))
+
+```
+
+
