@@ -26,6 +26,21 @@ editor_options:
   - logit binario multinivel longitudinal
 * poner random slope de tiempo para cada sujeto  
 
+16 diciembre:
+
+* marcha pacifica como ordinal | latente con 1 item [X]
+* fijar conversacion en t1 (!) [X]
+* detallar el footnote los pvalues, controles y tipo de estimación 
+* qué es cada modelo
+* tabla de variables, likertplot y corplot
+
+* Modelos en participaciones y voto, stepwise:
+
+M1: part ~ edpad + tiempo + tiempo2 + controles
+M2: part ~ edpad + conv + tiempo + tiempo2 + controles
+M3: part ~ edpad + conv + educ + tiempo + tiempo2 + controles
+
+- modelo de participaciones y voto reportamos M3, pero estimar M1 y M2 para chequear
 
 ```{r include=FALSE}
 knitr::opts_chunk$set(warning = FALSE,
@@ -51,29 +66,6 @@ div.tocify {
     max-width: 331px !important;
     max-height: 102% !important;
 }
-```
-
-```{r}
-rm(list=ls())
-if (!require("pacman")) install.packages("pacman") # instalar pacman
-pacman::p_load(dplyr,       # Manipulacion de datos 
-               haven,       # importar datos en .dta o .sav
-               sjmisc,      # descriptivos y frecuencias
-               sjPlot,      # tablas, plots y descriptivos
-               sjlabelled,
-               summarytools,# resumen de dataframe
-               knitr,       # tablas kable
-               kableExtra,  # tablas kable personalizadas
-               ggplot2,     # plots
-               corrplot,    # plot correlacion
-               tibble,
-               lavaan
-               )
-
-load(here::here("input/data/proc/study1.RData"))
-data1 <- study_1 %>% 
-  dplyr::select(-educ,-edmad,-edpad) %>%
-  na.omit()
 ```
 
 # Models
@@ -108,7 +100,7 @@ m1a<- '
         # modelo de medicion
         disrup1a =~ mdis1a + bloq1a + raya1a + toma1a
         online1a =~ onli1a + post1a + come1a + segu1a
-        
+
         # (1) modelo de regresion: PARTICIPACION DISRUPTIVA ____________________
         # efecto directo
         disrup1a ~ C1*edhigh+B1A*educyear+B1B*conv1a+mujer+age+agepavg+pospolcen+pospolizq+pospolind
@@ -142,9 +134,8 @@ m1a<- '
 
         # total effect
         tot_onl1_educ:= C2 + (A1A*B2A)
-        tot_onl2_conv:= C2 + (A1A*B2B)        
+        tot_onl2_conv:= C2 + (A1A*B2B)   
 '
-
 
 m2a <- stringr::str_replace_all(string = m1a,pattern = "1a",replacement = "2a")
 m3a <- stringr::str_replace_all(string = m1a,pattern = "1a",replacement = "3a")
@@ -244,6 +235,628 @@ tables1 <- list(tab_dis_educ,tab_onl_educ)
 save(tables1,
      file = here::here("output/tables/tab_educ.RData"))
 ```
+
+## Participation Disruptive, Online & Peaceful protest 
+
+```{r part-mpas-edhigh, results='asis'}
+rm(list=ls())
+if (!require("pacman")) install.packages("pacman") # instalar pacman
+pacman::p_load(dplyr,       # Manipulacion de datos 
+               haven,       # importar datos en .dta o .sav
+               sjmisc,      # descriptivos y frecuencias
+               sjPlot,      # tablas, plots y descriptivos
+               sjlabelled,
+               summarytools,# resumen de dataframe
+               knitr,       # tablas kable
+               kableExtra,  # tablas kable personalizadas
+               ggplot2,     # plots
+               corrplot,    # plot correlacion
+               tibble,
+               lavaan,
+               texreg,
+               huxtable
+               )
+
+load(here::here("input/data/proc/study1.RData"))
+data1 <- study_1 %>% 
+  dplyr::select(educyear,mujer,edhigh,age,agepavg,conv1a:segu5a,
+                "pospolcen","pospolizq","pospolind") %>% na.omit()
+
+data1$mpas1a <- scale(as.numeric(data1$mpas1a))
+data1$mpas2a <- scale(as.numeric(data1$mpas2a))
+data1$mpas3a <- scale(as.numeric(data1$mpas3a))
+data1$mpas4a <- scale(as.numeric(data1$mpas4a))
+data1$mpas5a <- scale(as.numeric(data1$mpas5a))
+
+
+m1a<- '
+        # modelo de medicion
+        disrup1a =~ mdis1a + bloq1a + raya1a + toma1a
+        online1a =~ onli1a + post1a + come1a + segu1a
+
+
+        # (1) modelo de regresion: PARTICIPACION DISRUPTIVA ____________________
+        # efecto directo
+        disrup1a ~ C1*edhigh+B1A*educyear+B1B*conv1a+mujer+age+agepavg+pospolcen+pospolizq+pospolind
+        
+        # efecto mediacion predictor sobre mediador (DECLARAR UNA VEZ)
+        # educ padres sobre educacion hijos
+        educyear ~ A1A*edhigh+mujer+pospolcen+pospolizq+pospolind
+        
+        # educ padres sobre conversacion hijos
+        conv1a ~ A1B*edhigh+mujer+pospolcen+pospolizq+pospolind
+        
+        # efecto indirecto (A*B)
+        # educpadres by educ-hijos (A1)
+        ind_dis1_educ:= A1A*B1A 
+        # educpadres by conversation (A2)
+        ind_dis2_conv:= A1B*B1B
+
+        # total effect
+        tot_dis1_educ:= C1 + (A1A*B1A)
+        tot_dis2_conv:= C1 + (A1B*B1B)
+        
+        # (2) modelo de regresion: PARTICIPACION ONLINE ________________________
+        # efecto directo
+        online1a ~ C2*edhigh+B2A*educyear+B2B*conv1a+mujer+age+agepavg+pospolcen+pospolizq+pospolind
+        
+        # efecto indirecto (A*B)
+        # educpadres by educ-hijos (A2)
+        ind_onl_educ:= A1A*B2A 
+        # educpadres by conversation (A2)
+        ind_onl2_conv:= A1B*B2B
+
+        # total effect
+        tot_onl1_educ:= C2 + (A1A*B2A)
+        tot_onl2_conv:= C2 + (A1A*B2B)
+
+        # (3) modelo de regresion: PARTICIPACION PACIFICA ______________________
+                # efecto directo
+        mpas1a ~ C3*edhigh+B3A*educyear+B3B*conv1a+mujer+age+agepavg+pospolcen+pospolizq+pospolind
+        
+        # efecto indirecto (A*B)
+        # educpadres by educ-hijos (A2)
+        ind_mar_educ:= A1A*B3A 
+        # educpadres by conversation (A2)
+        ind_mar2_conv:= A1B*B3B
+
+        # total effect
+        tot_mar1_educ:= C2 + (A1A*B3A)
+        tot_mar2_conv:= C2 + (A1A*B3B)
+'
+
+m2a <- stringr::str_replace_all(string = m1a,pattern = "1a",replacement = "2a")
+m3a <- stringr::str_replace_all(string = m1a,pattern = "1a",replacement = "3a")
+m4a <- stringr::str_replace_all(string = m1a,pattern = "1a",replacement = "4a")
+m5a <- stringr::str_replace_all(string = m1a,pattern = "1a",replacement = "5a")
+
+# fix conversation to moment 1
+m2a <- stringr::str_replace_all(string = m2a,pattern = "conv2a",replacement = "conv1a")
+m3a <- stringr::str_replace_all(string = m3a,pattern = "conv3a",replacement = "conv1a")
+m4a <- stringr::str_replace_all(string = m4a,pattern = "conv4a",replacement = "conv1a")
+m5a <- stringr::str_replace_all(string = m5a,pattern = "conv5a",replacement = "conv1a")
+
+models <- c(m1a,m2a,m3a,m4a,m5a)
+
+fits <- list()
+for (i in 1:length(models)) {
+    fits[[i]] <- lavaan::sem(model = models[[i]], data = data1,ordered = T)    
+}
+
+fit<- texreg::get.data(l = fits)
+filt<- data.frame(coef=fit[[1]]@coef.names)
+
+tabhux <- texreg::huxtablereg(fit,single.row = T)
+tabhux2 <- dplyr::filter(tabhux,(grepl(' ~ ', V1)))
+tabhux3 <- dplyr::filter(tabhux2,!(grepl('mujer', V1)))
+tabhux4 <- dplyr::filter(tabhux3,!(grepl('pospol', V1)))
+tabhux5 <- dplyr::filter(tabhux4,!(grepl('age', V1)))
+tabhux6 <- dplyr::filter(tabhux5,!(grepl('agepavg', V1)))
+
+fitind <- tabhux %>% filter(V1 %in% c("cfi","tli","rmsea","nobs")) 
+
+tabind_dis <- dplyr::filter(tabhux,(grepl('ind_dis', V1))) 
+tabtot_dis <- dplyr::filter(tabhux,(grepl('tot_dis', V1)))
+
+tabind_onl <- dplyr::filter(tabhux,(grepl('ind_onl', V1)))
+tabtot_onl <- dplyr::filter(tabhux,(grepl('tot_onl', V1)))
+
+coalesce_all_columns <- function(df) {
+  tibble(
+    V1 = df$V1[1],
+    V2 = na.omit(df$V2),
+    V3 = na.omit(df$V3),
+    V4 = na.omit(df$V4),
+    V5 = na.omit(df$V5),
+    V6 = na.omit(df$V6)        
+  )
+}
+
+#Participacion disruptiva
+tabdis <- tabhux6 %>%  dplyr::filter((grepl('disrup', V1))) %>% 
+  mutate(V1=stringr::str_replace_all(string = V1,
+                                     pattern = "1a|2a|3a|4a|5a",
+                                     replacement = "")) %>% 
+  as.data.frame()
+tabdis[tabdis==""] <- NA
+tabdis <- tabdis %>%  group_by(V1) %>% do(coalesce_all_columns(.)) %>%  ungroup() %>% 
+  rbind(tabind_dis,tabtot_dis,fitind) 
+
+#Participacion online
+tabonl <- tabhux6 %>%  dplyr::filter((grepl('online', V1))) %>% 
+  mutate(V1=stringr::str_replace_all(string = V1,
+                                     pattern = "1a|2a|3a|4a|5a",
+                                     replacement = "")) %>% 
+  as.data.frame()
+tabonl[tabonl==""] <- NA  
+tabonl <- tabonl %>%  group_by(V1) %>% do(coalesce_all_columns(.)) %>%  ungroup() %>% 
+  rbind(tabind_dis,tabtot_dis,fitind)   
+
+
+#Participacion marcha
+tabmar <- tabhux6 %>%  dplyr::filter((grepl('mpas', V1))) %>% 
+  mutate(V1=stringr::str_replace_all(string = V1,
+                                     pattern = "1a|2a|3a|4a|5a",
+                                     replacement = "")) %>% 
+  as.data.frame()
+tabmar[tabmar==""] <- NA  
+tabmar <- tabmar %>%  group_by(V1) %>% do(coalesce_all_columns(.)) %>%  ungroup() %>% 
+  rbind(tabind_dis,tabtot_dis,fitind)   
+
+coef <- c("Conversation" ,
+  "Years of education - parent highest",
+  "Years of education",
+  "Ind: Education",
+  "Ind: Conversation",
+  "Total: Education",
+  "Total: Conversation",
+  "CFI",
+  "RMSEA",
+  "TLI",
+  "N")
+
+col <- c(" ",paste0("Model ",1:length(fits)))
+tabdis$V1 <- coef
+tab_dis_educ <- 
+kable(tabdis,format = "html",
+      booktabs=T,
+      row.names = F,
+      caption = "Disruptive political participation, parental education and conversation",
+      col.names = col) %>% 
+  kable_styling(full_width = F)
+tab_dis_educ
+
+tabonl$V1 <- coef
+tab_onl_educ <- 
+kable(tabonl,format = "html",
+      booktabs=T,
+      row.names = F,
+      caption = "Online political participation, parental education and conversation",
+      col.names = col) %>% 
+  kable_styling(full_width = F) %>% 
+  row_spec(7,hline_after = T) 
+tab_onl_educ
+
+tabmar$V1 <- coef
+tab_mar_educ <- 
+kable(tabmar,format = "html",
+      booktabs=T,
+      row.names = F,
+      caption = "Participation Peaceful protest, parental education and conversation",
+      col.names = col) %>% 
+  kable_styling(full_width = F) %>% 
+  row_spec(7,hline_after = T) 
+tab_mar_educ
+
+
+
+tables1 <- list(tab_dis_educ,tab_onl_educ,tab_mar_educ)
+save(tables1,
+     file = here::here("output/tables/tab_educ_.RData"))
+```
+
+
+```{r part-mpas-edhigh-step, results='asis'}
+rm(list=ls())
+if (!require("pacman")) install.packages("pacman") # instalar pacman
+pacman::p_load(dplyr,       # Manipulacion de datos 
+               haven,       # importar datos en .dta o .sav
+               sjmisc,      # descriptivos y frecuencias
+               sjPlot,      # tablas, plots y descriptivos
+               sjlabelled,
+               summarytools,# resumen de dataframe
+               knitr,       # tablas kable
+               kableExtra,  # tablas kable personalizadas
+               ggplot2,     # plots
+               corrplot,    # plot correlacion
+               tibble,
+               lavaan,
+               texreg,
+               huxtable
+               )
+
+load(here::here("input/data/proc/study1.RData"))
+data1 <- study_1 %>% 
+  dplyr::select(educyear,mujer,edhigh,age,agepavg,conv1a:segu5a,
+                "pospolcen","pospolizq","pospolind") %>% na.omit()
+
+data1$mpas1a <- scale(as.numeric(data1$mpas1a))
+data1$mpas2a <- scale(as.numeric(data1$mpas2a))
+data1$mpas3a <- scale(as.numeric(data1$mpas3a))
+data1$mpas4a <- scale(as.numeric(data1$mpas4a))
+data1$mpas5a <- scale(as.numeric(data1$mpas5a))
+
+# Model 1: participation  ~ edhigh ---------------------------------------------
+m1a<- '
+        # modelo de medicion
+        disrup1a =~ mdis1a + bloq1a + raya1a + toma1a
+        online1a =~ onli1a + post1a + come1a + segu1a
+
+
+        # (1) modelo de regresion: PARTICIPACION DISRUPTIVA ____________________
+        # efecto directo
+        disrup1a ~ edhigh+mujer+age+agepavg+pospolcen+pospolizq+pospolind        
+
+        # (2) modelo de regresion: PARTICIPACION ONLINE ________________________
+        # efecto directo
+
+        online1a ~ edhigh+mujer+age+agepavg+pospolcen+pospolizq+pospolind          
+
+        # (3) modelo de regresion: PARTICIPACION PACIFICA ______________________
+                # efecto directo
+        mpas1a ~ edhigh+mujer+age+agepavg+pospolcen+pospolizq+pospolind        
+      
+'
+
+m2a <- stringr::str_replace_all(string = m1a,pattern = "1a",replacement = "2a")
+m3a <- stringr::str_replace_all(string = m1a,pattern = "1a",replacement = "3a")
+m4a <- stringr::str_replace_all(string = m1a,pattern = "1a",replacement = "4a")
+m5a <- stringr::str_replace_all(string = m1a,pattern = "1a",replacement = "5a")
+
+# fix conversation to moment 1
+m2a <- stringr::str_replace_all(string = m2a,pattern = "conv2a",replacement = "conv1a")
+m3a <- stringr::str_replace_all(string = m3a,pattern = "conv3a",replacement = "conv1a")
+m4a <- stringr::str_replace_all(string = m4a,pattern = "conv4a",replacement = "conv1a")
+m5a <- stringr::str_replace_all(string = m5a,pattern = "conv5a",replacement = "conv1a")
+
+models <- c(m1a,m2a,m3a,m4a,m5a)
+
+fits <- list()
+for (i in 1:length(models)) {
+    fits[[i]] <- lavaan::sem(model = models[[i]], data = data1,ordered = T)    
+}
+
+fit<- texreg::get.data(l = fits)
+filt<- data.frame(coef=fit[[1]]@coef.names)
+
+tabhux <- texreg::huxtablereg(fit,single.row = T)
+tabhux2 <- dplyr::filter(tabhux,(grepl(' ~ ', V1)))
+tabhux3 <- dplyr::filter(tabhux2,!(grepl('mujer', V1)))
+tabhux4 <- dplyr::filter(tabhux3,!(grepl('pospol', V1)))
+tabhux5 <- dplyr::filter(tabhux4,!(grepl('age', V1)))
+tabhux6 <- dplyr::filter(tabhux5,!(grepl('agepavg', V1)))
+
+fitind <- tabhux %>% filter(V1 %in% c("cfi","tli","rmsea","nobs")) 
+
+tabind_dis <- dplyr::filter(tabhux,(grepl('ind_dis', V1))) 
+tabtot_dis <- dplyr::filter(tabhux,(grepl('tot_dis', V1)))
+
+tabind_onl <- dplyr::filter(tabhux,(grepl('ind_onl', V1)))
+tabtot_onl <- dplyr::filter(tabhux,(grepl('tot_onl', V1)))
+
+coalesce_all_columns <- function(df) {
+  tibble(
+    V1 = df$V1[1],
+    V2 = na.omit(df$V2),
+    V3 = na.omit(df$V3),
+    V4 = na.omit(df$V4),
+    V5 = na.omit(df$V5),
+    V6 = na.omit(df$V6)        
+  )
+}
+
+coef <- c("Years of education - parent highest",
+          "CFI","RMSEA","TLI","N")
+
+
+#Participacion disruptiva
+tabdis_m1 <- tabhux6 %>%  dplyr::filter((grepl('disrup', V1))) %>% 
+  mutate(V1=stringr::str_replace_all(string = V1,
+                                     pattern = "1a|2a|3a|4a|5a",
+                                     replacement = "")) %>% 
+  as.data.frame()
+tabdis_m1[tabdis_m1==""] <- NA
+tabdis_m1 <- tabdis_m1 %>%  group_by(V1) %>% do(coalesce_all_columns(.)) %>%  ungroup() %>% 
+  rbind(tabind_dis,tabtot_dis,fitind) 
+
+tabdis_m1$V1 <- coef # replace names of 1st colummn
+
+#Participacion online
+tabonl_m1 <- tabhux6 %>%  dplyr::filter((grepl('online', V1))) %>% 
+  mutate(V1=stringr::str_replace_all(string = V1,
+                                     pattern = "1a|2a|3a|4a|5a",
+                                     replacement = "")) %>% 
+  as.data.frame()
+tabonl_m1[tabonl_m1==""] <- NA  
+tabonl_m1 <- tabonl_m1 %>%  group_by(V1) %>% do(coalesce_all_columns(.)) %>%  ungroup() %>% 
+  rbind(tabind_dis,tabtot_dis,fitind)   
+
+tabonl_m1$V1 <- coef # replace names of 1st colummn
+
+#Participacion marcha
+tabmar_m1 <- tabhux6 %>%  dplyr::filter((grepl('mpas', V1))) %>% 
+  mutate(V1=stringr::str_replace_all(string = V1,
+                                     pattern = "1a|2a|3a|4a|5a",
+                                     replacement = "")) %>% 
+  as.data.frame()
+tabmar_m1[tabmar_m1==""] <- NA  
+tabmar_m1 <- tabmar_m1 %>%  group_by(V1) %>% do(coalesce_all_columns(.)) %>%  ungroup() %>% 
+  rbind(tabind_dis,tabtot_dis,fitind)   
+
+tabmar_m1$V1 <- coef # replace names of 1st colummn
+
+# Model 2 : participation  ~ edhigh + conversation -----------------------------
+m1a<- '
+        # modelo de medicion
+        disrup1a =~ mdis1a + bloq1a + raya1a + toma1a
+        online1a =~ onli1a + post1a + come1a + segu1a
+
+
+        # (1) modelo de regresion: PARTICIPACION DISRUPTIVA ____________________
+        # efecto directo
+  
+        disrup1a ~ edhigh+conv1a+mujer+age+agepavg+pospolcen+pospolizq+pospolind        
+
+        # (2) modelo de regresion: PARTICIPACION ONLINE ________________________
+        # efecto directo
+
+        online1a ~ edhigh+conv1a+mujer+age+agepavg+pospolcen+pospolizq+pospolind          
+
+        # (3) modelo de regresion: PARTICIPACION PACIFICA ______________________
+                # efecto directo
+        mpas1a ~ edhigh+conv1a+mujer+age+agepavg+pospolcen+pospolizq+pospolind        
+'
+
+m2a <- stringr::str_replace_all(string = m1a,pattern = "1a",replacement = "2a")
+m3a <- stringr::str_replace_all(string = m1a,pattern = "1a",replacement = "3a")
+m4a <- stringr::str_replace_all(string = m1a,pattern = "1a",replacement = "4a")
+m5a <- stringr::str_replace_all(string = m1a,pattern = "1a",replacement = "5a")
+
+# fix conversation to moment 1
+m2a <- stringr::str_replace_all(string = m2a,pattern = "conv2a",replacement = "conv1a")
+m3a <- stringr::str_replace_all(string = m3a,pattern = "conv3a",replacement = "conv1a")
+m4a <- stringr::str_replace_all(string = m4a,pattern = "conv4a",replacement = "conv1a")
+m5a <- stringr::str_replace_all(string = m5a,pattern = "conv5a",replacement = "conv1a")
+
+models <- c(m1a,m2a,m3a,m4a,m5a)
+
+fits <- list()
+for (i in 1:length(models)) {
+    fits[[i]] <- lavaan::sem(model = models[[i]], data = data1,ordered = T)    
+}
+
+fit<- texreg::get.data(l = fits)
+filt<- data.frame(coef=fit[[1]]@coef.names)
+
+tabhux <- texreg::huxtablereg(fit,single.row = T)
+tabhux2 <- dplyr::filter(tabhux,(grepl(' ~ ', V1)))
+tabhux3 <- dplyr::filter(tabhux2,!(grepl('mujer', V1)))
+tabhux4 <- dplyr::filter(tabhux3,!(grepl('pospol', V1)))
+tabhux5 <- dplyr::filter(tabhux4,!(grepl('age', V1)))
+tabhux6 <- dplyr::filter(tabhux5,!(grepl('agepavg', V1)))
+
+fitind <- tabhux %>% filter(V1 %in% c("cfi","tli","rmsea","nobs")) 
+
+tabind_dis <- dplyr::filter(tabhux,(grepl('ind_dis', V1))) 
+tabtot_dis <- dplyr::filter(tabhux,(grepl('tot_dis', V1)))
+
+tabind_onl <- dplyr::filter(tabhux,(grepl('ind_onl', V1)))
+tabtot_onl <- dplyr::filter(tabhux,(grepl('tot_onl', V1)))
+
+coalesce_all_columns <- function(df) {
+  tibble(
+    V1 = df$V1[1],
+    V2 = na.omit(df$V2),
+    V3 = na.omit(df$V3),
+    V4 = na.omit(df$V4),
+    V5 = na.omit(df$V5),
+    V6 = na.omit(df$V6)        
+  )
+}
+
+coef <- c("Years of education - parent highest",
+          "Conversation",
+          "CFI","RMSEA","TLI","N")
+
+#Participacion disruptiva
+tabdis_m2 <- tabhux6 %>%  dplyr::filter((grepl('disrup', V1))) %>% 
+  mutate(V1=stringr::str_replace_all(string = V1,
+                                     pattern = "1a|2a|3a|4a|5a",
+                                     replacement = "")) %>% 
+  as.data.frame()
+tabdis_m2[tabdis_m2==""] <- NA
+tabdis_m2 <- tabdis_m2 %>%  group_by(V1) %>% do(coalesce_all_columns(.)) %>%  ungroup() %>% 
+  rbind(tabind_dis,tabtot_dis,fitind) 
+
+tabdis_m2 <- tabdis_m2[c(2,1,3:6),] # REORDER rows = educ, conv
+tabdis_m2$V1 <- coef # replace names of 1st colummn
+
+#Participacion online
+tabonl_m2 <- tabhux6 %>%  dplyr::filter((grepl('online', V1))) %>% 
+  mutate(V1=stringr::str_replace_all(string = V1,
+                                     pattern = "1a|2a|3a|4a|5a",
+                                     replacement = "")) %>% 
+  as.data.frame()
+tabonl_m2[tabonl_m2==""] <- NA  
+tabonl_m2 <- tabonl_m2 %>%  group_by(V1) %>% do(coalesce_all_columns(.)) %>%  ungroup() %>% 
+  rbind(tabind_dis,tabtot_dis,fitind)   
+
+tabonl_m2 <- tabonl_m2[c(2,1,3:6),] # REORDER rows = educ, conv
+tabonl_m2$V1 <- coef # replace names of 1st colummn
+
+#Participacion marcha
+tabmar_m2 <- tabhux6 %>%  dplyr::filter((grepl('mpas', V1))) %>% 
+  mutate(V1=stringr::str_replace_all(string = V1,
+                                     pattern = "1a|2a|3a|4a|5a",
+                                     replacement = "")) %>% 
+  as.data.frame()
+tabmar_m2[tabmar_m2==""] <- NA  
+tabmar_m2 <- tabmar_m2 %>%  group_by(V1) %>% do(coalesce_all_columns(.)) %>%  ungroup() %>% 
+  rbind(tabind_dis,tabtot_dis,fitind)   
+
+tabmar_m2 <- tabmar_m2[c(2,1,3:6),] # REORDER rows = educ, conv
+tabmar_m2$V1 <- coef # replace names of 1st colummn
+
+# Model 3 : participation  ~ edhigh + conversation +edyears --------------------
+m1a<- '
+        # modelo de medicion
+        disrup1a =~ mdis1a + bloq1a + raya1a + toma1a
+        online1a =~ onli1a + post1a + come1a + segu1a
+
+
+        # (1) modelo de regresion: PARTICIPACION DISRUPTIVA ____________________
+        # efecto directo
+  
+        disrup1a ~ edhigh+conv1a+educyear+mujer+age+agepavg+pospolcen+pospolizq+pospolind        
+
+        # (2) modelo de regresion: PARTICIPACION ONLINE ________________________
+        # efecto directo
+
+        online1a ~ edhigh+conv1a+educyear+mujer+age+agepavg+pospolcen+pospolizq+pospolind          
+
+        # (3) modelo de regresion: PARTICIPACION PACIFICA ______________________
+                # efecto directo
+        mpas1a ~ edhigh+conv1a+educyear+mujer+age+agepavg+pospolcen+pospolizq+pospolind        
+      
+'
+
+m2a <- stringr::str_replace_all(string = m1a,pattern = "1a",replacement = "2a")
+m3a <- stringr::str_replace_all(string = m1a,pattern = "1a",replacement = "3a")
+m4a <- stringr::str_replace_all(string = m1a,pattern = "1a",replacement = "4a")
+m5a <- stringr::str_replace_all(string = m1a,pattern = "1a",replacement = "5a")
+
+# fix conversation to moment 1
+m2a <- stringr::str_replace_all(string = m2a,pattern = "conv2a",replacement = "conv1a")
+m3a <- stringr::str_replace_all(string = m3a,pattern = "conv3a",replacement = "conv1a")
+m4a <- stringr::str_replace_all(string = m4a,pattern = "conv4a",replacement = "conv1a")
+m5a <- stringr::str_replace_all(string = m5a,pattern = "conv5a",replacement = "conv1a")
+
+models <- c(m1a,m2a,m3a,m4a,m5a)
+
+fits <- list()
+for (i in 1:length(models)) {
+    fits[[i]] <- lavaan::sem(model = models[[i]], data = data1,ordered = T)    
+}
+
+fit<- texreg::get.data(l = fits)
+filt<- data.frame(coef=fit[[1]]@coef.names)
+
+tabhux <- texreg::huxtablereg(fit,single.row = T)
+tabhux2 <- dplyr::filter(tabhux,(grepl(' ~ ', V1)))
+tabhux3 <- dplyr::filter(tabhux2,!(grepl('mujer', V1)))
+tabhux4 <- dplyr::filter(tabhux3,!(grepl('pospol', V1)))
+tabhux5 <- dplyr::filter(tabhux4,!(grepl('age', V1)))
+tabhux6 <- dplyr::filter(tabhux5,!(grepl('agepavg', V1)))
+
+fitind <- tabhux %>% filter(V1 %in% c("cfi","tli","rmsea","nobs")) 
+
+tabind_dis <- dplyr::filter(tabhux,(grepl('ind_dis', V1))) 
+tabtot_dis <- dplyr::filter(tabhux,(grepl('tot_dis', V1)))
+
+tabind_onl <- dplyr::filter(tabhux,(grepl('ind_onl', V1)))
+tabtot_onl <- dplyr::filter(tabhux,(grepl('tot_onl', V1)))
+
+coalesce_all_columns <- function(df) {
+  tibble(
+    V1 = df$V1[1],
+    V2 = na.omit(df$V2),
+    V3 = na.omit(df$V3),
+    V4 = na.omit(df$V4),
+    V5 = na.omit(df$V5),
+    V6 = na.omit(df$V6)        
+  )
+}
+
+coef <- c("Years of education - parent highest","Conversation" ,"Years of education",
+          "CFI","RMSEA","TLI","N")
+
+#Participacion disruptiva
+tabdis_m3 <- tabhux6 %>%  dplyr::filter((grepl('disrup', V1))) %>% 
+  mutate(V1=stringr::str_replace_all(string = V1,
+                                     pattern = "1a|2a|3a|4a|5a",
+                                     replacement = "")) %>% 
+  as.data.frame()
+tabdis_m3[tabdis_m3==""] <- NA
+tabdis_m3 <- tabdis_m3 %>%  group_by(V1) %>% do(coalesce_all_columns(.)) %>%  ungroup() %>% 
+  rbind(tabind_dis,tabtot_dis,fitind) 
+
+tabdis_m3 <- tabdis_m3[c(2,1,3:7),] # REORDER rows = educ, conv, educyear
+tabdis_m3$V1 <- coef # replace names of 1st colummn
+
+#Participacion online
+tabonl_m3 <- tabhux6 %>%  dplyr::filter((grepl('online', V1))) %>% 
+  mutate(V1=stringr::str_replace_all(string = V1,
+                                     pattern = "1a|2a|3a|4a|5a",
+                                     replacement = "")) %>% 
+  as.data.frame()
+tabonl_m3[tabonl_m3==""] <- NA  
+tabonl_m3 <- tabonl_m3 %>%  group_by(V1) %>% do(coalesce_all_columns(.)) %>%  ungroup() %>% 
+  rbind(tabind_dis,tabtot_dis,fitind)   
+
+tabonl_m3 <- tabonl_m3[c(2,1,3:7),] # REORDER rows = educ, conv, educyear
+tabonl_m3$V1 <- coef # replace names of 1st colummn
+
+#Participacion marcha
+tabmar_m3 <- tabhux6 %>%  dplyr::filter((grepl('mpas', V1))) %>% 
+  mutate(V1=stringr::str_replace_all(string = V1,
+                                     pattern = "1a|2a|3a|4a|5a",
+                                     replacement = "")) %>% 
+  as.data.frame()
+tabmar_m3[tabmar_m3==""] <- NA  
+tabmar_m3 <- tabmar_m3 %>%  group_by(V1) %>% do(coalesce_all_columns(.)) %>%  ungroup() %>% 
+  rbind(tabind_dis,tabtot_dis,fitind)   
+
+tabmar_m3 <- tabmar_m3[c(2,1,3:7),] # REORDER rows = educ, conv, educyear
+tabmar_m3$V1 <- coef # replace names of 1st colummn
+
+
+# Generate data for tables-----------------------------------------------------
+
+models_dist <- 
+left_join(tabdis_m3,tabdis_m2,by="V1",suffix = c("_3","_2")) %>% 
+  left_join(tabdis_m1,by="V1") %>% 
+  select(sort(names(.))) %>%
+  column_to_rownames(., var = "V1")
+
+models_onl <- 
+left_join(tabonl_m3,tabonl_m2,by="V1",suffix = c("_3","_2")) %>% 
+  left_join(tabonl_m1,by="V1") %>% 
+  select(sort(names(.))) %>%
+  column_to_rownames(., var = "V1")
+
+models_onl <- 
+left_join(tabmar_m3,tabmar_m2,by="V1",suffix = c("_3","_2")) %>% 
+  left_join(tabmar_m1,by="V1") %>% 
+  select(sort(names(.))) %>%
+  column_to_rownames(., var = "V1")
+
+tab_mar_educ <- 
+kable(tabmar,format = "html",
+      booktabs=T,
+      row.names = F,
+      caption = "Participation Peaceful protest, parental education and conversation",
+      col.names = col) %>% 
+  kable_styling(full_width = F) %>% 
+  row_spec(7,hline_after = T) 
+tab_mar_educ
+
+
+
+tables1 <- list(tab_dis_educ,tab_onl_educ,tab_mar_educ)
+save(tables1,
+     file = here::here("output/tables/tab_educ_.RData"))
+```
+
 
 ## Participation Peaceful protests
 
@@ -1263,7 +1876,7 @@ knitreg(mpasifica,
 
 - The following models assume the dependent variable as **binary**
 
-```{r vot-edhigh, results='asis'}
+```{r vot-edhigh, eval=FALSE, include=FALSE, results='asis'}
 rm(list=ls())
 if (!require("pacman")) install.packages("pacman") # instalar pacman
 pacman::p_load(dplyr,       # Manipulacion de datos 
@@ -1789,7 +2402,7 @@ data1<-
 study_1_long %>% 
   dplyr::select(folio_encuestado,momento,vot,educyear,age,agepavg,edhigh,conv_t1,conv,
                 mujer,pospol) %>%
-  dplyr::filter(vot !=2,momento !=3,momento !=6) %>%  
+  dplyr::filter(vot !=2,momento !=3,momento !=6) %>%
   mutate(conv_t1=as.numeric(conv_t1),
          vot=as.numeric(vot),
          conv=as.numeric(conv)
@@ -1798,14 +2411,6 @@ study_1_long %>%
 dim(data1)
 
 # Models-----------------------------------------------------------------------
-# votonull <- 
-# lme4::glmer(vot~1+(1|folio_encuestado),
-#             data = data1,family = "binomial")
-# 9.75/(3.29+9.75)
-# sjstats::icc(votonull)[[1]]
-# pdata <- panelr::panel_data(data1, id = folio_encuestado, wave = momento)
-# model <- panelr::wbm(vot ~  edhigh+educyear+conv_t1+mujer+pospol, data = pdata,use.wave = T, family = binomial,model = "random")
-# summary(model)
 
 voto <- 
 lme4::lmer(vot~edhigh+educyear+conv_t1+mujer+age+agepavg+pospol+momento+I(momento^2)+(1|folio_encuestado),
@@ -1835,20 +2440,18 @@ lme4::lmer(vot~edhigh+educyear+conv_t1+mujer+age+agepavg+pospol+momento+I(moment
             data = data1,
            # family = "binomial"
            )
-
-voto_convfix_int1 <- 
-lme4::lmer(vot~edhigh*momento+educyear+conv_t1+mujer+age+agepavg+pospol+momento+I(momento^2)+(1+momento|folio_encuestado),
-            data = data1,
-           # family = "binomial"
-           )
-
-voto_convfix_int2 <- 
-lme4::lmer(vot~edhigh+educyear+conv_t1*momento+mujer+age+agepavg+pospol+momento+I(momento^2)+(1+momento|folio_encuestado),
-            data = data1,
-           # family = "binomial"
-           )
-
-# summary(voto)
+# 
+# voto_convfix_int1 <- 
+# lme4::lmer(vot~edhigh*momento+educyear+conv_t1+mujer+age+agepavg+pospol+momento+I(momento^2)+(1+momento|folio_encuestado),
+#             data = data1,
+#            # family = "binomial"
+#            )
+# 
+# voto_convfix_int2 <- 
+# lme4::lmer(vot~edhigh+educyear+conv_t1*momento+mujer+age+agepavg+pospol+momento+I(momento^2)+(1+momento|folio_encuestado),
+#             data = data1,
+#            # family = "binomial"
+#            )
 
 # Table ------------------------------------------------------------------------
 votos <- list(voto,voto_re_t,voto_conv_int,
@@ -1858,26 +2461,7 @@ knitreg(votos,
         include.ci = FALSE,
         omit.coef = c("(pospol)|(mujer)|(age)|(agepavg)|(Intercept)"),
         caption.above = T,caption = caption,
-          # custom.gof.rows = list("ICC"=c(sjstats::icc(votonull)[[1]],
-          # sjstats::icc(voto)[[2]])),
         )
-
-# logit2prob <- function(logit){
-#   odds <- exp(logit)
-#   prob <- odds / (1 + odds)
-#   return(prob)
-# }
-
-# logit2prob(lme4::fixef(votonull))
-# logit2prob(lme4::fixef(voto))
-
-# set.seed(1234)
-# plot_model(model = voto,type = "re",sort.est = "sort.all",
-#            grid = F,
-#            transform = NULL,
-#            axis.labels = c(1:1010))
-# plot_model(model = voto,type = "pred",terms = "edhigh")
-# plot_model(model = voto,type = "pred",terms = "educyear")
 ```
 
 
