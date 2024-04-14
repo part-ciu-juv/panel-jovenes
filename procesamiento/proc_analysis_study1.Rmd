@@ -72,7 +72,7 @@ div.tocify {
 
 ## Participation Disruptive & Online 
 
-```{r part-edhigh, results='asis'}
+```{r part-edhigh, eval=FALSE, include=FALSE, results='asis'}
 rm(list=ls())
 if (!require("pacman")) install.packages("pacman") # instalar pacman
 pacman::p_load(dplyr,       # Manipulacion de datos 
@@ -238,7 +238,7 @@ save(tables1,
 
 ## Participation Disruptive, Online & Peaceful protest 
 
-```{r part-mpas-edhigh, results='asis'}
+```{r part-mpas-edhigh, eval=FALSE, include=FALSE, results='asis'}
 rm(list=ls())
 if (!require("pacman")) install.packages("pacman") # instalar pacman
 pacman::p_load(dplyr,       # Manipulacion de datos 
@@ -461,14 +461,10 @@ rm(list=ls())
 if (!require("pacman")) install.packages("pacman") # instalar pacman
 pacman::p_load(dplyr,       # Manipulacion de datos 
                haven,       # importar datos en .dta o .sav
-               sjmisc,      # descriptivos y frecuencias
-               sjPlot,      # tablas, plots y descriptivos
                sjlabelled,
                summarytools,# resumen de dataframe
                knitr,       # tablas kable
                kableExtra,  # tablas kable personalizadas
-               ggplot2,     # plots
-               corrplot,    # plot correlacion
                tibble,
                lavaan,
                texreg,
@@ -505,7 +501,6 @@ m1a<- '
         # (3) modelo de regresion: PARTICIPACION PACIFICA ______________________
                 # efecto directo
         mpas1a ~ edhigh+mujer+age+agepavg+pospolcen+pospolizq+pospolind        
-      
 '
 
 m2a <- stringr::str_replace_all(string = m1a,pattern = "1a",replacement = "2a")
@@ -726,10 +721,8 @@ m1a<- '
 
         # (3) modelo de regresion: PARTICIPACION PACIFICA ______________________
                 # efecto directo
-        mpas1a ~ edhigh+conv1a+educyear+mujer+age+agepavg+pospolcen+pospolizq+pospolind        
-      
+        mpas1a ~ edhigh+conv1a+educyear+mujer+age+agepavg+pospolcen+pospolizq+pospolind     
 '
-
 m2a <- stringr::str_replace_all(string = m1a,pattern = "1a",replacement = "2a")
 m3a <- stringr::str_replace_all(string = m1a,pattern = "1a",replacement = "3a")
 m4a <- stringr::str_replace_all(string = m1a,pattern = "1a",replacement = "4a")
@@ -821,6 +814,12 @@ tabmar_m3$V1 <- coef # replace names of 1st colummn
 
 
 # Generate data for tables-----------------------------------------------------
+options(knitr.kable.NA = '')
+#define headers for table
+period<-c(" "=1,"High school (1)"=3,"Oct 2019 - Jan 2020 (2)"=3,
+          "Mar - Dec 2020 (3)"=3,"First half: 2021 (4)"=3,"Second half: 2021 (5)"=3)
+#define colnames for table
+models <- rep(paste0("M",1:3),5)
 
 models_dist <- 
 left_join(tabdis_m3,tabdis_m2,by="V1",suffix = c("_3","_2")) %>% 
@@ -828,33 +827,39 @@ left_join(tabdis_m3,tabdis_m2,by="V1",suffix = c("_3","_2")) %>%
   select(sort(names(.))) %>%
   column_to_rownames(., var = "V1")
 
+
+kable(models_dist,format = "html",col.names = models,
+      booktabs=T,
+      row.names = T,
+      caption = "Disruptive political participation, parental education and conversation",
+      ) %>%
+  kable_styling(full_width = F) %>%
+  row_spec(7,hline_after = T) %>% 
+  add_header_above(period)
+
 models_onl <- 
 left_join(tabonl_m3,tabonl_m2,by="V1",suffix = c("_3","_2")) %>% 
   left_join(tabonl_m1,by="V1") %>% 
   select(sort(names(.))) %>%
   column_to_rownames(., var = "V1")
 
-models_onl <- 
+kable(models_onl,format="html",col.names=models,booktabs=T,row.names=T,
+      caption = "Online political participation, parental education and conversation") %>%
+  kable_styling(full_width = F) %>%
+  row_spec(7,hline_after = T) %>% 
+  add_header_above(period)
+
+
+models_mar <- 
 left_join(tabmar_m3,tabmar_m2,by="V1",suffix = c("_3","_2")) %>% 
-  left_join(tabmar_m1,by="V1") %>% 
-  select(sort(names(.))) %>%
+  left_join(tabmar_m1,by="V1") %>% select(sort(names(.))) %>%
   column_to_rownames(., var = "V1")
 
-tab_mar_educ <- 
-kable(tabmar,format = "html",
-      booktabs=T,
-      row.names = F,
-      caption = "Participation Peaceful protest, parental education and conversation",
-      col.names = col) %>% 
-  kable_styling(full_width = F) %>% 
-  row_spec(7,hline_after = T) 
-tab_mar_educ
-
-
-
-tables1 <- list(tab_dis_educ,tab_onl_educ,tab_mar_educ)
-save(tables1,
-     file = here::here("output/tables/tab_educ_.RData"))
+kable(models_mar,format="html",col.names=models,booktabs=T,row.names=T,
+      caption = "Participation Peaceful protest, parental education and conversation") %>%
+  kable_styling(full_width = F) %>%
+  row_spec(7,hline_after = T) %>% 
+  add_header_above(period)
 ```
 
 
@@ -862,7 +867,7 @@ save(tables1,
 
 - The following models assume the dependent variable as **continuous**    
 
-```{r mpas-edhigh-ols, results='asis'}
+```{r mpas-edhigh-ols, eval=FALSE, include=FALSE, results='asis'}
 rm(list=ls())
 if (!require("pacman")) install.packages("pacman") # instalar pacman
 pacman::p_load(dplyr,       # Manipulacion de datos 
@@ -1264,7 +1269,7 @@ kable(df_medconv,format = "html",digits = 3, col.names = colnames,
 
 - The following models assume the dependent variable as **binary**    
 
-```{r mpas-edhigh-logit, results='asis'}
+```{r mpas-edhigh-logit, eval=FALSE, include=FALSE, results='asis'}
 rm(list=ls())
 if (!require("pacman")) install.packages("pacman") # instalar pacman
 pacman::p_load(dplyr,       # Manipulacion de datos 
@@ -2379,7 +2384,7 @@ if (!require("pacman")) install.packages("pacman") # instalar pacman
 pacman::p_load(dplyr,       # Manipulacion de datos 
                haven,       # importar datos en .dta o .sav
                sjmisc,      # descriptivos y frecuencias
-               sjPlot,      # tablas, plots y descriptivos
+               # sjPlot,      # tablas, plots y descriptivos
                sjlabelled,
                summarytools,# resumen de dataframe
                knitr,       # tablas kable
@@ -2400,23 +2405,42 @@ load(here::here("input/data/proc/study1_long.RData"))
 
 data1<- 
 study_1_long %>% 
-  dplyr::select(folio_encuestado,momento,vot,educyear,age,agepavg,edhigh,conv_t1,conv,
+  dplyr::select(folio_encuestado,momento,vot,educyear,age,agepavg,edhigh,
+                conv_t1,
+                # conv,
                 mujer,pospol) %>%
   dplyr::filter(vot !=2,momento !=3,momento !=6) %>%
   mutate(conv_t1=as.numeric(conv_t1),
-         vot=as.numeric(vot),
-         conv=as.numeric(conv)
+         # vot=as.numeric(vot),
+         # conv=as.numeric(conv)
          ) %>% 
   na.omit()
 dim(data1)
 
 # Models-----------------------------------------------------------------------
 
-voto <- 
-lme4::lmer(vot~edhigh+educyear+conv_t1+mujer+age+agepavg+pospol+momento+I(momento^2)+(1|folio_encuestado),
+data1$momento_f<- factor(data1$momento)
+voto_t <- 
+lme4::glmer(vot~momento_f+(1|folio_encuestado),
             data = data1,
-           # family = "binomial"
+           family = "binomial"
            )
+
+library(ggeffects)
+plot(ggeffects::ggpredict(voto_t, "momento_f"))
+
+voto <- 
+lme4::glmer(vot~edhigh+educyear+conv_t1+mujer+age+agepavg+pospol+momento+I(momento^2)+(1|folio_encuestado),
+            data = data1,
+           family = "binomial"
+           )
+
+
+
+
+
+
+
 voto_re_t <- 
 lme4::lmer(vot~edhigh+educyear+conv_t1+mujer+age+agepavg+pospol+momento+I(momento^2)+(1+momento|folio_encuestado),
             data = data1,
@@ -2424,22 +2448,22 @@ lme4::lmer(vot~edhigh+educyear+conv_t1+mujer+age+agepavg+pospol+momento+I(moment
            )
 
 
-voto_conv_int <- 
-lme4::lmer(vot~edhigh*momento+educyear+conv+mujer+age+agepavg+pospol+momento+I(momento^2)+(1+momento|folio_encuestado),
-            data = data1,
-           # family = "binomial"
-           )
+# voto_conv_int <- 
+# lme4::lmer(vot~edhigh*momento+educyear+conv+mujer+age+agepavg+pospol+momento+I(momento^2)+(1+momento|folio_encuestado),
+#             data = data1,
+#            # family = "binomial"
+#            )
 
-voto_convfix <- 
-lme4::lmer(vot~edhigh+educyear+conv_t1+mujer+age+agepavg+pospol+momento+I(momento^2)+(1|folio_encuestado),
-            data = data1,
-           # family = "binomial"
-           )
-voto_convfix_re_t <- 
-lme4::lmer(vot~edhigh+educyear+conv_t1+mujer+age+agepavg+pospol+momento+I(momento^2)+(1+momento|folio_encuestado),
-            data = data1,
-           # family = "binomial"
-           )
+# voto_convfix <- 
+# lme4::lmer(vot~edhigh+educyear+conv_t1+mujer+age+agepavg+pospol+momento+I(momento^2)+(1|folio_encuestado),
+#             data = data1,
+#            # family = "binomial"
+#            )
+# voto_convfix_re_t <- 
+# lme4::lmer(vot~edhigh+educyear+conv_t1+mujer+age+agepavg+pospol+momento+I(momento^2)+(1+momento|folio_encuestado),
+#             data = data1,
+#            # family = "binomial"
+#            )
 # 
 # voto_convfix_int1 <- 
 # lme4::lmer(vot~edhigh*momento+educyear+conv_t1+mujer+age+agepavg+pospol+momento+I(momento^2)+(1+momento|folio_encuestado),
